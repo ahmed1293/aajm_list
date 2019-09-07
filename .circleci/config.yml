@@ -1,4 +1,6 @@
 version: 2
+orbs:
+  codecov: codecov/codecov@1.0.2
 jobs:
   build:
     machine: true
@@ -37,6 +39,8 @@ jobs:
           command: docker-compose run --rm django coverage html
       - store_artifacts:
           path: htmlcov
+      - codecov/upload:
+          file: htmlcov
 
 workflows:
   version: 2
