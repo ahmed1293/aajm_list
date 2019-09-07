@@ -5,6 +5,8 @@ services:
     image: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
+    env_file:
+      - ./.envs/postgres
   django:
     build: .
     command: python manage.py runserver_plus 0.0.0.0:8000
