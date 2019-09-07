@@ -4,3 +4,6 @@ psycopg2-binary>=2.7,<3.0
 django-extensions
 werkzeug
 django-debug-toolbar
+pytest
+pytest-django
+IPython
