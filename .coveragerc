@@ -1,0 +1,15 @@
+[run]
+source =
+    aajm_list/
+    list/
+
+omit =
+    *migrations*
+    *tests*
+    *templates*
+    *htmlcov*
+    *urls*
+    aajm_list/settings.py
+    aajm_list/wsgi.py
+
+branch = True
