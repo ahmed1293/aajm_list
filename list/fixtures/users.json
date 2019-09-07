@@ -1,0 +1,20 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$150000$WBnVbYU3uvxb$I1aU2WDPaxgCut6fM9PDEPJyyW4fxeIs6jXzMmVlq9k=",
+        "last_login": "2019-09-07T14:13:41.913Z",
+        "is_superuser": true,
+        "username": "ahmed1293",
+        "first_name": "",
+        "last_name": "",
+        "email": "ahmed.a.1293@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2019-09-07T14:13:02.643Z",
+        "groups": [],
+        "user_permissions": []
+    }
+}
+]
