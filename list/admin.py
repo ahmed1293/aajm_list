@@ -5,7 +5,7 @@ from list.models import ShoppingList, Item
 
 class ItemInline(admin.TabularInline):
     model = Item
-    extra = 1
+    extra = 0
 
 
 class ShoppingListAdmin(admin.ModelAdmin):
