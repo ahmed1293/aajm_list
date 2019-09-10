@@ -48,9 +48,6 @@ jobs:
           name: Bring up dependency containers
           command: docker-compose run --rm start_dependencies
       - run:
-          name: Make migrations
-          command: docker-compose run --rm django python manage.py makemigrations
-      - run:
           name: Migrate
           command: docker-compose run --rm django python manage.py migrate
       - run:
