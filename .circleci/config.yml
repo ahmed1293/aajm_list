@@ -8,26 +8,43 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Login to Docker Registry
+          command: echo "$DOCKER_PASS" | docker login -u $DOCKER_USER --password-stdin
+      - run:
+          name: Pull Images
+          command: |
+            pull_status=$(docker-compose pull --quiet; echo $?)
+            if [ $pull_status -ne 0]; then
+              current_branch=$CIRCLE_BRANCH
+              export CIRCLE_BRANCH=":master"
+              docker-compose pull --ignore-pull-failures
+              export CIRCLE_BRANCH=current_branch
+            fi
+      - run:
           name: Build
           command: docker-compose build
+      - run:
+          name: Push Images
+          command: docker-compose push
 
-  migrate:
-    machine: true
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run:
-          name: Make migrations
-          command: docker-compose run --rm django python manage.py makemigrations
-      - run:
-          name: Migrate
-          command: docker-compose run --rm django python manage.py migrate
 
   test:
     machine: true
     working_directory: ~/repo
     steps:
       - checkout
+      - run:
+          name: Login to Docker Registry
+          command: echo "$DOCKER_PASS" | docker login -u $DOCKER_USER --password-stdin
+      - run:
+          name: Pull Images
+          command: docker-compose pull
+      - run:
+          name: Make migrations
+          command: docker-compose run --rm django python manage.py makemigrations
+      - run:
+          name: Migrate
+          command: docker-compose run --rm django python manage.py migrate
       - run:
           name: Test
           command: docker-compose run --rm django coverage run -m py.test
@@ -50,9 +67,6 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - migrate:
-          requires:
-            - build
       - test:
           requires:
-            - migrate
+            - build
