@@ -15,9 +15,11 @@ jobs:
           command: echo 'export CI_BRANCH=":$CIRCLE_BRANCH"' >> $BASH_ENV
       - run:
           name: Pull Images
+          # this always seems to fail and pull from master
           command: |
             pull_status=$(docker-compose pull --quiet; echo $?)
             if [ $pull_status -ne 0 ]; then
+              echo "[INFO] No images exist for this tag, pulling from master branch instead"
               current_branch=$CIRCLE_BRANCH
               export CI_BRANCH=":master"
               docker-compose pull --ignore-pull-failures
