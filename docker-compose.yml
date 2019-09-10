@@ -6,8 +6,6 @@ services:
     build:
       context: .
       dockerfile: ./compose/postgres/Dockerfile
-      cache_from:
-        - ${DOCKER_REGISTRY}postgres:${CIRCLE_BRANCH}
     volumes:
       - pgdata:/var/lib/postgresql/data
     env_file:
@@ -17,8 +15,6 @@ services:
     build:
       context: .
       dockerfile: ./compose/django/Dockerfile
-      cache_from:
-        - ${DOCKER_REGISTRY}django:${CIRCLE_BRANCH}
     command: python manage.py runserver_plus 0.0.0.0:8000
     env_file:
       - ./.envs/postgres
