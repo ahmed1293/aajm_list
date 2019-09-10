@@ -12,7 +12,7 @@ jobs:
           command: echo "$DOCKER_PASS" | docker login -u $DOCKER_USER --password-stdin
       - run:
           name: Setup Env Variables
-          command: export CI_BRANCH=:$CIRCLE_BRANCH
+          command: export 'CI_BRANCH=":$CIRCLE_BRANCH"' >> $BASH_ENV
       - run:
           name: Pull Images
           command: |
@@ -21,7 +21,6 @@ jobs:
               current_branch=$CIRCLE_BRANCH
               export CI_BRANCH=":master"
               docker-compose pull --ignore-pull-failures
-              export CIRCLE_BRANCH=current_branch
             fi
       - run:
           name: Build
@@ -41,10 +40,13 @@ jobs:
           command: echo "$DOCKER_PASS" | docker login -u $DOCKER_USER --password-stdin
       - run:
           name: Setup Env Variables
-          command: export CI_BRANCH=:$CIRCLE_BRANCH
+          command: export 'CI_BRANCH=":$CIRCLE_BRANCH"' >> $BASH_ENV
       - run:
           name: Pull Images
           command: docker-compose pull
+      - run:
+          name: Bring up dependency containers
+          command: docker-compose run --rm start_dependencies
       - run:
           name: Make migrations
           command: docker-compose run --rm django python manage.py makemigrations
