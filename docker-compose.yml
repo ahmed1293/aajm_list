@@ -2,7 +2,7 @@ version: '3'
 
 services:
   postgres:
-    image: ${DOCKER_REGISTRY}postgres:${CIRCLE_BRANCH}
+    image: ${DOCKER_REGISTRY}postgres${CI_BRANCH}
     build:
       context: .
       dockerfile: ./compose/postgres/Dockerfile
@@ -11,7 +11,7 @@ services:
     env_file:
       - ./.envs/postgres
   django:
-    image: ${DOCKER_REGISTRY}django:${CIRCLE_BRANCH}
+    image: ${DOCKER_REGISTRY}django${CI_BRANCH}
     build:
       context: .
       dockerfile: ./compose/django/Dockerfile
