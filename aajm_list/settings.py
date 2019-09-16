@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     
     'django_extensions',
     'debug_toolbar',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -99,6 +100,15 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -122,6 +132,6 @@ INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-# tricks to have debug toolbar when developing with docker
+# trick to have debug toolbar when developing with docker
 ip = socket.gethostbyname(socket.gethostname())
 INTERNAL_IPS += [ip[:-1] + '1']

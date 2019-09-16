@@ -8,3 +8,6 @@ pytest
 pytest-django
 IPython
 pytest-cov
+djangorestframework
+markdown
+django-filter
