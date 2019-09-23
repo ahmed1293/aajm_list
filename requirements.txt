@@ -11,3 +11,4 @@ pytest-cov
 djangorestframework
 markdown
 django-filter
+drf-yasg
