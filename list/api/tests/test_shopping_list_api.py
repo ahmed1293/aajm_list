@@ -4,7 +4,6 @@ from django.urls import reverse
 from list.models import ShoppingList
 
 
-@pytest.mark.django_db
 def test_get_list_response(client, shopping_list):
     response = client.get(reverse('api:shopping-list-list'))
 
@@ -12,7 +11,6 @@ def test_get_list_response(client, shopping_list):
     assert len(response.data) == ShoppingList.objects.count()
 
 
-@pytest.mark.django_db
 def test_get_detail_response(client, shopping_list):
     response = client.get(reverse('api:shopping-list-detail', kwargs={'pk': shopping_list.pk}))
     assert response.status_code == 200

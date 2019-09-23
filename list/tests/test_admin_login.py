@@ -6,7 +6,6 @@ def test_superuser_can_login(admin_client):
     assert response.status_code == 200
 
 
-@pytest.mark.django_db
 def test_no_registered_user_cant_login(client):
     user_logged_in = client.login(username='not_registered', password='ejhrjqkwh12')
     assert not user_logged_in
