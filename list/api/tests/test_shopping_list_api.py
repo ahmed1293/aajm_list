@@ -1,10 +1,9 @@
-import pytest
 from django.urls import reverse
 
 from list.models import ShoppingList
 
 
-def test_get_list_response(client, shopping_list):
+def test_get_list_response(client):
     response = client.get(reverse('api:shopping-list-list'))
 
     assert response.status_code == 200
