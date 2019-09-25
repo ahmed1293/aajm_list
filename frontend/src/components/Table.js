@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import key from "weak-key";
-
+import "bulma/css/bulma.css"
 
 const Table = ({ data }) =>
   !data.length ? (
