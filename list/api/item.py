@@ -4,6 +4,7 @@ from list.models import Item
 
 
 class ItemSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Item
         fields = ['name', 'quantity', 'list', 'added_by', 'added_at']

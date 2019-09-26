@@ -1,5 +1,6 @@
 from django.urls import reverse
 
+from list.api.item import ItemSerializer
 from list.models import ShoppingList
 
 
@@ -10,13 +11,14 @@ def test_get_list_response(client):
     assert len(response.data) == ShoppingList.objects.count()
 
 
-def test_get_detail_response(client, shopping_list):
+def test_get_detail_response(client, shopping_list, item_banana):
     response = client.get(reverse('api:shopping-list-detail', kwargs={'pk': shopping_list.pk}))
     assert response.status_code == 200
 
     data = response.json()
     assert data['name'] == shopping_list.name
     assert data['created_by'] == shopping_list.created_by.pk
+    assert ItemSerializer(item_banana).data in data['items']
 
 
 def test_post_response(client, admin_user):
