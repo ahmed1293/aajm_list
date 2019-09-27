@@ -4,10 +4,17 @@ from list.models import Item
 
 
 class ItemSerializer(serializers.ModelSerializer):
+    added_at = serializers.DateTimeField(format="%d/%m/%Y %H:%M:%S", required=False)
 
     class Meta:
         model = Item
         fields = ['name', 'quantity', 'list', 'added_by', 'added_at']
+
+
+class ItemWithoutListSerializer(ItemSerializer):
+    class Meta:
+        model = Item
+        fields = ['name', 'quantity', 'added_by', 'added_at']
 
 
 class ItemViewSet(viewsets.ModelViewSet):
