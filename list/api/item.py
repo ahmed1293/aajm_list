@@ -4,6 +4,7 @@ from list.models import Item
 
 
 class ItemSerializer(serializers.ModelSerializer):
+    added_at = serializers.DateTimeField(format="%d/%m/%Y %H:%M:%S")
 
     class Meta:
         model = Item

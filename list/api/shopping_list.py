@@ -6,6 +6,7 @@ from list.models import ShoppingList
 
 class ShoppingListSerializer(serializers.ModelSerializer):
     items = ItemSerializer(source='item_set', many=True, read_only=True)
+    created_at = serializers.DateTimeField(format="%d/%m/%Y %H:%M:%S")
 
     class Meta:
         model = ShoppingList
