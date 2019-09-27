@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import "bulma/css/bulma.css";
 
 
@@ -15,9 +14,6 @@ class Tiles extends React.Component {
     }
 }
 
-Tiles.propTypes = {
-    data: PropTypes.array.isRequired
-};
 
 class Tile extends React.Component {
     render() {
@@ -26,10 +22,5 @@ class Tile extends React.Component {
     }
 }
 
-Tile.propTypes = {
-    list: PropTypes.shape({
-        name: PropTypes.string
-    })
-}
 
 export default Tiles;
