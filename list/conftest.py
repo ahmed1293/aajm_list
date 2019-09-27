@@ -1,4 +1,5 @@
 import pytest
+from rest_framework.test import APIClient
 
 from list.models import ShoppingList, Item
 
@@ -7,6 +8,11 @@ from list.models import ShoppingList, Item
 def enable_db_access(db):
     # enable DB access for all tests
     pass
+
+
+@pytest.fixture(scope='session')
+def api_client():
+    return APIClient()
 
 
 @pytest.fixture

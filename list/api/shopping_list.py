@@ -1,12 +1,12 @@
 from rest_framework import serializers, viewsets
 
-from list.api.item import ItemSerializer
+from list.api.item import ItemWithoutListSerializer
 from list.models import ShoppingList
 
 
 class ShoppingListSerializer(serializers.ModelSerializer):
-    items = ItemSerializer(source='item_set', many=True, read_only=True)
-    created_at = serializers.DateTimeField(format="%d/%m/%Y %H:%M:%S")
+    items = ItemWithoutListSerializer(source='item_set', many=True, read_only=True)
+    created_at = serializers.DateTimeField(format="%d/%m/%Y %H:%M:%S", required=False)
 
     class Meta:
         model = ShoppingList
@@ -16,3 +16,4 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 class ShoppingListViewSet(viewsets.ModelViewSet):
     queryset = ShoppingList.objects.all().prefetch_related('item_set')
     serializer_class = ShoppingListSerializer
+
