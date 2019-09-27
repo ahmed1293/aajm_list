@@ -32,7 +32,7 @@ class Tile extends React.Component {
 class Table extends React.Component {
     render() {
         const items = this.props.items;
-        return <table className="table is-striped">
+        return <table className="table is-striped is-narrow">
             <thead>
                 <tr>
                     {Object.entries(items[0]).map(h => <th>{h[0]}</th>)}
