@@ -1,6 +1,5 @@
 import React from "react";
 import key from "weak-key";
-import "bulma/css/bulma.css";
 
 
 class Tiles extends React.Component {
