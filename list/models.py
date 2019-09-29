@@ -19,6 +19,7 @@ class Item(models.Model):
     list = models.ForeignKey('ShoppingList', on_delete=models.CASCADE)
     added_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, null=True)
     added_at = models.DateTimeField(auto_now_add=True)
+    is_checked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

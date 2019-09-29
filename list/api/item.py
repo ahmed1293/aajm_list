@@ -8,13 +8,13 @@ class ItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ['name', 'quantity', 'list', 'added_by', 'added_at']
+        fields = ['id', 'name', 'quantity', 'list', 'added_by', 'added_at', 'is_checked']
 
 
 class ItemWithoutListSerializer(ItemSerializer):
     class Meta:
         model = Item
-        fields = ['name', 'quantity', 'added_by', 'added_at']
+        fields = ['id', 'name', 'quantity', 'added_by', 'added_at', 'is_checked']
 
 
 class ItemViewSet(viewsets.ModelViewSet):
