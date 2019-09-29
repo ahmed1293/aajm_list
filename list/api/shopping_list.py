@@ -14,6 +14,6 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
-    queryset = ShoppingList.objects.all().prefetch_related('item_set')
+    queryset = ShoppingList.objects.all().prefetch_related('item_set').order_by('-created_at')
     serializer_class = ShoppingListSerializer
 
