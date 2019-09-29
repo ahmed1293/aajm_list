@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 
-class DataProvider extends Component {
+class ListsProvider extends Component {
 
   state = {
       data: [],
@@ -26,4 +26,4 @@ class DataProvider extends Component {
   }
 }
 
-export default DataProvider;
+export default ListsProvider;

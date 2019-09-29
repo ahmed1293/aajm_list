@@ -66,16 +66,17 @@ def test_put_response(api_client, admin_user, item_banana, shopping_list):
 
 
 def test_patch_response(api_client, admin_user, item_banana, shopping_list):
+    previous_value = item_banana.is_checked
     response = api_client.patch(
         path=f'{reverse("api:item-list")}{item_banana.pk}/',
         data={
-            'name': 'apple',
+            'is_checked': not previous_value,
         }
     )
 
     assert response.status_code == 200
     item_banana.refresh_from_db()
-    assert item_banana.name == 'apple'
+    assert item_banana.is_checked is not previous_value
 
 
 def test_delete_response(api_client, admin_user, item_banana, shopping_list):

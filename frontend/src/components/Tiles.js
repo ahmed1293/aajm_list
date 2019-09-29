@@ -1,5 +1,6 @@
 import React from "react";
 import key from "weak-key";
+import Item from "./Item";
 
 
 class Tiles extends React.Component {
@@ -38,21 +39,20 @@ class Table extends React.Component {
            return <table className="table is-striped is-narrow">
             <thead>
                 <tr>
-                    {Object.entries(items[0]).map(h => <th key={key(h)}>{h[0]}</th>)}
+                    <th>name</th>
+                    <th>quantity</th>
+                    <th>who</th>
+                    <th>when</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                {items.map(item => (
-                    <tr key={key(item)}>
-                        {Object.entries(item).map(field => <td key={key(field)}>{field[1]}</td>)}
-                    </tr>
-                ))}
+                {items.map(item => <Item key={item['id']} item={item} />)}
             </tbody>
         </table>;
         }
         return null;
     }
 }
-
 
 export default Tiles;
