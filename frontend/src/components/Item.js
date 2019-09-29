@@ -8,7 +8,7 @@ class Item extends React.Component {
 
     constructor(props) {
         super(props);
-        this.id = props.item['id']
+        this.id = props.item['id'];
         this.checkItem = this.checkItem.bind(this);
         this.state = {
             checked: props.item['is_checked']
@@ -17,7 +17,7 @@ class Item extends React.Component {
 
     checkItem() {
         const newState = !this.state.checked;
-        this.setState({checked: newState})
+        this.setState({checked: newState});
 
         fetch('/api/items/' + this.id + '/', {
             method: 'PATCH',
@@ -28,7 +28,11 @@ class Item extends React.Component {
             body: JSON.stringify({
                 "is_checked": newState
             })
-        }).catch(err => console.error(err))
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            this.props.updateTable(data);
+        }).catch(err => console.error(err));
     }
 
     render() {
