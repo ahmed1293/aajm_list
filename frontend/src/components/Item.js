@@ -37,7 +37,7 @@ class Item extends React.Component {
 
     render() {
         const item = this.props.item;
-        return <tr className={this.state.checked ? "is-checked":null}>
+        return <tr className={this.state.checked ? "line-through":null}>
             <td>{item['name']}</td>
             <td>{item['quantity']}</td>
             <td>{item['added_by']}</td>
