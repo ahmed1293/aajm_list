@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "test": "jest"
+    "test": "jest",
+    "testCov": "jest --collectCoverage"
   },
   "repository": {
     "type": "git",
