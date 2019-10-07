@@ -6,16 +6,27 @@ import Cookies from "js-cookie";
 class Tiles extends React.Component {
     constructor(props) {
         super(props);
+        this.update = this.update.bind(this);
         this.state = {
             data: this.props.data
         };
+    }
+
+    update() {
+        return fetch('api/shopping-lists/'
+        ).then(
+            response => {
+                return response.json();
+        }).then(
+            data => this.setState({ data: data })
+        );
     }
 
     render() {
         const lists = this.state.data;
 
         return <div>
-            <NewListButton/>
+            <NewListButton updateLists={this.update}/>
             <section className="section">
                 <div className="container">
                     <div className="tile is-ancestor">
@@ -47,10 +58,8 @@ class NewListButton extends React.Component {
                 "name": "TEST", // TODO: make editable
                 "created_by": 1, // TODO: get from request
             })
-        }).then(response => {
-            return response.json();
-        }).then(data => {
-            // TODO Update tiles
+        }).then(() => {
+            this.props.updateLists();
         }).catch(err => console.error(err));  // TODO: handle errors
     }
 
