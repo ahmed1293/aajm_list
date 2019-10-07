@@ -19,7 +19,7 @@ class Item extends React.Component {
         const newState = !this.state.checked;
         this.setState({checked: newState});
 
-        fetch('/api/items/' + this.id + '/', {
+        return fetch('/api/items/' + this.id + '/', {
             method: 'PATCH',
             headers: {
               'X-CSRFToken': Cookies.get("csrftoken"),
@@ -32,12 +32,12 @@ class Item extends React.Component {
             return response.json();
         }).then(data => {
             this.props.updateTable(data);
-        }).catch(err => console.error(err));
+        }).catch(err => console.error(err));  // TODO: handle errors
     }
 
     render() {
         const item = this.props.item;
-        return <tr className={this.state.checked ? "is-checked":null}>
+        return <tr className={this.state.checked ? "line-through":null}>
             <td>{item['name']}</td>
             <td>{item['quantity']}</td>
             <td>{item['added_by']}</td>
