@@ -1,7 +1,7 @@
-import {render} from "@testing-library/react";
+import {fireEvent, render, waitForDomChange} from "@testing-library/react";
 import Table from "../components/Table";
 import React from "react";
-import {clickThenFlush, getMockPatchResponse, itemList} from "./testUtil";
+import {getMockPatchResponse, itemList} from "./testUtil";
 
 
 describe('Table rendering', () => {
@@ -67,7 +67,8 @@ describe('Table sorting', () => {
             container, 3, 'milk', '10L', '1', '04/01/2018 21:03:59'
         );
 
-        await clickThenFlush(firstButton);
+        fireEvent.click(firstButton);
+        await waitForDomChange({container});
 
         const newFirstRow = container.getElementsByTagName('tr')[1];
         const newSecondRow = container.getElementsByTagName('tr')[2];
@@ -104,13 +105,16 @@ describe('Table sorting', () => {
         const {container} = render(<Table items={itemList()} />);
 
         // check all items
-        await clickThenFlush(container.getElementsByTagName('svg')[0]);
-        await clickThenFlush(container.getElementsByTagName('svg')[0]);
-        await clickThenFlush(container.getElementsByTagName('svg')[0]);
+        fireEvent.click(container.getElementsByTagName('svg')[0]);
+        fireEvent.click(container.getElementsByTagName('svg')[0]);
+        fireEvent.click(container.getElementsByTagName('svg')[0]);
+        await waitForDomChange({container});
 
         const rowBeingUnchecked = container.getElementsByTagName('tr')[3];
         const uncheckButton = rowBeingUnchecked.getElementsByTagName('svg')[0];
-        await clickThenFlush(uncheckButton);
+
+        fireEvent.click(uncheckButton);
+        await waitForDomChange({container});
 
         const newFirstRow = container.getElementsByTagName('tr')[1];
 

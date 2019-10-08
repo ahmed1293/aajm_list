@@ -1,11 +1,3 @@
-import {fireEvent} from "@testing-library/dom";
-
-
-async function clickThenFlush(element) {
-    fireEvent.click(element);
-    const flushPromises = () => new Promise(setImmediate); // TODO: is this bad?
-    await flushPromises();
-}
 
 function getMockPatchResponse() {
     return Promise.resolve({
@@ -102,4 +94,4 @@ function shoppingLists() {
     ]
 }
 
-export {clickThenFlush, getMockPatchResponse, itemList, shoppingLists}
+export {getMockPatchResponse, itemList, shoppingLists}

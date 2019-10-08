@@ -1,7 +1,7 @@
 import React from 'react'
-import {render} from '@testing-library/react'
+import {fireEvent, render, waitForElement, getAllByText, waitForDomChange} from '@testing-library/react'
 import Item from "../components/Item";
-import {clickThenFlush, getMockPatchResponse} from "./testUtil";
+import {getMockPatchResponse} from "./testUtil";
 
 
 describe('Icons', () => {test.each`
@@ -52,13 +52,14 @@ describe('Checking an item', () => {
   });
 
 
-  test('Database PATCH after click',  async () => {
+  test('Database PATCH after click',   () => {
     const {container} = render(
       <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
     );
     const button = container.getElementsByTagName('svg')[0];
 
-    await clickThenFlush(button);
+    fireEvent.click(button);
+
     expect(mockFetch.mock.calls.length).toBe(1);
     expect(mockFetch.mock.calls[0][0]).toBe('/api/items/'+testItem.id+'/');
     expect(mockFetch.mock.calls[0][1].method).toBe('PATCH');
@@ -68,7 +69,7 @@ describe('Checking an item', () => {
   });
 
 
-  test('Strikethrough after click', async () => {
+  test('Strikethrough after click', () => {
     const {container} = render(
       <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
     );
@@ -76,7 +77,7 @@ describe('Checking an item', () => {
     const button = container.getElementsByTagName('svg')[0];
 
     expect(rowClassList.contains('line-through')).toBeFalsy();
-    await clickThenFlush(button);
+    fireEvent.click(button);
     expect(rowClassList.contains('line-through')).toBeTruthy();
   });
 
@@ -88,7 +89,10 @@ describe('Checking an item', () => {
     );
     const button = container.getElementsByTagName('svg')[0];
 
-    await clickThenFlush(button);
+    fireEvent.click(button);
+    const flushPromises = () => new Promise(setImmediate); // TODO: is this bad?
+    await flushPromises();
+
     expect(mockUpdateTable.mock.calls.length).toBe(1);
   });
 
