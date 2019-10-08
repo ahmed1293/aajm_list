@@ -18,7 +18,7 @@ class NewListButton extends React.Component {
             }
         }).then(() => {
             this.props.updateLists();
-        });  // TODO: handle errors
+        });
     }
 
     render() {

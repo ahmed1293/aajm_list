@@ -18,6 +18,7 @@ def test_get_detail_response(api_client, shopping_list, item_banana):
     assert response.status_code == 200
 
     data = response.json()
+    assert data['id'] == shopping_list.id
     assert data['name'] == shopping_list.name
     assert data['created_by'] == shopping_list.created_by.pk
     assert ItemWithoutListSerializer(item_banana).data in data['items']

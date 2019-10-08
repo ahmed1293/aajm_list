@@ -10,7 +10,7 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingList
-        fields = ['name', 'created_by', 'created_at', 'items']
+        fields = ['id', 'name', 'created_by', 'created_at', 'items']
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):
