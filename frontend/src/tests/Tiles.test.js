@@ -1,7 +1,7 @@
 import Tiles from "../components/Tiles";
 import {render, waitForDomChange} from '@testing-library/react'
 import React from "react";
-import {shoppingLists} from "./testUtil";
+import {getMockAllListsResponse, shoppingLists} from "./testUtil";
 
 
 describe('Tiles rendering', () => {
@@ -30,11 +30,7 @@ describe('Tiles rendering', () => {
 
     test('Tiles load if fetch successful', async() => {
         global.fetch = jest.fn().mockReturnValue(
-            Promise.resolve({
-                ok: true,
-                status: 200,
-                json: () => shoppingLists()
-            })
+            getMockAllListsResponse()
         );
         const {container} = await render(<Tiles/>);
 

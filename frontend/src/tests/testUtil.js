@@ -15,6 +15,14 @@ function getMockPatchResponse() {
     })
 }
 
+function getMockAllListsResponse() {
+    return Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => shoppingLists()
+    })
+}
+
 function itemList() {
     return [
         {
@@ -94,4 +102,4 @@ function shoppingLists() {
     ]
 }
 
-export {getMockPatchResponse, itemList, shoppingLists}
+export {getMockPatchResponse, getMockAllListsResponse, itemList, shoppingLists}
