@@ -1,5 +1,4 @@
 import React from "react";
-import Cookies from "js-cookie";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faUndo} from "@fortawesome/free-solid-svg-icons";
 import {fetchDjango} from "../util";

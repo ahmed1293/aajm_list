@@ -1,7 +1,7 @@
 import React from "react";
 import key from "weak-key";
-import Table from "./Table";
 import NewListButton from "./buttons/NewList";
+import List from "./List";
 
 class Tiles extends React.Component {
     constructor(props) {
@@ -41,7 +41,7 @@ class Tiles extends React.Component {
                     <div className="container">
                         <div className="tile is-ancestor">
                             <div className="tile flex-wrap">
-                                {lists.map(list => <Tile key={key(list)} list={list}/>)}
+                                {lists.map(list => <List key={key(list)} list={list} updateLists={this.update}/>)}
                             </div>
                         </div>
                     </div>
@@ -49,20 +49,6 @@ class Tiles extends React.Component {
             </div>
         }
         return <p>{this.state.placeholder}</p>;
-    }
-}
-
-
-class Tile extends React.Component {
-    render() {
-        const list = this.props.list;
-        return <div className="tile is-parent is-vertical box is-4">
-            <article className="tile is-child is-primary">
-                <p className="title">{list['name']}</p>
-                <p className="subtitle">{list['created_at']}</p>
-                <Table items={list['items']}/>
-            </article>
-        </div>;
     }
 }
 

@@ -31,7 +31,7 @@ test('New list created after click', async () => {
         .mockReturnValueOnce( // post after click
             Promise.resolve({
                 ok: true,
-                status: 200,
+                status: 201,
             })
         )
         .mockReturnValueOnce( // response after new list
