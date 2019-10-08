@@ -1,7 +1,7 @@
 import {render} from "@testing-library/react";
 import Table from "../components/Table";
 import React from "react";
-import {clickThenFlush, getMockPatchResponse, itemList} from "./util";
+import {clickThenFlush, getMockPatchResponse, itemList} from "./testUtil";
 
 
 describe('Table rendering', () => {

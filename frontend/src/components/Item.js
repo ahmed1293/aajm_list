@@ -2,6 +2,7 @@ import React from "react";
 import Cookies from "js-cookie";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faUndo} from "@fortawesome/free-solid-svg-icons";
+import {fetchDjango} from "../util";
 
 
 class Item extends React.Component {
@@ -19,20 +20,16 @@ class Item extends React.Component {
         const newState = !this.state.checked;
         this.setState({checked: newState});
 
-        return fetch('/api/items/' + this.id + '/', {
+        return fetchDjango('/api/items/' + this.id + '/', {
             method: 'PATCH',
-            headers: {
-              'X-CSRFToken': Cookies.get("csrftoken"),
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+            body: {
                 "is_checked": newState
-            })
+            }
         }).then(response => {
             return response.json();
         }).then(data => {
             this.props.updateTable(data);
-        }).catch(err => console.error(err));  // TODO: handle errors
+        }); // TODO: handle errors
     }
 
     render() {

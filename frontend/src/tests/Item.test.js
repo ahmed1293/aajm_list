@@ -1,7 +1,7 @@
 import React from 'react'
 import {render} from '@testing-library/react'
 import Item from "../components/Item";
-import {clickThenFlush, getMockPatchResponse} from "./util";
+import {clickThenFlush, getMockPatchResponse} from "./testUtil";
 
 
 describe('Icons', () => {test.each`

@@ -1,7 +1,7 @@
 import React from "react";
 import key from "weak-key";
 import Table from "./Table";
-import Cookies from "js-cookie";
+import {fetchDjango} from "../util";
 
 class Tiles extends React.Component {
     constructor(props) {
@@ -61,19 +61,15 @@ class NewListButton extends React.Component {
     }
 
     createList() {
-        return fetch('/api/shopping-lists/', {
+        return fetchDjango('/api/shopping-lists/', {
             method: 'POST',
-            headers: {
-              'X-CSRFToken': Cookies.get("csrftoken"),
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+            body: {
                 "name": "TEST", // TODO: make editable
                 "created_by": 1, // TODO: get from request
-            })
+            }
         }).then(() => {
             this.props.updateLists();
-        }).catch(err => console.error(err));  // TODO: handle errors
+        });  // TODO: handle errors
     }
 
     render() {
