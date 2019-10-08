@@ -1,19 +1,54 @@
 import React from "react";
 import key from "weak-key";
 import Table from "./Table";
+import NewListButton from "./buttons/NewList";
 
 class Tiles extends React.Component {
-    render() {
-        const noOfLists = this.props.data.length;
+    constructor(props) {
+        super(props);
+        this.update = this.update.bind(this);
 
-        if (noOfLists === 0) {
-            return <p>Nothing to show</p>;  // TODO: add list button
+        this.state = {
+            data: [],
+            loaded: false,
+            placeholder: 'Loading...'
+        };
+    }
+
+    componentDidMount() {
+        this.update();
+    }
+
+    async update() {
+        let response = await fetch('api/shopping-lists/');
+
+        if (response.status !== 200) {
+            this.setState({ placeholder: "Something went wrong" });
         }
-        return <div className="tile is-ancestor">
-            <div className="tile flex-wrap">
-                {this.props.data.map(list => <Tile key={key(list)} list={list}/>)}
+        else {
+            let data = await response.json();
+            this.setState({ data: data, loaded: true });
+        }
+    }
+
+    render() {
+        const lists = this.state.data;
+
+        if (this.state.loaded) {
+            return <div>
+                <NewListButton updateLists={this.update}/>
+                <section className="section">
+                    <div className="container">
+                        <div className="tile is-ancestor">
+                            <div className="tile flex-wrap">
+                                {lists.map(list => <Tile key={key(list)} list={list}/>)}
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </div>;
+        }
+        return <p>{this.state.placeholder}</p>;
     }
 }
 
@@ -21,7 +56,7 @@ class Tiles extends React.Component {
 class Tile extends React.Component {
     render() {
         const list = this.props.list;
-        return <div className="tile is-parent is-vertical">
+        return <div className="tile is-parent is-vertical box is-4">
             <article className="tile is-child is-primary">
                 <p className="title">{list['name']}</p>
                 <p className="subtitle">{list['created_at']}</p>
