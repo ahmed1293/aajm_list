@@ -19,37 +19,36 @@ class Tiles extends React.Component {
         this.update();
     }
 
-    update() {
-        fetch('api/shopping-lists/')
-            .then(response => {
-                if (response.status !== 200) {
-                    return this.setState({ placeholder: "Something went wrong" });
-                }
-                return response.json();
-            })
-            .then(data =>
-                this.setState({ data: data, loaded: true })
-            );
+    async update() {
+        let response = await fetch('api/shopping-lists/');
+
+        if (response.status !== 200) {
+            this.setState({ placeholder: "Something went wrong" });
+        }
+        else {
+            let data = await response.json();
+            this.setState({ data: data, loaded: true });
+        }
     }
 
     render() {
         const lists = this.state.data;
 
-        if (!this.state.loaded) {
-            return <p>{this.state.placeholder}</p>
-        }
-        return <div>
-            <NewListButton updateLists={this.update}/>
-            <section className="section">
-                <div className="container">
-                    <div className="tile is-ancestor">
-                        <div className="tile flex-wrap">
-                            {lists.map(list => <Tile key={key(list)} list={list}/>)}
+        if (this.state.loaded) {
+            return <div>
+                <NewListButton updateLists={this.update}/>
+                <section className="section">
+                    <div className="container">
+                        <div className="tile is-ancestor">
+                            <div className="tile flex-wrap">
+                                {lists.map(list => <Tile key={key(list)} list={list}/>)}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
+                </section>
+            </div>
+        }
+        return <p>{this.state.placeholder}</p>;
     }
 }
 
