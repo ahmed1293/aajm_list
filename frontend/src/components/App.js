@@ -1,12 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ListsProvider from "./ListsProvider";
 import Tiles from "./Tiles";
 
 
 const App = () => (
-  <ListsProvider endpoint="api/shopping-lists/"
-                 render={data => <Tiles data={data} />} />
+  <Tiles/>
 );
 
 const wrapper = document.getElementById("app");
