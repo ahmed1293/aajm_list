@@ -17,7 +17,7 @@ describe('Table rendering', () => {
        const table = container.getElementsByTagName('table');
        const rows = container.getElementsByTagName('tr');
        expect(table.length).toBe(1);
-       expect(rows.length).toBe(4);
+       expect(rows.length).toBe(5); // 1 row is the addItem button
     })
 
 });
@@ -48,31 +48,31 @@ describe('Table sorting', () => {
         items[0]['is_checked'] = true;
         const {container} = render(<Table items={items} />);
 
-        checkRowValues(container, 3,'onion', '1g', '1', '29/09/2019 19:03:59');
+        checkRowValues(container, 4,'onion', '1g', '1', '29/09/2019 19:03:59');
     });
 
     test('Items move to the bottom after being checked', async () => {
         const items = itemList();
 
         const {container} = render(<Table items={items} />);
-        const firstButton = container.getElementsByTagName('svg')[0];
+        const firstButton = container.getElementsByClassName('fa-check')[0];
 
         const firstRow = checkRowValues(
-            container, 1, 'onion', '1g', '1', '29/09/2019 19:03:59'
+            container, 2, 'onion', '1g', '1', '29/09/2019 19:03:59'
         );
         const secondRow = checkRowValues(
-            container, 2, 'banana', '100kg', '1', '02/01/2010 20:03:59'
+            container, 3, 'banana', '100kg', '1', '02/01/2010 20:03:59'
         );
         const thirdRow = checkRowValues(
-            container, 3, 'milk', '10L', '1', '04/01/2018 21:03:59'
+            container, 4, 'milk', '10L', '1', '04/01/2018 21:03:59'
         );
 
         fireEvent.click(firstButton);
         await waitForDomChange({container});
 
-        const newFirstRow = container.getElementsByTagName('tr')[1];
-        const newSecondRow = container.getElementsByTagName('tr')[2];
-        const newThirdRow = container.getElementsByTagName('tr')[3];
+        const newFirstRow = container.getElementsByTagName('tr')[2];
+        const newSecondRow = container.getElementsByTagName('tr')[3];
+        const newThirdRow = container.getElementsByTagName('tr')[4];
 
         expect(newFirstRow).toBe(secondRow);
         expect(newSecondRow).toBe(thirdRow);
@@ -105,18 +105,18 @@ describe('Table sorting', () => {
         const {container} = render(<Table items={itemList()} />);
 
         // check all items
-        fireEvent.click(container.getElementsByTagName('svg')[0]);
-        fireEvent.click(container.getElementsByTagName('svg')[0]);
-        fireEvent.click(container.getElementsByTagName('svg')[0]);
+        fireEvent.click(container.getElementsByClassName('fa-check')[0]);
+        fireEvent.click(container.getElementsByClassName('fa-check')[0]);
+        fireEvent.click(container.getElementsByClassName('fa-check')[0]);
         await waitForDomChange({container});
 
-        const rowBeingUnchecked = container.getElementsByTagName('tr')[3];
+        const rowBeingUnchecked = container.getElementsByTagName('tr')[4];
         const uncheckButton = rowBeingUnchecked.getElementsByTagName('svg')[0];
 
         fireEvent.click(uncheckButton);
         await waitForDomChange({container});
 
-        const newFirstRow = container.getElementsByTagName('tr')[1];
+        const newFirstRow = container.getElementsByTagName('tr')[2];
 
         expect(newFirstRow).toBe(rowBeingUnchecked);
     })

@@ -3,24 +3,23 @@ import Item from "./Item";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {fetchDjango} from "../util";
+import AddItemForm from "./forms/AddItem";
 
 class Table extends React.Component {
     constructor(props) {
         super(props);
-        this.updateAndSort = this.updateAndSort.bind(this);
-        this.toggleForm = this.toggleForm.bind(this);
+        this.sort = this.sort.bind(this);
         this.addItem = this.addItem.bind(this);
         this.state = {
-            data: this.props.items,
-            addingItem: false
+            data: this.props.items
         };
     }
 
     componentDidMount() {
-        this.updateAndSort();
+        this.sort();
     }
 
-    updateAndSort(updatedItem) {
+    sort(updatedItem) {
         let data = this.state.data;
 
         if (updatedItem) {
@@ -36,35 +35,9 @@ class Table extends React.Component {
         this.setState({data: data});
     }
 
-    toggleForm() {
-        this.setState({addingItem: !this.state.addingItem});
-    }
-
-    async addItem(event) {
-        event.preventDefault();
-        const data = new FormData(event.target);
-        // TODO: validate data
-
-        let response = await fetchDjango('/api/items/', {
-            method: 'POST',
-            body: {
-                "name": data.get('item'),
-                "quantity": data.get('quantity'),
-                "list": this.props.listId,
-                "added_by": 1,
-                "is_checked": false
-            }
-        });
-
-        if (response.status !== 201) {
-            // TODO: do something
-        }
-        else {
-            let newItem = await response.json();
-            this.state.data.push(newItem);
-            this.toggleForm();
-            this.updateAndSort();
-        }
+    addItem(newItem) {
+        this.state.data.push(newItem);
+        this.sort();
     }
 
     render() {
@@ -84,44 +57,12 @@ class Table extends React.Component {
                 <tbody>
                     <tr>
                        <td colSpan={5} className="has-text-centered">
-                           <a className="button is-small">
-                                <FontAwesomeIcon className="has-text-info" icon={faPlus} onClick={this.toggleForm}/>
-                            </a>
+                           <AddItemForm listId={this.props.listId} updateItemList={this.addItem}></AddItemForm>
                        </td>
                     </tr>
-                    {items.map(item => <Item key={item['id']} item={item} updateTable={this.updateAndSort} />)}
+                    {items.map(item => <Item key={item['id']} item={item} updateTable={this.sort} />)}
                 </tbody>
             </table>
-           <div className={this.state.addingItem ? "modal is-active":"modal"}>
-               <div className="modal-background" onClick={this.toggleForm}></div>
-               <div className="modal-content">
-                   <article className="message is-dark">
-                       <div className="message-header">
-                           <p>Add Item</p>
-                       </div>
-                       <div className="message-body">
-                           <form onSubmit={this.addItem}>
-                               <div className="field">
-                                   <label className="label">Item</label>
-                                   <div className="control">
-                                       <input className="input" name="item" type="text" placeholder="e.g. Chicken"/>
-                                   </div>
-                               </div>
-                               <div className="field">
-                                   <label className="label">Quantity</label>
-                                   <div className="control">
-                                       <input className="input" name="quantity" type="text" placeholder="e.g. 81"/>
-                                   </div>
-                               </div>
-                               <div className="control">
-                                   <button className="button is-dark">Add</button>
-                               </div>
-                           </form>
-                       </div>
-                   </article>
-               </div>
-               <button className="modal-close is-large" aria-label="close" onClick={this.toggleForm}></button>
-           </div>
            </div>;
         }
         return null;
