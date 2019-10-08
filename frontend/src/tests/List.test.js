@@ -34,7 +34,7 @@ test('Clicking delete removes list from page', async () => {
     const listTiles = container.getElementsByClassName('is-parent');
     expect(listTiles.length).toBe(shoppingLists().length);
 
-    const deleteButton = container.getElementsByTagName('svg')[0];
+    const deleteButton = container.getElementsByClassName('fa-times')[0].parentElement;
     fireEvent.click(deleteButton);
 
     await waitForElementToBeRemoved(() => [

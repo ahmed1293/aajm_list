@@ -39,11 +39,11 @@ class Item extends React.Component {
             <td>{item['added_by']}</td>
             <td>{item['added_at']}</td>
             <td>
-                <a className="button is-small">
+                <a className="button is-small" onClick={this.checkItem}>
                     <FontAwesomeIcon
                         className={this.state.checked ? "icon has-text-info":"icon has-text-primary"}
                         icon={this.state.checked ? faUndo:faCheck}
-                        onClick={this.checkItem}/>
+                    />
                 </a>
             </td>
         </tr>

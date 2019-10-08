@@ -30,8 +30,8 @@ class List extends React.Component {
                         <p className="title">{list['name']}</p>
                     </div>
                     <div className="level-right">
-                        <a className="button">
-                            <FontAwesomeIcon className="has-text-danger" icon={faTimes} onClick={this.delete}/>
+                        <a className="button" onClick={this.delete}>
+                            <FontAwesomeIcon className="has-text-danger" icon={faTimes}/>
                         </a>
                     </div>
                 </nav>
