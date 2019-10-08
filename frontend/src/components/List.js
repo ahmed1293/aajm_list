@@ -36,7 +36,7 @@ class List extends React.Component {
                     </div>
                 </nav>
                 <p className="subtitle">{list['created_at']}</p>
-                <Table items={list['items']}/>
+                <Table items={list['items']} listId={list['id']}/>
             </article>
         </div>;
     }
