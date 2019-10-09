@@ -1,18 +1,21 @@
 import React from "react";
-import {fetchDjango} from "../../util";
+import {fetchDjango, shoppingListsUrl} from "../../util";
 import Modal from "../common/Modal";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 
 
-class AddListForm extends React.Component {
+class ListForm extends React.Component {
 
     constructor(props) {
         super(props);
         this.toggleForm = this.toggleForm.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.activateFormButton = this.activateFormButton.bind(this);
         this.state = {
             activeModal: false,
-            name: '',
+            name: this.props.name,
             nameInvalid: false
         }
     }
@@ -22,7 +25,8 @@ class AddListForm extends React.Component {
     }
 
     handleChange(event) {
-        this.setState({name: event.target.value});
+        const value = event.target.value;
+        this.setState({name: value});
     }
 
     async handleSubmit(event) {
@@ -34,18 +38,33 @@ class AddListForm extends React.Component {
             return null;
         }
 
-        let response = await fetchDjango('/api/shopping-lists/', {
-            method: 'POST',
-            body: {
-                "name": this.state.name,
-                "created_by": 1, // TODO: get from request
-            }
+        let response = await fetchDjango(
+            shoppingListsUrl(this.props.id), {
+                method: this.props.id ? 'PATCH':'POST',
+                body: {
+                    "name": this.state.name,
+                    "created_by": 1, // TODO: get from request
+                }
         });
 
-        if (response.status === 201) {
-            this.props.updateLists();
-            this.setState({name: '', nameInvalid: false});
+        if (response.ok) {
+            this.props.updateParent(this.state.name);
             this.toggleForm();
+        }
+    }
+
+    activateFormButton() {
+        if (!this.props.id) {
+            return <div className="container has-text-centered">
+                <a className="button is-dark is-large is-rounded" onClick={this.toggleForm}>
+                    New list
+                </a>
+            </div>
+        }
+        else {
+            return <a className="button" onClick={this.toggleForm}>
+                <FontAwesomeIcon className="has-text-warning" icon={faPencilAlt}/>
+            </a>
         }
     }
 
@@ -53,7 +72,7 @@ class AddListForm extends React.Component {
 
         const form = <article className="message is-dark">
             <div className="message-header">
-               <p>New List</p>
+               <p>List</p>
            </div>
            <div className="message-body">
                <form onSubmit={this.handleSubmit}>
@@ -63,32 +82,28 @@ class AddListForm extends React.Component {
                            <input
                                className={this.state.nameInvalid ? "input is-danger":"input"}
                                name="name" type="text"
-                               value={this.state.name}
+                               value={this.state.name || ''}
                                onChange={this.handleChange}
                                placeholder="e.g. Food shop"
                            />
                        </div>
                    </div>
                    <div className="control">
-                       <button className="button is-dark">Add</button>
+                       <button className="button is-dark">Save</button>
                    </div>
                </form>
            </div>
         </article>;
 
-        return <section className="section">
-            <div className="container has-text-centered">
-                <a className="button is-dark is-large is-rounded" onClick={this.toggleForm}>
-                    New List
-                </a>
-            </div>
+        return <div>
+            {this.activateFormButton()}
             <Modal
                 modalContent={form}
                 active={this.state.activeModal}
                 toggle={this.toggleForm}
             />
-        </section>
+        </div>
     }
 }
 
-export default AddListForm
+export default ListForm

@@ -111,7 +111,7 @@ describe('Table sorting', () => {
         await waitForDomChange({container});
 
         const rowBeingUnchecked = container.getElementsByTagName('tr')[4];
-        const uncheckButton = rowBeingUnchecked.getElementsByTagName('svg')[0];
+        const uncheckButton = rowBeingUnchecked.getElementsByClassName('fa-undo')[0].parentElement;
 
         fireEvent.click(uncheckButton);
         await waitForDomChange({container});

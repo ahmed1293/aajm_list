@@ -1,9 +1,6 @@
 import React from "react";
 import Item from "./Item";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
-import {fetchDjango} from "../util";
-import AddItemForm from "./forms/AddItem";
+import ItemForm from "./forms/ItemForm";
 
 class Table extends React.Component {
     constructor(props) {
@@ -51,12 +48,13 @@ class Table extends React.Component {
                     <th>who</th>
                     <th>when</th>
                     <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                   <td colSpan={5} className="has-text-centered">
-                       <AddItemForm listId={this.props.listId} updateItemList={this.addItem}></AddItemForm>
+                   <td colSpan={6} className="has-text-centered">
+                       <ItemForm listId={this.props.listId} updateParent={this.addItem}></ItemForm>
                    </td>
                 </tr>
                 {items.map(item => <Item key={item['id']} item={item} updateTable={this.sort} />)}

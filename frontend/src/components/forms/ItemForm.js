@@ -1,11 +1,11 @@
 import React from "react";
-import {fetchDjango} from "../../util";
+import {fetchDjango, itemsUrl} from "../../util";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faPencilAlt, faPlus} from "@fortawesome/free-solid-svg-icons";
 import Modal from "../common/Modal";
 
 
-class AddItemForm extends React.Component {
+class ItemForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -13,10 +13,11 @@ class AddItemForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validateForm = this.validateForm.bind(this);
+        this.activateFormButton = this.activateFormButton.bind(this);
         this.state = {
             activeModal: false,
-            item: '',
-            quantity: '',
+            item: this.props.item,
+            quantity: this.props.quantity,
             itemInvalid: false,
             quantityInvalid: false
         };
@@ -41,20 +42,23 @@ class AddItemForm extends React.Component {
             return null;
         }
 
-        let response = await fetchDjango('/api/items/', {
-            method: 'POST',
-            body: {
-                "name": this.state.item,
-                "quantity": this.state.quantity,
-                "list": this.props.listId,
-                "added_by": 1,
-                "is_checked": false
-            }
+        let response = await fetchDjango(
+            itemsUrl(this.props.id), {
+                method: this.props.id ? 'PATCH':'POST',
+                body: this.props.id ? {
+                        "name": this.state.item,
+                        "quantity": this.state.quantity,
+                    } : {
+                        "name": this.state.item,
+                        "quantity": this.state.quantity,
+                        "list": this.props.listId,
+                        "added_by": 1,
+                        "is_checked": false
+                    }
         });
 
         let newItem = await response.json();
-        this.props.updateItemList(newItem);
-        this.setState({item: '', quantity: '', itemInvalid: false, quantityInvalid: false});
+        this.props.updateParent(newItem);
         this.toggleForm();
     }
 
@@ -73,11 +77,24 @@ class AddItemForm extends React.Component {
         return valid;
     }
 
+    activateFormButton() {
+        if (!this.props.id) {
+            return <a className="button is-small" onClick={this.toggleForm}>
+                <FontAwesomeIcon className="has-text-info" icon={faPlus}/>
+            </a>
+        }
+        else {
+            return <a className="button is-small" onClick={this.toggleForm}>
+                <FontAwesomeIcon className="icon has-text-warning" icon={faPencilAlt}/>
+            </a>
+        }
+    }
+
     render() {
 
         const form = <article className="message is-dark">
             <div className="message-header">
-               <p>Add Item</p>
+               <p>Item</p>
             </div>
             <div className="message-body">
                <form onSubmit={this.handleSubmit}>
@@ -87,7 +104,7 @@ class AddItemForm extends React.Component {
                            <input
                                className={this.state.itemInvalid ? "input is-danger":"input"}
                                name="item" type="text"
-                               value={this.state.item}
+                               value={this.state.item || ''}
                                onChange={this.handleChange}
                                placeholder="e.g. Chicken"
                            />
@@ -99,23 +116,21 @@ class AddItemForm extends React.Component {
                            <input
                                className={this.state.quantityInvalid ? "input is-danger":"input"}
                                name="quantity" type="text"
-                               value={this.state.quantity}
+                               value={this.state.quantity || ''}
                                onChange={this.handleChange}
                                placeholder="e.g. 81"
                            />
                        </div>
                    </div>
                    <div className="control">
-                       <button className="button is-dark">Add</button>
+                       <button className="button is-dark">Save</button>
                    </div>
                </form>
            </div>
         </article>;
 
         return <div>
-            <a className="button is-small" onClick={this.toggleForm}>
-                <FontAwesomeIcon className="has-text-info" icon={faPlus}/>
-            </a>
+            {this.activateFormButton()}
             <Modal
                 modalContent={form}
                 active={this.state.activeModal}
@@ -125,4 +140,4 @@ class AddItemForm extends React.Component {
     }
 }
 
-export default AddItemForm;
+export default ItemForm;

@@ -12,4 +12,22 @@ function fetchDjango(url, init) {
     });
 }
 
-export {fetchDjango}
+function shoppingListsUrl(id) {
+    if (id) {
+        return '/api/shopping-lists/' + id + '/';
+    }
+    else {
+        return '/api/shopping-lists/';
+    }
+}
+
+function itemsUrl(id) {
+    if (id) {
+        return '/api/items/' + id + '/';
+    }
+    else {
+        return '/api/items/';
+    }
+}
+
+export {fetchDjango, shoppingListsUrl, itemsUrl}
