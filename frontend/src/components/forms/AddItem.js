@@ -13,7 +13,7 @@ class AddItemForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.state = {
-            addingItem: false,
+            activeModal: false,
             item: '',
             quantity: '',
             itemInvalid: false,
@@ -22,7 +22,7 @@ class AddItemForm extends React.Component {
     }
 
     toggleForm() {
-        this.setState({addingItem: !this.state.addingItem});
+        this.setState({activeModal: !this.state.activeModal});
     }
 
     handleChange(event) {
@@ -77,7 +77,7 @@ class AddItemForm extends React.Component {
         <a className="button is-small" onClick={this.toggleForm}>
             <FontAwesomeIcon className="has-text-info" icon={faPlus}/>
         </a>
-        <div className={this.state.addingItem ? "modal is-active":"modal"}>
+        <div className={this.state.activeModal ? "modal is-active":"modal"}>
            <div className="modal-background" onClick={this.toggleForm}></div>
            <div className="modal-content">
                <article className="message is-dark">

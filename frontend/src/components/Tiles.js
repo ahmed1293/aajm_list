@@ -1,7 +1,7 @@
 import React from "react";
 import key from "weak-key";
-import NewListButton from "./buttons/NewList";
 import List from "./List";
+import AddListForm from "./forms/AddList";
 
 class Tiles extends React.Component {
     constructor(props) {
@@ -36,7 +36,7 @@ class Tiles extends React.Component {
 
         if (this.state.loaded) {
             return <div>
-                <NewListButton updateLists={this.update}/>
+                <AddListForm updateLists={this.update}/>
                 <section className="section">
                     <div className="container">
                         <div className="tile is-ancestor">
