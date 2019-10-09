@@ -2,6 +2,7 @@ import React from "react";
 import {fetchDjango} from "../../util";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import Modal from "../common/Modal";
 
 
 class AddItemForm extends React.Component {
@@ -13,7 +14,7 @@ class AddItemForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.state = {
-            addingItem: false,
+            activeModal: false,
             item: '',
             quantity: '',
             itemInvalid: false,
@@ -22,7 +23,7 @@ class AddItemForm extends React.Component {
     }
 
     toggleForm() {
-        this.setState({addingItem: !this.state.addingItem});
+        this.setState({activeModal: !this.state.activeModal});
     }
 
     handleChange(event) {
@@ -53,7 +54,7 @@ class AddItemForm extends React.Component {
 
         let newItem = await response.json();
         this.props.updateItemList(newItem);
-        this.setState({itemInvalid: false, quantityInvalid: false});
+        this.setState({item: '', quantity: '', itemInvalid: false, quantityInvalid: false});
         this.toggleForm();
     }
 
@@ -73,53 +74,54 @@ class AddItemForm extends React.Component {
     }
 
     render() {
-       return <div>
-        <a className="button is-small" onClick={this.toggleForm}>
-            <FontAwesomeIcon className="has-text-info" icon={faPlus}/>
-        </a>
-        <div className={this.state.addingItem ? "modal is-active":"modal"}>
-           <div className="modal-background" onClick={this.toggleForm}></div>
-           <div className="modal-content">
-               <article className="message is-dark">
-                   <div className="message-header">
-                       <p>Add Item</p>
+
+        const form = <article className="message is-dark">
+            <div className="message-header">
+               <p>Add Item</p>
+            </div>
+            <div className="message-body">
+               <form onSubmit={this.handleSubmit}>
+                   <div className="field">
+                       <label className="label">Item</label>
+                       <div className="control">
+                           <input
+                               className={this.state.itemInvalid ? "input is-danger":"input"}
+                               name="item" type="text"
+                               value={this.state.item}
+                               onChange={this.handleChange}
+                               placeholder="e.g. Chicken"
+                           />
+                       </div>
                    </div>
-                   <div className="message-body">
-                       <form onSubmit={this.handleSubmit}>
-                           <div className="field">
-                               <label className="label">Item</label>
-                               <div className="control">
-                                   <input
-                                       className={this.state.itemInvalid ? "input is-danger":"input"}
-                                       name="item" type="text"
-                                       value={this.state.item}
-                                       onChange={this.handleChange}
-                                       placeholder="e.g. Chicken"
-                                   />
-                               </div>
-                           </div>
-                           <div className="field">
-                               <label className="label">Quantity</label>
-                               <div className="control">
-                                   <input
-                                       className={this.state.quantityInvalid ? "input is-danger":"input"}
-                                       name="quantity" type="text"
-                                       value={this.state.quantity}
-                                       onChange={this.handleChange}
-                                       placeholder="e.g. 81"
-                                   />
-                               </div>
-                           </div>
-                           <div className="control">
-                               <button className="button is-dark">Add</button>
-                           </div>
-                       </form>
+                   <div className="field">
+                       <label className="label">Quantity</label>
+                       <div className="control">
+                           <input
+                               className={this.state.quantityInvalid ? "input is-danger":"input"}
+                               name="quantity" type="text"
+                               value={this.state.quantity}
+                               onChange={this.handleChange}
+                               placeholder="e.g. 81"
+                           />
+                       </div>
                    </div>
-               </article>
+                   <div className="control">
+                       <button className="button is-dark">Add</button>
+                   </div>
+               </form>
            </div>
-           <button className="modal-close is-large" aria-label="close" onClick={this.toggleForm}></button>
-        </div>
-       </div>;
+        </article>;
+
+        return <div>
+            <a className="button is-small" onClick={this.toggleForm}>
+                <FontAwesomeIcon className="has-text-info" icon={faPlus}/>
+            </a>
+            <Modal
+                modalContent={form}
+                active={this.state.activeModal}
+                toggle={this.toggleForm}
+            />
+        </div>;
     }
 }
 

@@ -6,10 +6,10 @@ import {getMockPatchResponse, itemList} from "./testUtil";
 
 describe('Table rendering', () => {
 
-    test('No table if no items', () => {
+    test('Add item button rendered even if not items', () => {
         const {container} = render(<Table items={[]} />);
-        const table = container.getElementsByTagName('table');
-        expect(table.length).toBe(0);
+        const addItemButton = container.getElementsByClassName('fa-plus')[0].parentElement;
+        expect(addItemButton).toBeTruthy();
     });
 
     test('Table rendered if items passed through', () => {

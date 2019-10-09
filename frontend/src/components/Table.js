@@ -11,7 +11,7 @@ class Table extends React.Component {
         this.sort = this.sort.bind(this);
         this.addItem = this.addItem.bind(this);
         this.state = {
-            data: this.props.items
+            data: this.props.items,
         };
     }
 
@@ -42,30 +42,27 @@ class Table extends React.Component {
 
     render() {
         const items = this.state.data;
-        if (items.length > 0) {
-           return <div>
+        return <div>
             <table className="table is-striped is-narrow">
                 <thead>
-                    <tr>
-                        <th>name</th>
-                        <th>quantity</th>
-                        <th>who</th>
-                        <th>when</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                       <td colSpan={5} className="has-text-centered">
-                           <AddItemForm listId={this.props.listId} updateItemList={this.addItem}></AddItemForm>
-                       </td>
-                    </tr>
-                    {items.map(item => <Item key={item['id']} item={item} updateTable={this.sort} />)}
-                </tbody>
+                <tr>
+                    <th>name</th>
+                    <th>quantity</th>
+                    <th>who</th>
+                    <th>when</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                   <td colSpan={5} className="has-text-centered">
+                       <AddItemForm listId={this.props.listId} updateItemList={this.addItem}></AddItemForm>
+                   </td>
+                </tr>
+                {items.map(item => <Item key={item['id']} item={item} updateTable={this.sort} />)}
+            </tbody>
             </table>
-           </div>;
-        }
-        return null;
+        </div>;
     }
 }
 
