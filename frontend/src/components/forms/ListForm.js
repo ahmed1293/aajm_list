@@ -57,7 +57,7 @@ class ListForm extends React.Component {
         if (!this.props.id) {
             return <div className="container has-text-centered">
                 <a className="button is-dark is-large is-rounded" onClick={this.toggleForm}>
-                    New List
+                    New list
                 </a>
             </div>
         }

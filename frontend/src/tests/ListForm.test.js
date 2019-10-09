@@ -62,7 +62,7 @@ test('Creating new list', async () => {
     const {container} = render(<Tiles/>);
 
     await wait(() => {
-        getAllByText(container, 'New List')
+        getAllByText(container, 'New list')
     });
 
     const button = container.getElementsByTagName('a')[0];
@@ -118,6 +118,9 @@ test('Modifying existing list', async () => {
 
     const form = container.getElementsByTagName('form')[1]; // first form is the create one
     const nameInput = form.getElementsByTagName('input')[0];
+
+    expect(nameInput.value).toBe(oldListName);
+
     fireEvent.change(nameInput, {target: {value: newListName}});
 
     const submitButton = form.getElementsByTagName('button')[0];

@@ -1,7 +1,7 @@
-import {getMockPatchResponse, itemList, randomInt} from "./testUtil";
+import {getMockPatchResponse, itemList} from "./testUtil";
 import {fireEvent, render, wait, getByText, waitForDomChange} from "@testing-library/react";
 import Table from "../components/Table";
-import AddItemForm from "../components/forms/AddItem";
+import ItemForm from "../components/forms/ItemForm";
 import React from "react";
 
 describe('Add item form validation', () => {
@@ -13,7 +13,7 @@ describe('Add item form validation', () => {
 
     test('Input boxes show no error on initial render', () => {
         const updateListMock = jest.fn();
-        const {container} = render(<AddItemForm listId={1} updateItemList={updateListMock} />);
+        const {container} = render(<ItemForm listId={1} updateItemList={updateListMock} />);
 
         const itemInput = container.getElementsByTagName('input')[0];
         const quantityInput = container.getElementsByTagName('input')[1];
@@ -25,7 +25,7 @@ describe('Add item form validation', () => {
 
     test('Both input boxes show error if no input at all', () => {
         const updateListMock = jest.fn();
-        const {container} = render(<AddItemForm listId={1} updateItemList={updateListMock} />);
+        const {container} = render(<ItemForm listId={1} updateItemList={updateListMock} />);
 
         const itemInput = container.getElementsByTagName('input')[0];
         const quantityInput = container.getElementsByTagName('input')[1];
@@ -39,7 +39,7 @@ describe('Add item form validation', () => {
 
     test('Individual input boxes show error if no input into them', () => {
         const updateListMock = jest.fn();
-        const {container} = render(<AddItemForm listId={1} updateItemList={updateListMock} />);
+        const {container} = render(<ItemForm listId={1} updateItemList={updateListMock} />);
 
         const itemInput = container.getElementsByTagName('input')[0];
         const quantityInput = container.getElementsByTagName('input')[1];
@@ -62,7 +62,7 @@ describe('Add item form validation', () => {
 });
 
 
-describe('Add item form submission', () => {
+describe('Creating item', () => {
 
     const newItemName = "asparagus";
     const newItemQuantity = "300kg";
@@ -161,4 +161,56 @@ describe('Add item form submission', () => {
         expect(newRowData[3].innerHTML).toBe(newItemAddedAt);
     });
 
+});
+
+
+test('Updating an existing item', async () => {
+    const itemToBeEdited = itemList()[0];
+    const nameBeforeEdit = itemToBeEdited['name'];
+    const quantityBeforeEdit = itemToBeEdited['quantity'];
+
+    const newItemName = 'NEW NAME';
+    const newItemQuantity = 'NEW QUANTITY';
+
+    global.fetch = jest.fn().mockReturnValue(
+        Promise.resolve({
+            ok: true,
+            json: () => {
+                return {
+                    "id": itemToBeEdited['id'],
+                    "name": newItemName,
+                    "quantity": newItemQuantity,
+                    "added_by": itemToBeEdited['added_by'],
+                    "added_at": itemToBeEdited['added_at'],
+                    "is_checked": itemToBeEdited['is_checked']
+                }
+            }
+        })
+    );
+
+    const {container} = render(<Table items={itemList()} />);
+    const editButton = container.getElementsByClassName('fa-pencil-alt')[0].parentElement;
+    fireEvent.click(editButton);
+
+    const form = container.getElementsByTagName('form')[1]; // first form is for item creation
+    const nameInput = form.getElementsByTagName('input')[0];
+    const quantityInput = form.getElementsByTagName('input')[1];
+
+    expect(nameInput.value).toBe(nameBeforeEdit);
+    expect(quantityInput.value).toBe(quantityBeforeEdit);
+
+    fireEvent.change(nameInput, {target: {value: newItemName}});
+    fireEvent.change(quantityInput, {target: {value: newItemQuantity}});
+
+    const submitButton = form.getElementsByTagName('button')[0];
+    fireEvent.click(submitButton);
+
+    await waitForDomChange({container});
+
+    expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy();
+
+    await wait(() => [
+        getByText(container, newItemName),
+        getByText(container, newItemQuantity)
+    ])
 });

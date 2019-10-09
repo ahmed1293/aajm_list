@@ -21,4 +21,13 @@ function shoppingListsUrl(id) {
     }
 }
 
-export {fetchDjango, shoppingListsUrl}
+function itemsUrl(id) {
+    if (id) {
+        return '/api/items/' + id + '/';
+    }
+    else {
+        return '/api/items/';
+    }
+}
+
+export {fetchDjango, shoppingListsUrl, itemsUrl}

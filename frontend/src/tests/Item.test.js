@@ -4,7 +4,7 @@ import Item from "../components/Item";
 import {getMockPatchResponse} from "./testUtil";
 
 
-describe('Icons', () => {test.each`
+describe('Item icons', () => {test.each`
     checked  | icon          | colourClass           | isCrossedThrough
     ${true}  | ${'fa-undo'}  | ${'has-text-info'}    | ${true}
     ${false} | ${'fa-check'} | ${'has-text-primary'} | ${false}`
@@ -21,7 +21,7 @@ describe('Icons', () => {test.each`
         <table><tbody><Item item={testItem} /></tbody></table>
     );
 
-    const iconClassList = container.getElementsByTagName('svg')[0].classList;
+    const iconClassList = container.getElementsByTagName('svg')[1].classList;
     const rowClassList = container.getElementsByTagName('tr')[0].classList;
 
     expect(iconClassList.contains(icon)).toBeTruthy();
@@ -56,7 +56,7 @@ describe('Checking an item', () => {
     const {container} = render(
       <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
     );
-    const button = container.getElementsByClassName('button')[0];
+    const button = container.getElementsByClassName('fa-check')[0].parentElement;
 
     fireEvent.click(button);
 
@@ -74,7 +74,7 @@ describe('Checking an item', () => {
       <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
     );
     const rowClassList = container.getElementsByTagName('tr')[0].classList;
-    const button = container.getElementsByClassName('button')[0];
+    const button = container.getElementsByClassName('fa-check')[0].parentElement;
 
     expect(rowClassList.contains('line-through')).toBeFalsy();
     fireEvent.click(button);
@@ -87,7 +87,7 @@ describe('Checking an item', () => {
     const {container} = render(
       <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
     );
-    const button = container.getElementsByClassName('button')[0];
+    const button = container.getElementsByClassName('fa-check')[0].parentElement;
 
     fireEvent.click(button);
     const flushPromises = () => new Promise(setImmediate); // TODO: is this bad?
