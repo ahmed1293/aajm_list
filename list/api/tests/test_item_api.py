@@ -19,17 +19,17 @@ def test_get_detail_response(api_client, item_banana):
     data = response.json()
     assert data['name'] == item_banana.name
     assert data['quantity'] == item_banana.quantity
-    assert data['added_by'] == item_banana.added_by.pk
+    assert data['added_by'] == item_banana.added_by.username
 
 
 def test_post_response(api_client, admin_user, shopping_list):
+    api_client.force_login(admin_user)
     response = api_client.post(
         path=reverse('api:item-list'),
         data={
             'name': 'onion',
             'quantity': '200kg',
-            'list': shopping_list.pk,
-            'added_by': admin_user.pk
+            'list': shopping_list.pk
         }
     )
 
@@ -52,8 +52,7 @@ def test_put_response(api_client, admin_user, item_banana, shopping_list):
         data={
             'name': 'chicken',
             'quantity': '7',
-            'list': other_list.pk,
-            'added_by': admin_user.pk
+            'list': other_list.pk
         }
     )
 
