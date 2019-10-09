@@ -39,7 +39,7 @@ describe('Tiles rendering', () => {
 
         await waitForDomChange({container});
 
-        expect(tiles.length).toBe(6);
+        expect(tiles.length).toBe(5);
         expect(listTiles.length).toBe(2);
     })
 

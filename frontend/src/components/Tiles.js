@@ -1,7 +1,7 @@
 import React from "react";
 import key from "weak-key";
 import List from "./List";
-import AddListForm from "./forms/AddList";
+import ListForm from "./forms/ListForm";
 
 class Tiles extends React.Component {
     constructor(props) {
@@ -36,7 +36,7 @@ class Tiles extends React.Component {
 
         if (this.state.loaded) {
             return <div>
-                <AddListForm updateLists={this.update}/>
+                <ListForm updateParent={this.update}/>
                 <section className="section">
                     <div className="container">
                         <div className="tile is-ancestor flex-wrap">

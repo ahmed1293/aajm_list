@@ -12,4 +12,13 @@ function fetchDjango(url, init) {
     });
 }
 
-export {fetchDjango}
+function shoppingListsUrl(id) {
+    if (id) {
+        return '/api/shopping-lists/' + id + '/';
+    }
+    else {
+        return '/api/shopping-lists/';
+    }
+}
+
+export {fetchDjango, shoppingListsUrl}

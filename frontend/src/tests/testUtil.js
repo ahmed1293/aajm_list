@@ -54,6 +54,7 @@ function itemList() {
 function shoppingLists() {
     return [
         {
+            "id": 1,
             "name": "tesco",
             "created_by": 2,
             "created_at": "07/10/2019 19:35:44",
@@ -77,6 +78,7 @@ function shoppingLists() {
             ]
         },
         {
+            "id": 2,
             "name": "food",
             "created_by": 1,
             "created_at": "10/10/2018 16:35:44",

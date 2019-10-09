@@ -1,11 +1,11 @@
-import {fireEvent, getAllByText, getByText, wait} from "@testing-library/dom";
+import {fireEvent, getAllByText, getByText, wait, waitForDomChange} from "@testing-library/dom";
 import {render} from "@testing-library/react";
 import React from "react";
-import AddListForm from "../components/forms/AddList";
+import ListForm from "../components/forms/ListForm";
 import {getMockAllListsResponse, shoppingLists} from "./testUtil";
 import Tiles from "../components/Tiles";
 
-describe('Add list form validation', () => {
+describe('Form validation', () => {
 
     function submitForm(container) {
         const submitButton = container.getElementsByTagName('button')[0];
@@ -13,7 +13,7 @@ describe('Add list form validation', () => {
     }
 
     test('Input boxes show no error on initial render', () => {
-        const {container} = render(<AddListForm updateLists={jest.fn()} />);
+        const {container} = render(<ListForm updateLists={jest.fn()} />);
         const nameInput = container.getElementsByTagName('input')[0];
 
         expect(nameInput.classList.contains('is-danger')).toBeFalsy();
@@ -21,7 +21,7 @@ describe('Add list form validation', () => {
 
     test('Input box shows error if no input at all', () => {
         const updateListsMock = jest.fn();
-        const {container} = render(<AddListForm updateLists={updateListsMock} />);
+        const {container} = render(<ListForm updateLists={updateListsMock} />);
 
         const itemInput = container.getElementsByTagName('input')[0];
 
@@ -33,7 +33,7 @@ describe('Add list form validation', () => {
 });
 
 
-test('New list created after form submitted', async () => {
+test('Creating new list', async () => {
     let shoppingListsAfterNewCreation = shoppingLists();
     const newList = {
         "name": "List created after click",
@@ -45,13 +45,13 @@ test('New list created after form submitted', async () => {
 
     global.fetch = jest.fn()
         .mockReturnValueOnce(getMockAllListsResponse()) // initial response
-        .mockReturnValueOnce( // post after click
+        .mockReturnValueOnce( // post after submit
             Promise.resolve({
                 ok: true,
                 status: 201,
             })
         )
-        .mockReturnValueOnce( // response after new list
+        .mockReturnValueOnce( // get all lists after creation
             Promise.resolve({
                 ok: true,
                 status: 200,
@@ -75,8 +75,58 @@ test('New list created after form submitted', async () => {
     const submitButton = form.getElementsByTagName('button')[0];
     fireEvent.click(submitButton);
 
+    await waitForDomChange({container});
+    expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy();
+
     await wait(() => [
         getByText(container, newList['name']),
         getByText(container, newList['created_at']),
+    ]);
+});
+
+
+test('Modifying existing list', async () => {
+    let shoppingListsAfterEdit = shoppingLists();
+    const oldListName = shoppingListsAfterEdit[0]['name'];
+    const newListName = 'LIST EDIT';
+    shoppingListsAfterEdit[0]['name'] = newListName;
+
+    global.fetch = jest.fn()
+        .mockReturnValueOnce(getMockAllListsResponse()) // initial response
+        .mockReturnValueOnce( // patch after submit
+            Promise.resolve({
+                ok: true,
+                status: 200,
+            })
+        )
+        .mockReturnValueOnce( // get all lists after edit
+            Promise.resolve({
+                ok: true,
+                status: 200,
+                json: () => shoppingListsAfterEdit
+            })
+        );
+
+    const {container} = await render(<Tiles/>);
+
+    await wait(() => {
+        getAllByText(container, oldListName)
+    });
+
+    const editButton = container.getElementsByClassName('fa-pencil-alt')[0].parentElement;
+    fireEvent.click(editButton);
+
+    const form = container.getElementsByTagName('form')[1]; // first form is the create one
+    const nameInput = form.getElementsByTagName('input')[0];
+    fireEvent.change(nameInput, {target: {value: newListName}});
+
+    const submitButton = form.getElementsByTagName('button')[0];
+    fireEvent.click(submitButton);
+
+    await waitForDomChange();
+    expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy();
+
+    await wait(() => [
+        getByText(container, newListName),
     ]);
 });
