@@ -43,7 +43,6 @@ class ListForm extends React.Component {
                 method: this.props.id ? 'PATCH':'POST',
                 body: {
                     "name": this.state.name,
-                    "created_by": 1, // TODO: get from request
                 }
         });
 

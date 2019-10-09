@@ -2,7 +2,7 @@ import pytest
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 
-from list.api.item import ItemWithoutListSerializer
+from list.api.item import ItemSerializer
 from list.models import ShoppingList
 
 
@@ -20,14 +20,15 @@ def test_get_detail_response(api_client, shopping_list, item_banana):
     data = response.json()
     assert data['id'] == shopping_list.id
     assert data['name'] == shopping_list.name
-    assert data['created_by'] == shopping_list.created_by.pk
-    assert ItemWithoutListSerializer(item_banana).data in data['items']
+    assert data['created_by'] == shopping_list.created_by.username
+    assert ItemSerializer(item_banana).data in data['items']
 
 
 def test_post_response(api_client, admin_user):
+    api_client.force_login(admin_user)
     response = api_client.post(
         path=reverse('api:shopping-list-list'),
-        data={'name': 'test_list', 'created_by': admin_user.pk}
+        data={'name': 'test_list'}
     )
 
     assert response.status_code == 201
@@ -37,7 +38,7 @@ def test_post_response(api_client, admin_user):
 def test_put_response(api_client, admin_user, shopping_list):
     response = api_client.put(
         path=f'{reverse("api:shopping-list-list")}{shopping_list.pk}/',
-        data={'name': 'new_name', 'created_by': admin_user.pk}
+        data={'name': 'new_name'}
     )
 
     assert response.status_code == 200
