@@ -23,7 +23,6 @@ def test_get_detail_response(api_client, item_banana):
 
 
 def test_post_response(api_client, admin_user, shopping_list):
-    api_client.force_login(admin_user)
     response = api_client.post(
         path=reverse('api:item-list'),
         data={

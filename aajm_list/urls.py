@@ -9,14 +9,12 @@ from rest_framework import permissions
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="AAJM API",
       default_version='v1',
-      description="Test description",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
+      description="Internal APIs for AAJM List app",
+      contact=openapi.Contact(email="ahmed.code.1293@gmail.com"),
       license=openapi.License(name="BSD License"),
    ),
-   public=True,
    permission_classes=(permissions.AllowAny,),
 )
 

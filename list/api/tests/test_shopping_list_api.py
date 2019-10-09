@@ -24,8 +24,7 @@ def test_get_detail_response(api_client, shopping_list, item_banana):
     assert ItemSerializer(item_banana).data in data['items']
 
 
-def test_post_response(api_client, admin_user):
-    api_client.force_login(admin_user)
+def test_post_response(api_client):
     response = api_client.post(
         path=reverse('api:shopping-list-list'),
         data={'name': 'test_list'}
