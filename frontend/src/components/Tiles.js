@@ -39,10 +39,8 @@ class Tiles extends React.Component {
                 <AddListForm updateLists={this.update}/>
                 <section className="section">
                     <div className="container">
-                        <div className="tile is-ancestor">
-                            <div className="tile flex-wrap">
-                                {lists.map(list => <List key={key(list)} list={list} updateLists={this.update}/>)}
-                            </div>
+                        <div className="tile is-ancestor flex-wrap">
+                            {lists.map(list => <List key={key(list)} list={list} updateLists={this.update}/>)}
                         </div>
                     </div>
                 </section>

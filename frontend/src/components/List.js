@@ -23,8 +23,8 @@ class List extends React.Component {
 
     render() {
         const list = this.props.list;
-        return <div className="tile is-parent is-vertical box is-4">
-            <article className="tile is-child is-primary">
+        return <div className="tile is-parent is-vertical is-4">
+            <article className="tile is-child box">
                 <nav className="level">
                     <div className="level-left">
                         <p className="title">{list['name']}</p>

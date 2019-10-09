@@ -77,8 +77,8 @@ class AddListForm extends React.Component {
         </article>;
 
         return <section className="section">
-            <div className="container">
-                <a className="button is-dark is-large is-fullwidth has-text-warning" onClick={this.toggleForm}>
+            <div className="container has-text-centered">
+                <a className="button is-dark is-large is-rounded" onClick={this.toggleForm}>
                     New List
                 </a>
             </div>
