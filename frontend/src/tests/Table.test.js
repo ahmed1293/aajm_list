@@ -119,6 +119,6 @@ describe('Table sorting', () => {
         const newFirstRow = container.getElementsByTagName('tr')[2];
 
         expect(newFirstRow).toBe(rowBeingUnchecked);
-    })
+    });
 
 });

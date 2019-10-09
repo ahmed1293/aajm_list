@@ -9,12 +9,15 @@ class AddItemForm extends React.Component {
     constructor(props) {
         super(props);
         this.toggleForm = this.toggleForm.bind(this);
-        this.addItem = this.addItem.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
         this.validateForm = this.validateForm.bind(this);
         this.state = {
             addingItem: false,
-            itemFormError: false,
-            quantityFormError: false
+            item: '',
+            quantity: '',
+            itemInvalid: false,
+            quantityInvalid: false
         };
     }
 
@@ -22,20 +25,26 @@ class AddItemForm extends React.Component {
         this.setState({addingItem: !this.state.addingItem});
     }
 
-    async addItem(event) {
-        event.preventDefault();
-        this.setState({itemFormError: false, quantityFormError: false});
-        const data = new FormData(event.target);
+    handleChange(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        this.setState({[name]: value});
+    }
 
-        if (!this.validateForm(data)) {
+    async handleSubmit(event) {
+        event.preventDefault();
+        this.setState({itemInvalid: false, quantityInvalid: false});
+
+        if (!this.validateForm()) {
             return null;
         }
 
         let response = await fetchDjango('/api/items/', {
             method: 'POST',
             body: {
-                "name": data.get('item'),
-                "quantity": data.get('quantity'),
+                "name": this.state.item,
+                "quantity": this.state.quantity,
                 "list": this.props.listId,
                 "added_by": 1,
                 "is_checked": false
@@ -44,20 +53,20 @@ class AddItemForm extends React.Component {
 
         let newItem = await response.json();
         this.props.updateItemList(newItem);
-        this.setState({itemFormError: false, quantityFormError: false});
+        this.setState({itemInvalid: false, quantityInvalid: false});
         this.toggleForm();
     }
 
-    validateForm(data) {
+    validateForm() {
         let valid = true;
 
-        if (!data.get('item')) {
-            this.setState({itemFormError: true});
+        if (!this.state.item) {
+            this.setState({itemInvalid: true});
             valid = false;
         }
 
-        if (!data.get('quantity')) {
-            this.setState({quantityFormError: true});
+        if (!this.state.quantity) {
+            this.setState({quantityInvalid: true});
             valid = false;
         }
         return valid;
@@ -76,13 +85,15 @@ class AddItemForm extends React.Component {
                        <p>Add Item</p>
                    </div>
                    <div className="message-body">
-                       <form onSubmit={this.addItem}>
+                       <form onSubmit={this.handleSubmit}>
                            <div className="field">
                                <label className="label">Item</label>
                                <div className="control">
                                    <input
-                                       className={this.state.itemFormError ? "input is-danger":"input"}
+                                       className={this.state.itemInvalid ? "input is-danger":"input"}
                                        name="item" type="text"
+                                       value={this.state.item}
+                                       onChange={this.handleChange}
                                        placeholder="e.g. Chicken"
                                    />
                                </div>
@@ -91,8 +102,10 @@ class AddItemForm extends React.Component {
                                <label className="label">Quantity</label>
                                <div className="control">
                                    <input
-                                       className={this.state.quantityFormError ? "input is-danger":"input"}
+                                       className={this.state.quantityInvalid ? "input is-danger":"input"}
                                        name="quantity" type="text"
+                                       value={this.state.quantity}
+                                       onChange={this.handleChange}
                                        placeholder="e.g. 81"
                                    />
                                </div>
