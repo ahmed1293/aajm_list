@@ -1,20 +1,25 @@
 import React from "react";
 import Item from "./Item";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPlus} from "@fortawesome/free-solid-svg-icons";
+import {fetchDjango} from "../util";
+import AddItemForm from "./forms/AddItem";
 
 class Table extends React.Component {
     constructor(props) {
         super(props);
-        this.updateAndSort = this.updateAndSort.bind(this);
+        this.sort = this.sort.bind(this);
+        this.addItem = this.addItem.bind(this);
         this.state = {
             data: this.props.items
         };
     }
 
     componentDidMount() {
-        this.updateAndSort();
+        this.sort();
     }
 
-    updateAndSort(updatedItem) {
+    sort(updatedItem) {
         let data = this.state.data;
 
         if (updatedItem) {
@@ -30,23 +35,35 @@ class Table extends React.Component {
         this.setState({data: data});
     }
 
+    addItem(newItem) {
+        this.state.data.push(newItem);
+        this.sort();
+    }
+
     render() {
         const items = this.state.data;
         if (items.length > 0) {
-           return <table className="table is-striped is-narrow">
-            <thead>
-                <tr>
-                    <th>name</th>
-                    <th>quantity</th>
-                    <th>who</th>
-                    <th>when</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {items.map(item => <Item key={item['id']} item={item} updateTable={this.updateAndSort} />)}
-            </tbody>
-        </table>;
+           return <div>
+            <table className="table is-striped is-narrow">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>quantity</th>
+                        <th>who</th>
+                        <th>when</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                       <td colSpan={5} className="has-text-centered">
+                           <AddItemForm listId={this.props.listId} updateItemList={this.addItem}></AddItemForm>
+                       </td>
+                    </tr>
+                    {items.map(item => <Item key={item['id']} item={item} updateTable={this.sort} />)}
+                </tbody>
+            </table>
+           </div>;
         }
         return null;
     }

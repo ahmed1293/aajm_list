@@ -56,7 +56,7 @@ describe('Checking an item', () => {
     const {container} = render(
       <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
     );
-    const button = container.getElementsByTagName('svg')[0];
+    const button = container.getElementsByClassName('button')[0];
 
     fireEvent.click(button);
 
@@ -74,7 +74,7 @@ describe('Checking an item', () => {
       <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
     );
     const rowClassList = container.getElementsByTagName('tr')[0].classList;
-    const button = container.getElementsByTagName('svg')[0];
+    const button = container.getElementsByClassName('button')[0];
 
     expect(rowClassList.contains('line-through')).toBeFalsy();
     fireEvent.click(button);
@@ -87,7 +87,7 @@ describe('Checking an item', () => {
     const {container} = render(
       <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
     );
-    const button = container.getElementsByTagName('svg')[0];
+    const button = container.getElementsByClassName('button')[0];
 
     fireEvent.click(button);
     const flushPromises = () => new Promise(setImmediate); // TODO: is this bad?
