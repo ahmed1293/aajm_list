@@ -79,12 +79,12 @@ class ItemForm extends React.Component {
 
     activateFormButton() {
         if (!this.props.id) {
-            return <a className="button is-small" onClick={this.toggleForm}>
+            return <a className={"button is-small " + (this.state.activeModal ? "is-loading":"")} onClick={this.toggleForm}>
                 <FontAwesomeIcon className="has-text-info" icon={faPlus}/>
             </a>
         }
         else {
-            return <a className="button is-small" onClick={this.toggleForm}>
+            return <a className={"button is-small " + (this.state.activeModal ? "is-loading":"")} onClick={this.toggleForm}>
                 <FontAwesomeIcon className="icon has-text-warning" icon={faPencilAlt}/>
             </a>
         }
