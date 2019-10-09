@@ -56,13 +56,14 @@ class ListForm extends React.Component {
     activateFormButton() {
         if (!this.props.id) {
             return <div className="container has-text-centered">
-                <a className="button is-dark is-large is-rounded" onClick={this.toggleForm}>
+                <a className={"button is-dark is-large is-rounded " + (this.state.activeModal ? "is-loading":"")}
+                   onClick={this.toggleForm}>
                     New list
                 </a>
             </div>
         }
         else {
-            return <a className="button" onClick={this.toggleForm}>
+            return <a className={"button " + (this.state.activeModal ? "is-loading":"")} onClick={this.toggleForm}>
                 <FontAwesomeIcon className="has-text-warning" icon={faPencilAlt}/>
             </a>
         }

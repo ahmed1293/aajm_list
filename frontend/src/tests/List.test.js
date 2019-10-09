@@ -4,7 +4,7 @@ import Tiles from "../components/Tiles";
 import React from "react";
 
 
-test('Clicking delete removes list from page', async () => {
+test('Deleting a list', async () => {
     let listsAfterDeletion = shoppingLists();
     const listToBeDeleted = listsAfterDeletion[0];
     listsAfterDeletion.shift();
@@ -36,6 +36,11 @@ test('Clicking delete removes list from page', async () => {
 
     const deleteButton = container.getElementsByClassName('fa-times')[0].parentElement;
     fireEvent.click(deleteButton);
+
+    const deleteConfirmation = container.getElementsByClassName('is-danger')[0];
+    const form = deleteConfirmation.getElementsByTagName('form')[0];
+    const confirmDeleteButton = form.getElementsByTagName('button')[0];
+    fireEvent.click(confirmDeleteButton);
 
     await waitForElementToBeRemoved(() => [
         getByText(container, listToBeDeleted['name']),
