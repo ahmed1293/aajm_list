@@ -39,7 +39,7 @@ class Table extends React.Component {
 
     render() {
         const items = this.state.data;
-        return <div>
+        return <div class="table-container">
             <table className="table is-striped is-narrow">
                 <thead>
                 <tr>
