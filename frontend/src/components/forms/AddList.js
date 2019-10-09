@@ -1,5 +1,6 @@
 import React from "react";
 import {fetchDjango} from "../../util";
+import Modal from "../common/Modal";
 
 
 class AddListForm extends React.Component {
@@ -43,47 +44,76 @@ class AddListForm extends React.Component {
 
         if (response.status === 201) {
             this.props.updateLists();
+            this.setState({name: '', nameInvalid: false});
             this.toggleForm();
         }
     }
 
+    renderForm() {
+        return <article className="message is-dark">
+           <div className="message-header">
+               <p>New List</p>
+           </div>
+           <div className="message-body">
+               <form onSubmit={this.handleSubmit}>
+                   <div className="field">
+                       <label className="label">Name</label>
+                       <div className="control">
+                           <input
+                               className={this.state.nameInvalid ? "input is-danger":"input"}
+                               name="name" type="text"
+                               value={this.state.name}
+                               onChange={this.handleChange}
+                               placeholder="e.g. Food shop"
+                           />
+                       </div>
+                   </div>
+                   <div className="control">
+                       <button className="button is-dark">Add</button>
+                   </div>
+               </form>
+           </div>
+        </article>
+    }
+
     render() {
+
+        const form = <article className="message is-dark">
+            <div className="message-header">
+               <p>New List</p>
+           </div>
+           <div className="message-body">
+               <form onSubmit={this.handleSubmit}>
+                   <div className="field">
+                       <label className="label">Name</label>
+                       <div className="control">
+                           <input
+                               className={this.state.nameInvalid ? "input is-danger":"input"}
+                               name="name" type="text"
+                               value={this.state.name}
+                               onChange={this.handleChange}
+                               placeholder="e.g. Food shop"
+                           />
+                       </div>
+                   </div>
+                   <div className="control">
+                       <button className="button is-dark">Add</button>
+                   </div>
+               </form>
+           </div>
+        </article>;
+
         return <section className="section">
             <div className="container">
                 <a className="button is-dark is-large is-fullwidth has-text-warning" onClick={this.toggleForm}>
                     New List
                 </a>
             </div>
-            <div className={this.state.activeModal ? "modal is-active":"modal"}>
-            <div className="modal-background" onClick={this.toggleForm}></div>
-            <div className="modal-content">
-               <article className="message is-dark">
-                   <div className="message-header">
-                       <p>New List</p>
-                   </div>
-                   <div className="message-body">
-                       <form onSubmit={this.handleSubmit}>
-                           <div className="field">
-                               <label className="label">Name</label>
-                               <div className="control">
-                                   <input
-                                       className={this.state.nameInvalid ? "input is-danger":"input"}
-                                       name="name" type="text"
-                                       value={this.state.name}
-                                       onChange={this.handleChange}
-                                       placeholder="e.g. Food shop"
-                                   />
-                               </div>
-                           </div>
-                           <div className="control">
-                               <button className="button is-dark">Add</button>
-                           </div>
-                       </form>
-                   </div>
-               </article>
-           </div>
-            <button className="modal-close is-large" aria-label="close" onClick={this.toggleForm}></button>
-        </div>
+            <Modal
+                modalContent={form}
+                active={this.state.activeModal}
+                toggle={this.toggleForm}
+            />
         </section>
     }
 }
