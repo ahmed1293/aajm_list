@@ -49,33 +49,6 @@ class AddListForm extends React.Component {
         }
     }
 
-    renderForm() {
-        return <article className="message is-dark">
-           <div className="message-header">
-               <p>New List</p>
-           </div>
-           <div className="message-body">
-               <form onSubmit={this.handleSubmit}>
-                   <div className="field">
-                       <label className="label">Name</label>
-                       <div className="control">
-                           <input
-                               className={this.state.nameInvalid ? "input is-danger":"input"}
-                               name="name" type="text"
-                               value={this.state.name}
-                               onChange={this.handleChange}
-                               placeholder="e.g. Food shop"
-                           />
-                       </div>
-                   </div>
-                   <div className="control">
-                       <button className="button is-dark">Add</button>
-                   </div>
-               </form>
-           </div>
-        </article>
-    }
-
     render() {
 
         const form = <article className="message is-dark">
