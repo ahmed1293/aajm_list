@@ -52,7 +52,6 @@ class ItemForm extends React.Component {
                         "name": this.state.item,
                         "quantity": this.state.quantity,
                         "list": this.props.listId,
-                        "added_by": 1,
                         "is_checked": false
                     }
         });
