@@ -46,7 +46,7 @@ class Tiles extends React.Component {
                 </section>
             </div>
         }
-        return <progress className="progress is-dark" max="100"></progress>;
+        return <progress className="progress is-dark is-small" max="100"></progress>;
     }
 }
 
