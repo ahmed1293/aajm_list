@@ -63,10 +63,8 @@ jobs:
           path: ~/repo/coverage/lcov-report
       - codecov/upload:
           file: ~/repo/coverage.xml
-          flags: backend
       - codecov/upload:
           file: ~/repo/coverage/clover.xml
-          flags: frontend
 
 workflows:
   version: 2
