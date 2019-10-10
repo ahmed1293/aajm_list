@@ -14,7 +14,9 @@ describe('Tiles rendering', () => {
 
         const {container} = await render(<Tiles/>);
 
-        expect(container.innerHTML).toBe('<p>Loading...</p>');
+        expect(container.innerHTML).toBe(
+            '<progress class="progress is-small is-dark" value="" max="100"></progress>'
+        );
     });
 
     test('Correct placeholder if fetch fails', async () => {
@@ -25,7 +27,9 @@ describe('Tiles rendering', () => {
         const {container} = render(<Tiles/>);
         await waitForDomChange({container});
 
-        expect(container.innerHTML).toBe('<p>Something went wrong</p>');
+        expect(container.innerHTML).toBe(
+            '<progress class="progress is-small is-danger" value="100" max="100"></progress>'
+        );
     });
 
     test('Tiles load if fetch successful', async() => {
