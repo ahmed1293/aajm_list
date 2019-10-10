@@ -79,8 +79,8 @@ test('Creating new list', async () => {
     expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy();
 
     await wait(() => [
-        getByText(container, newList['name']),
-        getByText(container, newList['created_at']),
+        getAllByText(container, newList['name']), // multiple elements due to enlargement modal
+        getAllByText(container, newList['created_at']),
     ]);
 });
 
@@ -110,7 +110,7 @@ test('Modifying existing list', async () => {
     const {container} = await render(<Tiles/>);
 
     await wait(() => {
-        getAllByText(container, oldListName)
+        getAllByText(container, oldListName) // multiple elements due to enlargement modal
     });
 
     const editButton = container.getElementsByClassName('fa-pencil-alt')[0].parentElement;
@@ -130,6 +130,6 @@ test('Modifying existing list', async () => {
     expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy();
 
     await wait(() => [
-        getByText(container, newListName),
+        getAllByText(container, newListName),
     ]);
 });

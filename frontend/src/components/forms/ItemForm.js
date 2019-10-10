@@ -58,7 +58,7 @@ class ItemForm extends React.Component {
 
         let newItem = await response.json();
         this.props.updateParent(newItem);
-        this.setState({item: '', quantity: ''})
+        this.setState({item: '', quantity: ''});
         this.toggleForm();
     }
 
@@ -79,7 +79,9 @@ class ItemForm extends React.Component {
 
     activateFormButton() {
         if (!this.props.id) {
-            return <a className={"button is-small " + (this.state.activeModal ? "is-loading":"")} onClick={this.toggleForm}>
+            return <a className={
+                "button " + (this.props.smallButton ? "is-small ":"") + (this.state.activeModal ? "is-loading":"")
+            } onClick={this.toggleForm}>
                 <FontAwesomeIcon className="has-text-info" icon={faPlus}/>
             </a>
         }
@@ -102,6 +104,7 @@ class ItemForm extends React.Component {
                        <label className="label">Item</label>
                        <div className="control">
                            <input
+                               autoFocus
                                className={this.state.itemInvalid ? "input is-danger":"input"}
                                name="item" type="text"
                                value={this.state.item || ''}
@@ -114,6 +117,7 @@ class ItemForm extends React.Component {
                        <label className="label">Quantity</label>
                        <div className="control">
                            <input
+                               autoFocus
                                className={this.state.quantityInvalid ? "input is-danger":"input"}
                                name="quantity" type="text"
                                value={this.state.quantity || ''}

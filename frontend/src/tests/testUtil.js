@@ -56,14 +56,14 @@ function shoppingLists() {
         {
             "id": 1,
             "name": "tesco",
-            "created_by": 2,
+            "created_by": "bob",
             "created_at": "07/10/2019 19:35:44",
             "items": [
               {
                 "id": 12,
                 "name": "cheese strings",
                 "quantity": "1",
-                "added_by": 1,
+                "added_by": "bob",
                 "added_at": "07/10/2019 19:35:44",
                 "is_checked": false
               },
@@ -71,7 +71,7 @@ function shoppingLists() {
                 "id": 11,
                 "name": "spinach",
                 "quantity": "2 packs",
-                "added_by": 2,
+                "added_by": "billy",
                 "added_at": "07/10/2019 19:35:44",
                 "is_checked": false
               }
@@ -87,7 +87,7 @@ function shoppingLists() {
                 "id": 1,
                 "name": "chicken",
                 "quantity": "900kg",
-                "added_by": 1,
+                "added_by": "bob",
                 "added_at": "07/10/2019 10:26:01",
                 "is_checked": false
               },
@@ -95,7 +95,7 @@ function shoppingLists() {
                 "id": 3,
                 "name": "parsley",
                 "quantity": "50g",
-                "added_by": 2,
+                "added_by": "billy",
                 "added_at": "01/11/2019 11:21:11",
                 "is_checked": false
               }
