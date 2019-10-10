@@ -29,21 +29,19 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Test
-          command: docker-compose run --rm django coverage run -m py.test
+          name: pytest
+          command: make pytest-ci
       - run:
-          name: Generate code coverage
-          command: docker-compose run --rm django coverage report -m
-      - run:
-          name: Generate htmlcov
-          command: docker-compose run --rm django coverage html
+          name: jest
+          command: make jest-ci
       - store_artifacts:
           path: htmlcov
-      - run:
-          name: Generate coverage XML
-          command: docker-compose run --rm django coverage xml
+      - store_artifacts:
+          path: ~/repo/coverage/lcov-report
       - codecov/upload:
           file: ~/repo/coverage.xml
+      - codecov/upload:
+          file: ~/repo/coverage/clover.xml
 
 workflows:
   version: 2
