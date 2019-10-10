@@ -112,3 +112,25 @@ venv.bak/
 # Node
 /node_modules/
 
+*.dll
+*.exe
+.DS_Store
+example.tf
+terraform.tfplan
+terraform.tfstate
+bin/
+modules-dev/
+pkg/
+vendor/
+website/.vagrant
+website/build
+website/node_modules
+.vagrant/
+*.backup
+./*.tfstate
+.terraform/
+*.bak
+*~
+.*.swp
+.idea
+
