@@ -11,7 +11,7 @@ class Tiles extends React.Component {
         this.state = {
             data: [],
             loaded: false,
-            placeholder: 'Loading...'
+            errorOccurred: false
         };
     }
 
@@ -23,7 +23,7 @@ class Tiles extends React.Component {
         let response = await fetch('api/shopping-lists/');
 
         if (response.status !== 200) {
-            this.setState({ placeholder: "Something went wrong" });
+            this.setState({ errorOccurred: true });
         }
         else {
             let data = await response.json();
@@ -46,7 +46,11 @@ class Tiles extends React.Component {
                 </section>
             </div>
         }
-        return <progress className="progress is-dark is-small" max="100"></progress>;
+        return <progress
+            className={"progress is-small " + (this.state.errorOccurred ? "is-danger":"is-dark")}
+            value={this.state.errorOccurred ? "100":""}
+            max="100"
+        ></progress>;
     }
 }
 
