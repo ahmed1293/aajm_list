@@ -47,9 +47,7 @@ class Tiles extends React.Component {
             </div>
         }
         return <progress
-            className={"progress is-small " + (this.state.errorOccurred ? "is-danger":"is-dark")}
-            value={this.state.errorOccurred ? "100":""}
-            max="100"
+            className={"progress is-small " + (this.state.errorOccurred ? "is-danger":"is-dark")} max="100"
         ></progress>;
     }
 }

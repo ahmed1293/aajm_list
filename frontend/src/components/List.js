@@ -87,7 +87,7 @@ class List extends React.Component {
         return <div className="tile is-parent is-vertical is-4">
             <article className="tile is-child box">
                 <nav className="level">
-                    <div className="level-left">
+                    <div className="level-left level-is-shrinkable">
                         <p className="title">{this.state.name}</p>
                     </div>
                     <div className="buttons level-right">

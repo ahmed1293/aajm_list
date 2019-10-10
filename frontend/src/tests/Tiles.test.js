@@ -15,7 +15,7 @@ describe('Tiles rendering', () => {
         const {container} = await render(<Tiles/>);
 
         expect(container.innerHTML).toBe(
-            '<progress class="progress is-small is-dark" value="" max="100"></progress>'
+            '<progress class="progress is-small is-dark" max="100"></progress>'
         );
     });
 
@@ -28,7 +28,7 @@ describe('Tiles rendering', () => {
         await waitForDomChange({container});
 
         expect(container.innerHTML).toBe(
-            '<progress class="progress is-small is-danger" value="100" max="100"></progress>'
+            '<progress class="progress is-small is-danger" max="100"></progress>'
         );
     });
 
