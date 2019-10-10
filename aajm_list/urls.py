@@ -19,6 +19,11 @@ schema_view = get_schema_view(
 )
 
 
+admin.site.site_header = "AAJM"
+admin.site.site_title = "Admin"
+admin.site.index_title = "AAJM Admin"
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('list.api.urls')),
