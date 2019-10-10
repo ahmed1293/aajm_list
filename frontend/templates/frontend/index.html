@@ -1,23 +1,10 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="../../static/frontend/css/main.bundle.css">
-    <link rel="stylesheet" href="../../static/custom.css">
-    <title>AAJM</title>
-  </head>
-  <body class="has-background-light">
+{% extends 'frontend/base.html' %}
 
-  <div class="box has-background-dark">
-      <h1 class="title has-text-weight-bold has-text-centered is-1 has-text-light">AAJM</h1>
-    </div>
+{% load static %}
 
-    <section class="section" id="app">
-      <!-- React -->
-    </section>
-
-  </body>
-  {% load static %}
+{% block content %}
+  <section class="section" id="app">
+    <!-- React -->
+  </section>
   <script src="{% static "frontend/main.js" %}"></script>
-</html>
+{% endblock %}

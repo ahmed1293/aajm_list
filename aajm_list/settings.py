@@ -2,6 +2,8 @@ import os
 import socket
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.urls import reverse
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -114,7 +116,7 @@ REST_FRAMEWORK = {
 
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': True,
-    'LOGIN_URL': '/',
+    'LOGIN_URL': '/login',
     'LOGOUT_URL': '/',
 
     # Swagger security definitions to include in the schema;
@@ -158,3 +160,7 @@ INTERNAL_IPS = [
 # trick to have debug toolbar when developing with docker
 ip = socket.gethostbyname(socket.gethostname())
 INTERNAL_IPS += [ip[:-1] + '1']
+
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login'
