@@ -112,6 +112,20 @@ REST_FRAMEWORK = {
     )
 }
 
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': True,
+    'LOGIN_URL': '/',
+    'LOGOUT_URL': '/',
+
+    # Swagger security definitions to include in the schema;
+    # see https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#security-definitions-object
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
