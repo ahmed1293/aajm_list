@@ -1,14 +1,27 @@
 version: '3'
 
 services:
+
+  start_dependencies:
+    image: dadarek/wait-for-dependencies:0.2
+    environment:
+      - TIMEOUT_LENGTH=60
+    depends_on:
+      - postgres
+    command: postgres:${POSTGRES_PORT}
+
   postgres:
-    image: postgres:10.4
+    image: ${DOCKER_REGISTRY}postgres${CI_BRANCH}
+    build:
+      context: .
+      dockerfile: compose/postgres/Dockerfile
     volumes:
       - pgdata:/var/lib/postgresql/data
     env_file:
       - ./.envs/postgres
 
   django:
+    image: ${DOCKER_REGISTRY}django${CI_BRANCH}
     build:
       context: .
       dockerfile: compose/django/Dockerfile
@@ -23,6 +36,7 @@ services:
       - postgres
 
   node:
+    image: ${DOCKER_REGISTRY}node${CI_BRANCH}
     build:
       context: .
       dockerfile: compose/node/Dockerfile
