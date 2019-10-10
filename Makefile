@@ -2,8 +2,14 @@ run:
 	docker-compose up -d
 
 loadstatic:
-	npm run dev
+	docker-compose run --rm node npm run dev
 	docker-compose run --rm django python manage.py collectstatic --noinput
 
-test:
+pytest:
 	docker-compose run --rm django pytest -s
+
+jest:
+	docker-compose run --rm node npm run test
+
+ci-test: pytest jest
+
