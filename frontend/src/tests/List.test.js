@@ -1,7 +1,36 @@
 import {getMockAllListsResponse, shoppingLists} from "./testUtil";
-import {fireEvent, getByText, render, wait, waitForElementToBeRemoved} from "@testing-library/react";
+import {fireEvent, getAllByText, render, wait, waitForElementToBeRemoved} from "@testing-library/react";
 import Tiles from "../components/Tiles";
 import React from "react";
+
+
+test('Enlarging a list', async () => {
+    global.fetch = jest.fn().mockReturnValue(getMockAllListsResponse());
+
+    const {container} = render(<Tiles/>);
+
+    const lists = shoppingLists();
+    const listToEnlarge = lists[0];
+
+    await wait(() => {
+        getAllByText(container, listToEnlarge['name']); // multiple elements due to enlargement modal
+    });
+
+    const standardTable = container.getElementsByTagName('table')[0];
+    const standardAddButton = container.getElementsByClassName('fa-plus')[0].parentElement;
+    expect(standardTable.classList.contains('is-narrow')).toBeTruthy();
+    expect(standardAddButton.classList.contains('is-small')).toBeTruthy();
+
+    const enlargeButton = container.getElementsByClassName('fa-search')[0].parentElement;
+    fireEvent.click(enlargeButton);
+
+    const modal = container.getElementsByClassName('modal is-active')[0];
+    const enlargedTable = modal.getElementsByTagName('table')[0];
+    const enlargedAddButton = modal.getElementsByClassName('fa-plus')[0].parentElement;
+
+    expect(enlargedTable.classList.contains('is-narrow')).toBeFalsy();
+    expect(enlargedAddButton.classList.contains('is-small')).toBeFalsy();
+});
 
 
 test('Deleting a list', async () => {
@@ -28,7 +57,7 @@ test('Deleting a list', async () => {
     const {container} = render(<Tiles/>);
 
     await wait(() => {
-        getByText(container, listToBeDeleted['name']);
+        getAllByText(container, listToBeDeleted['name']); // multiple elements due to enlargement modal
     });
 
     const listTiles = container.getElementsByClassName('is-parent');
@@ -43,8 +72,8 @@ test('Deleting a list', async () => {
     fireEvent.click(confirmDeleteButton);
 
     await waitForElementToBeRemoved(() => [
-        getByText(container, listToBeDeleted['name']),
-        getByText(container, listToBeDeleted['items'][0]['name'])
+        getAllByText(container, listToBeDeleted['name']),
+        getAllByText(container, listToBeDeleted['items'][0]['name'])
     ]);
 
     expect(listTiles.length).toBe(shoppingLists().length - 1);

@@ -40,7 +40,7 @@ class Table extends React.Component {
     render() {
         const items = this.state.data;
         return <div className="table-container">
-            <table className="table is-striped is-narrow">
+            <table className={"table is-striped " + (this.props.narrow ? "is-narrow":"")}>
                 <thead>
                 <tr>
                     <th>name</th>
@@ -54,7 +54,7 @@ class Table extends React.Component {
             <tbody>
                 <tr>
                    <td colSpan={6} className="has-text-centered">
-                       <ItemForm listId={this.props.listId} updateParent={this.addItem}></ItemForm>
+                       <ItemForm listId={this.props.listId} updateParent={this.addItem} smallButton={this.props.narrow}/>
                    </td>
                 </tr>
                 {items.map(item => <Item key={item['id']} item={item} updateTable={this.sort} />)}
