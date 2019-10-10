@@ -58,6 +58,7 @@ class ItemForm extends React.Component {
 
         let newItem = await response.json();
         this.props.updateParent(newItem);
+        this.setState({item: '', quantity: ''})
         this.toggleForm();
     }
 
