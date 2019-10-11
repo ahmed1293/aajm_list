@@ -34,3 +34,10 @@
         url: https://github.com/docker/compose/releases/download/1.23.1/docker-compose-{{ ansible_system }}-{{ ansible_userspace_architecture }}
         dest: /usr/local/bin/docker-compose
         mode: +x
+
+    - name: Clone AAJM Repo
+      git:
+        repo: https://github.com/ahmed1293/aajm_list.git
+        dest: /home/ubuntu/code
+        clone: yes
+        version: master
