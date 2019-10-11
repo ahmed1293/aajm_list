@@ -34,13 +34,14 @@ services:
       cache_from:
         - ${DOCKER_REGISTRY}django${CI_BRANCH}
     command: python manage.py runserver_plus 0.0.0.0:8000
-    volumes:
-      - .:/code
     ports:
       - "8000:8000"
     depends_on:
       - postgres
+    volumes:
+      - .:/code # removing this will break coverage reports on circleci
     environment:
+      - DJANGO_SECRET_KEY
       - POSTGRES_HOST
       - POSTGRES_PORT
       - POSTGRES_DB
@@ -55,9 +56,7 @@ services:
       cache_from:
         - ${DOCKER_REGISTRY}node${CI_BRANCH}
     command: npm run dev
-    volumes:
-      - .:/app/
-      - /app/node_modules
+
 
 volumes:
   pgdata:

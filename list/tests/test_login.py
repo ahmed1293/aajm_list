@@ -19,6 +19,11 @@ def test_superuser_can_login_into_admin(admin_client):
     assert response.status_code == 200
 
 
+def test_logged_in_user_can_go_to_homepage(admin_client):
+    response = admin_client.get('/')
+    assert response.status_code == 200
+
+
 def test_non_registered_user_cant_login(client):
     client.logout()
     user_logged_in = client.login(username='not_registered', password='ejhrjqkwh12')
