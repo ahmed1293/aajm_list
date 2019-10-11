@@ -45,7 +45,7 @@ jobs:
           name: Pull Images
           command: docker-compose pull
       - run:
-          name: Bring up dependency containers
+          name: Bring up Postgres
           command: docker-compose run --rm start_dependencies
       - run:
           name: Migrate
