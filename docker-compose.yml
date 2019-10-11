@@ -38,6 +38,8 @@ services:
       - "8000:8000"
     depends_on:
       - postgres
+    volumes:
+      - .:/code
     environment:
       - DJANGO_SECRET_KEY
       - POSTGRES_HOST
