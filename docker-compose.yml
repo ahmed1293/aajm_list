@@ -19,8 +19,12 @@ services:
         - ${DOCKER_REGISTRY}postgres${CI_BRANCH}
     volumes:
       - pgdata:/var/lib/postgresql/data
-    env_file:
-      - ./.envs/postgres
+    environment:
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
 
   django:
     image: ${DOCKER_REGISTRY}django${CI_BRANCH}
@@ -30,14 +34,18 @@ services:
       cache_from:
         - ${DOCKER_REGISTRY}django${CI_BRANCH}
     command: python manage.py runserver_plus 0.0.0.0:8000
-    env_file:
-      - ./.envs/postgres
     volumes:
       - .:/code
     ports:
       - "8000:8000"
     depends_on:
       - postgres
+    environment:
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
 
   node:
     image: ${DOCKER_REGISTRY}node${CI_BRANCH}
