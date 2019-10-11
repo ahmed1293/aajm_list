@@ -47,4 +47,6 @@
 
     - name: Collect Static Files
       shell: docker-compose run --rm django python manage.py collectstatic --noinput
+      args:
+        chdir: "{{ working_dir }}"
 
