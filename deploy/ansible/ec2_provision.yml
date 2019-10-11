@@ -35,6 +35,14 @@
         dest: /usr/local/bin/docker-compose
         mode: +x
 
+    - name: Install pip
+      apt:
+        name: python3-pip
+
+    - name: Install Docker SDKs for Python
+      pip:
+        name: ["docker", "docker-compose", "PyYAML"]
+
     - name: Clone AAJM Repo
       git:
         repo: https://github.com/ahmed1293/aajm_list.git
