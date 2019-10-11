@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 
 services:
 
@@ -15,6 +15,8 @@ services:
     build:
       context: .
       dockerfile: compose/postgres/Dockerfile
+      cache_from:
+        - ${DOCKER_REGISTRY}postgres${CI_BRANCH}
     volumes:
       - pgdata:/var/lib/postgresql/data
     env_file:
@@ -25,6 +27,8 @@ services:
     build:
       context: .
       dockerfile: compose/django/Dockerfile
+      cache_from:
+        - ${DOCKER_REGISTRY}django${CI_BRANCH}
     command: python manage.py runserver_plus 0.0.0.0:8000
     env_file:
       - ./.envs/postgres
@@ -40,6 +44,8 @@ services:
     build:
       context: .
       dockerfile: compose/node/Dockerfile
+      cache_from:
+        - ${DOCKER_REGISTRY}node${CI_BRANCH}
     command: npm run dev
     volumes:
       - .:/app/
