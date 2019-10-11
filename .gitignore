@@ -140,4 +140,3 @@ website/node_modules
 
 # Ansible
 /deploy/ansible/ansible.cfg
-/deploy/ansible/inventory.yml
