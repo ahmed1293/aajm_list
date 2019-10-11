@@ -1,4 +1,5 @@
-- host: ec2
+- name: Provision EC2
+  hosts: all
   become: yes
   tasks:
 
