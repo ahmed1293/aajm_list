@@ -41,9 +41,7 @@ services:
       cache_from:
         - ${DOCKER_REGISTRY}node${CI_BRANCH}
     command: npm run dev
-    volumes:
-      - .:/app/
-      - /app/node_modules
+
 
 volumes:
   pgdata:
