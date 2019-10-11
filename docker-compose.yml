@@ -32,6 +32,8 @@ services:
       - "8000:8000"
     depends_on:
       - postgres
+    environment:
+      - DJANGO_SECRET_KEY
 
   node:
     image: ${DOCKER_REGISTRY}node${CI_BRANCH}
