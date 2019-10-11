@@ -2,44 +2,11 @@ version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.2
 jobs:
-  provision:
-    working_directory: ~/repo
-    docker:
-      - image: circleci/python:3.7.2
-    steps:
-      - checkout
-      - run:
-          name: Install Ansible
-          command: |
-            sudo pip install pipenv
-            pipenv install ansible
-      - add_ssh_keys:
-          fingerprints:
-            - 70:22:d0:f1:6a:7b:4b:98:33:cc:4b:11:72:3d:8a:cb
-      - run:
-          name: Test ansible-playbook
-          command: |
-            cd ~/repo/deploy/ansible
-            pipenv run ansible-playbook ec2_provision.yml
-
   build:
     machine: true
     working_directory: ~/repo
     steps:
       - checkout
-#      - run:
-#          name: Install Ansible
-#          command: |
-#            sudo apt update -y
-#            sudo apt install -y language-pack-ja-base language-pack-ja
-#            sudo apt install -y software-properties-common
-#            sudo apt-add-repository -y ppa:ansible/ansible
-#            sudo apt update -y
-#            sudo apt install -y curl python-dev git
-#            sudo curl "https://bootstrap.pypa.io/get-pip.py" -o "/tmp/get-pip.py"
-#            sudo python /tmp/get-pip.py
-#            sudo pip install --upgrade pip && pip install --upgrade setuptools
-#            sudo pip install ansible
       - run:
           name: Login to Docker Registry
           command: echo "$DOCKER_PASS" | docker login -u $DOCKER_USER --password-stdin
@@ -48,7 +15,6 @@ jobs:
           command: echo 'export CI_BRANCH=":$CIRCLE_BRANCH"' >> $BASH_ENV
       - run:
           name: Pull Images
-          # this always seems to fail and pull from master
           command: |
             pull_status=$(docker-compose pull --quiet; echo $?)
             if [ $pull_status -ne 0 ]; then
@@ -99,14 +65,38 @@ jobs:
       - codecov/upload:
           file: ~/repo/coverage/clover.xml
 
+  deploy:
+    docker:
+      - image: circleci/python:3.7.2
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Install Ansible
+          command: |
+            sudo pip install pipenv
+            pipenv install ansible
+      - add_ssh_keys:
+          fingerprints:
+            - 70:22:d0:f1:6a:7b:4b:98:33:cc:4b:11:72:3d:8a:cb
+      - run:
+          name: Deploy
+          command: |
+            cd ~/repo/deploy/ansible
+            pipenv run ansible-playbook deploy.yml
+
 workflows:
   version: 2
-  build_and_test:
+  build_test_deploy:
     jobs:
-      - provision
-      - build:
-          requires:
-            - provision
+      - build
       - test:
           requires:
             - build
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
