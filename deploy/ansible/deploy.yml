@@ -1,0 +1,52 @@
+- name: Deploy
+  hosts: all
+  become: yes
+  vars:
+    working_dir: /home/ubuntu/code
+  tasks:
+
+    - name: Pull Code
+        git:
+          repo: https://github.com/ahmed1293/aajm_list.git
+          dest: {{working_dir}}
+          clone: no
+          version: master
+
+    - name: Log into DockerHub
+      docker_login:
+        username: "{{ lookup('env','DOCKER_USER') }}"
+        password: "{{ lookup('env','DOCKER_PASS') }}"
+
+    - name: Set Environment Variables
+      environment:
+        CIRCLE_CI: ":{{ lookup('env','CIRCLE_BRANCH') }}"
+        DJANGO_SECRET_KEY: ":{{ lookup('env','DJANGO_SECRET_KEY') }}"
+        POSTGRES_HOST: ":{{ lookup('env','POSTGRES_HOST') }}"
+        POSTGRES_PORT: ":{{ lookup('env','POSTGRES_PORT') }}"
+        POSTGRES_DB: ":{{ lookup('env','POSTGRES_DB') }}"
+        POSTGRES_USER: ":{{ lookup('env','POSTGRES_USER') }}"
+        POSTGRES_PASSWORD: ":{{ lookup('env','POSTGRES_PASSWORD') }}"
+
+    - name: Stop Containers
+      docker_compose:
+        project_src: {{working_dir}}
+        build: no
+        stopped: yes
+      register: output
+
+    - debug:
+        var: output
+
+    - name: Pull and Start Containers
+      docker_compose:
+        project_src: {{working_dir}}
+        pull: yes
+        state: present
+      register: output
+
+    - debug:
+        var: output
+
+    - name: Collect Static Files
+      shell: docker-compose run --rm django python manage.py collectstatic --noinput
+
