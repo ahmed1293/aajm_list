@@ -2,6 +2,7 @@
 source =
     aajm_list/
     list/
+    frontend/
 
 omit =
     *migrations*
@@ -9,7 +10,9 @@ omit =
     *templates*
     *htmlcov*
     *urls*
-    aajm_list/settings.py
+    aajm_list/settings/*
     aajm_list/wsgi.py
+    frontend/apps.py
+    list/apps.py
 
 branch = True

@@ -39,7 +39,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - .:/code
+      - .:/code # removing this will break coverage reports on circleci
     environment:
       - DJANGO_SECRET_KEY
       - POSTGRES_HOST
