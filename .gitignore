@@ -137,3 +137,7 @@ website/node_modules
 .idea
 
 /docker-compose.override.yml
+
+# Ansible
+/deploy/ansible/ansible.cfg
+/deploy/ansible/inventory.yml
