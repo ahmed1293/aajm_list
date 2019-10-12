@@ -32,9 +32,6 @@
         stopped: yes
       register: output
 
-    - debug:
-        var: output
-
     - name: Pull and Start Containers
       docker_compose:
         project_src: "{{ working_dir }}"
@@ -42,11 +39,9 @@
         state: present
       register: output
 
-    - debug:
-        var: output
+    - assert:
+        that:
+          - "django.code_django_1.state.running"
+          - "postgres.code_postgres_1.state.running"
 
-    - name: Collect Static Files
-      shell: docker-compose run --rm django python manage.py collectstatic --noinput
-      args:
-        chdir: "{{ working_dir }}"
 
