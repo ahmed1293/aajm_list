@@ -1,24 +1,35 @@
-run:
-	docker-compose up -d
+docker-pull:
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml pull --quiet
 
-loadstatic:
-	docker-compose run --rm node npm run dev
-	docker-compose run --rm django python manage.py collectstatic --noinput
+docker-push:
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml push
 
-pytest:
-	docker-compose run --rm django pytest -s
+build-ci:
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml build
+
+migrate-ci:
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml run --rm django python manage.py migrate
 
 pytest-ci:
-	docker-compose run --rm django coverage run -m py.test
-	docker-compose run --rm django coverage report -m
-	docker-compose run --rm django coverage html
-	docker-compose run --rm django coverage xml
-
-jest:
-	docker-compose run --rm node npm run test
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml run --rm django coverage run -m py.test
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml run --rm django coverage report -m
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml run --rm django coverage html
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml run --rm django coverage xml
 
 jest-ci:
-	docker-compose run --rm node npm run testCov
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml run --rm node npm run testCov
 
-ci-test: pytest-ci jest-ci
+local:
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml -f docker-compose.override.yml up -d
+
+loadstatic:
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml -f docker-compose.override.yml node npm run dev
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml -f docker-compose.override.yml run --rm django python manage.py collectstatic --noinput
+
+pytest:
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml -f docker-compose.override.yml run --rm django pytest -s
+
+jest:
+	docker-compose -f docker-compose.prod.yml -f docker-compose.yml -f docker-compose.override.yml run --rm node npm run test
+
 
