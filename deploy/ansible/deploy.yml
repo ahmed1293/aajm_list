@@ -5,12 +5,14 @@
     working_dir: /home/ubuntu/code
   environment:
     CIRCLE_CI: ":master"
+    DOCKER_REGISTRY: "{{ lookup('env','DOCKER_REGISTRY') }}"
     DJANGO_SECRET_KEY: "{{ lookup('env','DJANGO_SECRET_KEY') }}"
     POSTGRES_HOST: "{{ lookup('env','POSTGRES_HOST') }}"
     POSTGRES_PORT: "{{ lookup('env','POSTGRES_PORT') }}"
     POSTGRES_DB: "{{ lookup('env','POSTGRES_DB') }}"
     POSTGRES_USER: "{{ lookup('env','POSTGRES_USER') }}"
     POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
+
   tasks:
 
     - name: Pull Code
@@ -26,23 +28,24 @@
         password: "{{ lookup('env','DOCKER_PASS') }}"
 
     - name: Stop Containers
-      shell: docker-compose stop
-      args:
-        chdir: "{{ working_dir }}"
+      docker_compose:
+        project_src: "{{ working_dir }}"
+        state: absent
 
     - name: Pull Images
-      shell: docker-compose pull
-      args:
-        chdir: "{{ working_dir }}"
+      docker_compose:
+        project_src: "{{ working_dir }}"
+        pull: yes
+        state: absent
 
     - name: Start Containers
-      shell: docker-compose up -d
-      args:
-        chdir: "{{ working_dir }}"
+      docker_compose:
+        project_src: "{{ working_dir }}"
+        state: present
 
-#    - assert:
-#        that:
-#          - "code_django_1.state.running"
-#          - "code_postgres_1.state.running"
+    - assert:
+        that:
+          - "django.code_django_1.state.running"
+          - "postgres.code_postgres_1.state.running"
 
 
