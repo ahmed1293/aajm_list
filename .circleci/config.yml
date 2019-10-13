@@ -16,7 +16,7 @@ jobs:
       - run:
           name: Pull Images
           command: |
-            pull_status=$(make docker-pull; echo $?)
+            pull_status=$(docker-compose pull --quiet; echo $?)
             if [ $pull_status -ne 0 ]; then
               echo "[INFO] No images exist for this tag, pulling from master branch instead"
               current_branch=$CIRCLE_BRANCH
@@ -25,10 +25,10 @@ jobs:
             fi
       - run:
           name: Build
-          command: make build-ci
+          command: docker-compose build
       - run:
           name: Push Images
-          command: make docker-push
+          command: docker-compose push
 
   test:
     machine: true
@@ -43,10 +43,10 @@ jobs:
           command: echo 'export CI_BRANCH=":$CIRCLE_BRANCH"' >> $BASH_ENV
       - run:
           name: Pull Images
-          command: make docker-pull
+          command: docker-compose pull
       - run:
           name: Migrate
-          command: make migrate-ci
+          command: docker-compose run --rm django python manage.py migrate
       - run:
           name: pytest
           command: make pytest-ci

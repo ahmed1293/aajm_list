@@ -136,7 +136,7 @@ website/node_modules
 .*.swp
 .idea
 
-/docker-compose.override.yml
+/docker-compose.local.yml
 
 # Ansible
 /deploy/ansible/ansible.cfg
