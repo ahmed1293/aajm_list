@@ -48,6 +48,11 @@
       args:
         chdir: "{{ working_dir }}"
 
+    - name: Collect Static Files
+      shell: docker-compose run --rm django python manage.py collectstatic --noinput
+      args:
+        chdir: "{{ working_dir }}"
+
     - assert:
         that:
           - "django.code_django_1.state.running"
