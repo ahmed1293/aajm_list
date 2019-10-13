@@ -43,6 +43,11 @@
         project_src: "{{ working_dir }}"
         state: present
 
+    - name: Run Migrations
+      shell: docker-compose run --rm django python manage.py migrate
+      args:
+        chdir: "{{ working_dir }}"
+
     - assert:
         that:
           - "django.code_django_1.state.running"
