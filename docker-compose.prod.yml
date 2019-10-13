@@ -26,6 +26,8 @@ services:
       dockerfile: compose/django/Dockerfile
       cache_from:
         - ${DOCKER_REGISTRY}django${CI_BRANCH}
+    volumes:
+      - .:/code # this should only be necessary locally and on the CI (jest coverage wont work otherwise)
     command: python manage.py runserver_plus 0.0.0.0:8000
     restart: always
     working_dir: /code
