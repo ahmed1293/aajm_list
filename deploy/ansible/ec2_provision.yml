@@ -43,6 +43,12 @@
       pip:
         name: ["docker", "docker-compose", "PyYAML"]
 
+    - name: Add user to Docker group
+      user:
+        name: '{{ ansible_env.USER }}'
+        groups: docker
+        append: yes
+
     - name: Clone AAJM Repo
       git:
         repo: https://github.com/ahmed1293/aajm_list.git
