@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 # trick to have debug toolbar when developing with docker
 ip = socket.gethostbyname(socket.gethostname())
