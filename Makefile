@@ -1,5 +1,5 @@
 run:
-	docker-compose up -d
+	docker-compose up -d django postgres
 
 loadstatic:
 	docker-compose run --rm node npm run dev
