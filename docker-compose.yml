@@ -14,9 +14,5 @@ services:
       - .:/app/
       - /app/node_modules
 
-  nginx:
-    build:
-      dockerfile: compose/nginx/local/Dockerfile
-
 volumes:
   pgdata:

@@ -47,23 +47,15 @@ services:
     image: ${DOCKER_REGISTRY}nginx${CI_BRANCH}
     build:
       context: .
-      dockerfile: compose/nginx/production/Dockerfile
+      dockerfile: compose/nginx/Dockerfile
       cache_from:
         - ${DOCKER_REGISTRY}nginx${CI_BRANCH}
     ports:
       - "80:80"
     volumes:
       - ./staticfiles:/home/app/django/staticfiles
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
     depends_on:
       - django
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./data/certbot/conf:/etc/letsencrypt
-      - ./data/certbot/www:/var/www/certbot
 
 volumes:
   pgdata:
