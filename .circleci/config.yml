@@ -64,10 +64,12 @@ jobs:
 
   deploy:
     docker:
-      - image: circleci/python:3.7.2
+      - image: circleci/python:3.8.0
     working_directory: ~/repo
     steps:
       - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
       - restore_cache:
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
