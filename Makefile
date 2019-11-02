@@ -1,4 +1,4 @@
-run:
+local:
 	docker-compose up -d django postgres
 
 loadstatic:
