@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
-    "test": "jest",
-    "testCov": "jest --collectCoverage"
+    "test": "jest --testPathIgnorePatterns /staticfiles",
+    "testCov": "jest --testPathIgnorePatterns /staticfiles --collectCoverage"
   },
   "repository": {
     "type": "git",
