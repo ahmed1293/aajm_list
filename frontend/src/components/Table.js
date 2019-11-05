@@ -43,12 +43,12 @@ class Table extends React.Component {
             <table className={"table is-striped " + (this.props.narrow ? "is-narrow":"")}>
                 <thead>
                 <tr>
+                    <th></th>
+                    <th></th>
                     <th>name</th>
                     <th>quantity</th>
                     <th>who</th>
                     <th>when</th>
-                    <th></th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>

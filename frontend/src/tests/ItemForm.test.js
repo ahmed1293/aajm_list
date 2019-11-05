@@ -149,16 +149,16 @@ describe('Creating item', () => {
         const lastRowData = lastRow.getElementsByTagName('td');
 
         const originalItems = itemList(); // order of ITEMS (defined above) would have changed
-        expect(lastRowData[0].innerHTML).toBe(originalItems[0].name);
-        expect(lastRowData[1].innerHTML).toBe(originalItems[0].quantity);
-        expect(lastRowData[3].innerHTML).toBe(originalItems[0].added_at);
+        expect(lastRowData[2].innerHTML).toBe(originalItems[0].name);
+        expect(lastRowData[3].innerHTML).toBe(originalItems[0].quantity);
+        expect(lastRowData[5].innerHTML).toBe(originalItems[0].added_at);
         expect(lastRow.classList.contains('line-through')).toBeTruthy();
 
         const newRow = container.getElementsByTagName('tr')[4];
         const newRowData = newRow.getElementsByTagName('td');
-        expect(newRowData[0].innerHTML).toBe(newItemName);
-        expect(newRowData[1].innerHTML).toBe(newItemQuantity);
-        expect(newRowData[3].innerHTML).toBe(newItemAddedAt);
+        expect(newRowData[2].innerHTML).toBe(newItemName);
+        expect(newRowData[3].innerHTML).toBe(newItemQuantity);
+        expect(newRowData[5].innerHTML).toBe(newItemAddedAt);
     });
 
 });

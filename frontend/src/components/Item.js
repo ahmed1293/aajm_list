@@ -41,10 +41,6 @@ class Item extends React.Component {
     render() {
         const item = this.props.item;
         return <tr className={this.state.checked ? "line-through":null}>
-            <td>{this.state.name}</td>
-            <td>{this.state.quantity}</td>
-            <td>{item['added_by']}</td>
-            <td>{item['added_at']}</td>
             <td>
                 <ItemForm id={item['id']} item={item['name']} quantity={item['quantity']} updateParent={this.update}/>
             </td>
@@ -56,6 +52,10 @@ class Item extends React.Component {
                     />
                 </a>
             </td>
+            <td>{this.state.name}</td>
+            <td>{this.state.quantity}</td>
+            <td>{item['added_by']}</td>
+            <td>{item['added_at']}</td>
         </tr>
     }
 }

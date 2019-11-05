@@ -28,10 +28,10 @@ describe('Table sorting', () => {
     function checkRowValues(container, rowIndex, first, second, third, fourth) {
         const row = container.getElementsByTagName('tr')[rowIndex];
         const rowData = row.getElementsByTagName('td');
-        expect(rowData[0].innerHTML).toBe(first);
-        expect(rowData[1].innerHTML).toBe(second);
-        expect(rowData[2].innerHTML).toBe(third);
-        expect(rowData[3].innerHTML).toBe(fourth);
+        expect(rowData[2].innerHTML).toBe(first);
+        expect(rowData[3].innerHTML).toBe(second);
+        expect(rowData[4].innerHTML).toBe(third);
+        expect(rowData[5].innerHTML).toBe(fourth);
 
         return row;
     }
