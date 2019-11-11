@@ -19,5 +19,6 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
     serializer_class = ShoppingListSerializer
 
     def perform_create(self, serializer):
+        # TODO: use self.request.data to create using defaults
         serializer.save(created_by=self.request.user)
 

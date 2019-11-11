@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from list.models import ShoppingList, Item
+from list.models import ShoppingList, Item, DefaultItem
 
 
 class ItemInline(admin.TabularInline):
@@ -29,5 +29,14 @@ class ItemAdmin(admin.ModelAdmin):
     )
 
 
+class DefaultItemAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'name',
+        'quantity'
+    )
+
+
 admin.site.register(ShoppingList, ShoppingListAdmin)
 admin.site.register(Item, ItemAdmin)
+admin.site.register(DefaultItem, DefaultItemAdmin)

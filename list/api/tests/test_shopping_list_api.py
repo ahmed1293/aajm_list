@@ -27,7 +27,7 @@ def test_get_detail_response(api_client, shopping_list, item_banana):
 def test_post_response(api_client):
     response = api_client.post(
         path=reverse('api:shopping-list-list'),
-        data={'name': 'test_list'}
+        data={'name': 'test_list', 'chicken': 'hi'}
     )
 
     assert response.status_code == 201

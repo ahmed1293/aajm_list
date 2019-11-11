@@ -2,7 +2,7 @@ import pytest
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 
-from list.models import ShoppingList, Item
+from list.models import ShoppingList, Item, DefaultItem
 
 
 @pytest.fixture(autouse=True)
@@ -33,4 +33,12 @@ def item_banana(shopping_list, admin_user):
         quantity='1',
         list=shopping_list,
         added_by=admin_user,
+    )
+
+
+@pytest.fixture
+def default_item():
+    return DefaultItem.objects.create(
+        name='cucumber',
+        quantity='1'
     )
