@@ -5,7 +5,7 @@
     working_dir: /home/ubuntu/code
   environment:
     COMPOSE_FILE: "docker-compose.prod.yml"
-    CIRCLE_CI: ":master"
+    CI_BRANCH: ":master"
     DOCKER_REGISTRY: "{{ lookup('env','DOCKER_REGISTRY') }}"
     DJANGO_SECRET_KEY: "{{ lookup('env','DJANGO_SECRET_KEY') }}"
     POSTGRES_HOST: "{{ lookup('env','POSTGRES_HOST') }}"
