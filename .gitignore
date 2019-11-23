@@ -140,3 +140,6 @@ website/node_modules
 
 # Ansible
 /deploy/ansible/ansible.cfg
+
+# Webpack bundles
+*.bundle.*
