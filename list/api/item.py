@@ -1,6 +1,6 @@
 from rest_framework import serializers, viewsets
 
-from list.models import Item
+from list.models import Item, DefaultItem
 
 
 class ItemSerializer(serializers.ModelSerializer):
@@ -18,3 +18,14 @@ class ItemViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
+
+
+class DefaultItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DefaultItem
+        fields = ['id', 'name', 'quantity']
+
+
+class DefaultItemViewSet(viewsets.ModelViewSet):
+    queryset = DefaultItem.objects.all()
+    serializer_class = DefaultItemSerializer

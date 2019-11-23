@@ -1,7 +1,8 @@
+from django.db import transaction
 from rest_framework import serializers, viewsets
 
 from list.api.item import ItemSerializer
-from list.models import ShoppingList
+from list.models import ShoppingList, DefaultItem, Item
 
 
 class ShoppingListSerializer(serializers.ModelSerializer):
@@ -18,6 +19,14 @@ class ShoppingListViewSet(viewsets.ModelViewSet):
     queryset = ShoppingList.objects.all().prefetch_related('item_set').order_by('-created_at')
     serializer_class = ShoppingListSerializer
 
+    @transaction.atomic
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        instance = serializer.save(created_by=self.request.user)
+        for default_item in DefaultItem.objects.all():
+            Item.objects.create(
+                name=default_item.name,
+                quantity=default_item.quantity,
+                list=instance,
+                added_by=self.request.user
+            )
 

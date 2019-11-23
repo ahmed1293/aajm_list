@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 
 from list.api.item import ItemSerializer
-from list.models import ShoppingList
+from list.models import ShoppingList, DefaultItem, Item
 
 
 def test_get_list_response(api_client):
@@ -27,7 +27,7 @@ def test_get_detail_response(api_client, shopping_list, item_banana):
 def test_post_response(api_client):
     response = api_client.post(
         path=reverse('api:shopping-list-list'),
-        data={'name': 'test_list'}
+        data={'name': 'test_list', 'chicken': 'hi'}
     )
 
     assert response.status_code == 201
@@ -67,3 +67,19 @@ def test_delete_response(api_client, shopping_list):
     assert response.status_code == 204
     with pytest.raises(ObjectDoesNotExist):
         ShoppingList.objects.get(pk=shopping_list.pk)
+
+
+def test_default_items_created_in_post(api_client):
+    DefaultItem.objects.create(
+        name='default',
+        quantity='2'
+    )
+
+    response = api_client.post(
+        path=reverse('api:shopping-list-list'),
+        data={'name': 'list_with_defaults'}
+    )
+
+    new_list = ShoppingList.objects.get(name='list_with_defaults')
+    assert new_list.item_set.count() == 1
+    assert Item.objects.get(name='default', quantity='2', list=new_list)
