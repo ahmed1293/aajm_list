@@ -6,8 +6,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href={% static "bundles/main.bundle.css" %}>
-    <link rel="stylesheet" href={% static "custom.css" %}>
+    <link rel="stylesheet" href={% static "bundles/main.bundle.css" %}?v={{ COMMIT_REF }}>
+    <link rel="stylesheet" href={% static "custom.css" %}?v={{ COMMIT_REF }}>
     <title>AAJM</title>
   </head>
   <body class="has-background-light">
