@@ -40,7 +40,7 @@
         pull: yes
         state: present
       environment:
-        COMMIT_REF: gitresult.after
+        COMMIT_REF: "{{ gitresult.after }}"
 
     - name: Run Migrations
       shell: docker-compose run --rm django python manage.py migrate
