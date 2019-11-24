@@ -136,6 +136,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'frontend/static/'),
 ]
 
+COMMIT_REF = os.environ.get('COMMIT_REF')
+
 INTERNAL_IPS = [
     '127.0.0.1',
 ]

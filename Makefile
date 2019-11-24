@@ -1,4 +1,5 @@
 local:
+	export COMMIT_REF=$(git rev-parse HEAD)
 	docker-compose up -d django postgres
 
 loadstatic:

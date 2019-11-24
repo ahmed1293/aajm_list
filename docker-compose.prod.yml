@@ -37,6 +37,7 @@ services:
       - postgres
     environment:
       - DJANGO_SECRET_KEY
+      - COMMIT_REF
       - POSTGRES_HOST
       - POSTGRES_PORT
       - POSTGRES_DB
