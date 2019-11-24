@@ -30,7 +30,7 @@ services:
     restart: always
     working_dir: /code
     volumes:
-      - /staticfiles:/staticfiles
+      - ./staticfiles:/staticfiles
     expose:
       - "8000"
     depends_on:
@@ -53,7 +53,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - /staticfiles:/home/app/django/staticfiles
+      - ./staticfiles:/home/app/django/staticfiles
     depends_on:
       - django
 
