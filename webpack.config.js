@@ -1,10 +1,10 @@
-const path = require('path')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: './frontend/src/index.js',
   output: {
-    path: path.resolve(__dirname, './frontend/static/frontend/'),
+    path: path.resolve(__dirname, './frontend/static/bundles'),
     filename: 'main.bundle.js'
   },
   module: {
@@ -36,7 +36,7 @@ module.exports = {
   },
   plugins: [
       new MiniCssExtractPlugin({
-        filename: 'css/[name].bundle.css'
+        filename: '[name].bundle.css'
       })
   ]
 };
