@@ -33,15 +33,10 @@
         project_src: "{{ working_dir }}"
         state: absent
 
-    - name: Pull Images
+    - name: Pull Images and Start Containers
       docker_compose:
         project_src: "{{ working_dir }}"
         pull: yes
-        state: absent
-
-    - name: Start Containers
-      docker_compose:
-        project_src: "{{ working_dir }}"
         state: present
 
     - name: Run Migrations
