@@ -46,20 +46,6 @@ services:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
 
-  nginx:
-    image: ${DOCKER_REGISTRY}nginx${CI_BRANCH}
-    build:
-      context: .
-      dockerfile: compose/nginx/Dockerfile
-      cache_from:
-        - ${DOCKER_REGISTRY}nginx${CI_BRANCH}
-    ports:
-      - "80:80"
-    volumes:
-      - staticfiles:/home/app/django/staticfiles
-    depends_on:
-      - django
-
 volumes:
   pgdata:
   staticfiles:
