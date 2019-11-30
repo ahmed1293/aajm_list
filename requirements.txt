@@ -14,3 +14,4 @@ markdown
 django-filter
 drf-yasg
 django-storages
+boto3
