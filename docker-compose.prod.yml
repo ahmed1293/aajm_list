@@ -29,8 +29,6 @@ services:
     command: gunicorn aajm_list.wsgi:application --bind 0.0.0.0:8000
     restart: always
     working_dir: /code
-    volumes:
-      - staticfiles:/code/staticfiles
     expose:
       - "8000"
     depends_on:
@@ -46,6 +44,17 @@ services:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
 
+  nginx:
+    image: ${DOCKER_REGISTRY}nginx${CI_BRANCH}
+    build:
+      context: .
+      dockerfile: compose/nginx/Dockerfile
+      cache_from:
+        - ${DOCKER_REGISTRY}nginx${CI_BRANCH}
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+
 volumes:
   pgdata:
-  staticfiles:
