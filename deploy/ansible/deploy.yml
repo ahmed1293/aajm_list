@@ -13,6 +13,8 @@
     POSTGRES_DB: "{{ lookup('env','POSTGRES_DB') }}"
     POSTGRES_USER: "{{ lookup('env','POSTGRES_USER') }}"
     POSTGRES_PASSWORD: "{{ lookup('env','POSTGRES_PASSWORD') }}"
+    AWS_ACCESS_KEY_ID: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
+    AWS_SECRET_ACCESS_KEY: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
 
   tasks:
 
