@@ -1,5 +1,4 @@
 import os
-import socket
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.urls import reverse
@@ -27,7 +26,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'debug_toolbar',
     'rest_framework',
-    'drf_yasg'
+    'drf_yasg',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -126,26 +126,13 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'frontend/static/'),
-]
-
 COMMIT_REF = os.environ.get('COMMIT_REF')
 
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-# trick to have debug toolbar when developing with docker
-ip = socket.gethostbyname(socket.gethostname())
-INTERNAL_IPS += [ip[:-1] + '1']
-
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login'
+

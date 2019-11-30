@@ -97,3 +97,22 @@ resource "aws_security_group" "allow_https" {
 output "ip" {
   value = aws_eip.aajm_ip.public_ip
 }
+
+resource "aws_s3_bucket" "aajm-s3" {
+  bucket = "aajm-s3"
+  acl = "private"
+
+  tags = {
+    Name        = "AAJM"
+    Environment = "Prod"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "aajm-s3" {
+  bucket = aws_s3_bucket.aajm-s3.id
+
+  block_public_acls   = true
+  block_public_policy = true
+  ignore_public_acls = true
+  restrict_public_buckets = true
+}
