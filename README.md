@@ -3,10 +3,12 @@
 [![build](https://circleci.com/gh/ahmed1293/aajm_list.svg?style=shield)](https://circleci.com/gh/ahmed1293/aajm_list) 
 [![codecov](https://codecov.io/gh/ahmed1293/aajm_list/branch/master/graph/badge.svg)](https://codecov.io/gh/ahmed1293/aajm_list)
 
-Frontend: [React](https://reactjs.org), tested with [Jest](https://jestjs.io) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro).
+Frontend: React and Bulma CSS. Tested with Jest and React Testing Library.
 
-Backend: [Django](https://www.djangoproject.com), [Django REST framework](https://www.django-rest-framework.org), and [PostgreSQL](https://www.postgresql.org).
+Backend: Django, Django REST framework, and PostgreSQL. Tested with pytest.
 
-Build: [Docker](https://www.docker.com).
+Build: Docker, Docker-compose.
+
+Deployment: AWS EC2 and S3, Terraform, Ansible, CircleCI.
 
 ![Demo](/preview/demo.gif)
