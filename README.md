@@ -7,7 +7,7 @@ Frontend: React and Bulma CSS. Tested with Jest and React Testing Library.
 
 Backend: Django, Django REST framework, and PostgreSQL. Tested with Pytest.
 
-Build: Docker, Docker-compose.
+Build: Docker Compose.
 
 Deployment: AWS EC2 and S3, Terraform, Ansible, CircleCI.
 
