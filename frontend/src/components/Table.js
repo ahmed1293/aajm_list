@@ -7,9 +7,6 @@ class Table extends React.Component {
         super(props);
         this.sort = this.sort.bind(this);
         this.addItem = this.addItem.bind(this);
-        this.state = {
-            data: this.props.items,
-        };
     }
 
     componentDidMount() {
@@ -17,7 +14,7 @@ class Table extends React.Component {
     }
 
     sort(updatedItem) {
-        let data = this.state.data;
+        let data = this.props.items;
 
         if (updatedItem) {
             const itemIndex = data.findIndex(item => item['id'] === updatedItem['id']);
@@ -33,12 +30,12 @@ class Table extends React.Component {
     }
 
     addItem(newItem) {
-        this.state.data.push(newItem);
+        this.props.items.push(newItem);
         this.sort();
     }
 
     render() {
-        const items = this.state.data;
+        const items = this.props.items;
         return <div className="table-container">
             <table className={"table is-striped " + (this.props.narrow ? "is-narrow":"")}>
                 <thead>
