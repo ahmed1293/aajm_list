@@ -34,14 +34,15 @@ class Table extends React.Component {
         this.sort();
     }
 
+    // move ItemForm modal outside of table so it works on Jess' phone?
     render() {
         const items = this.props.items;
         return <div className="table-container">
             <table className={"table is-striped " + (this.props.narrow ? "is-narrow":"")}>
                 <thead>
                 <tr>
-                    <th></th>
-                    <th></th>
+                    <th/>
+                    <th/>
                     <th>name</th>
                     <th>quantity</th>
                     <th>who</th>

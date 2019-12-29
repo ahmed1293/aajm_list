@@ -8,17 +8,15 @@
         {% csrf_token %}
             <div class="field">
                 <div class="control">
-                    <input
-                            class="input {% if form.errors %} is-danger {% endif %}"
-                            placeholder="Username" type="text" name="username" autofocus required id="id_username"
+                    <input class="input {% if form.errors %} is-danger {% endif %}" placeholder="Username"
+                           type="text" name="username" autofocus required id="id_username"
                     />
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <input
-                            class="input {% if form.errors %} is-danger {% endif %}"
-                            placeholder="Password" type="password" name="password" required id="id_password"
+                    <input class="input {% if form.errors %} is-danger {% endif %}" placeholder="Password"
+                           type="password" name="password" required id="id_password"
                     />
                 </div>
             </div>
