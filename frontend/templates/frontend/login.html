@@ -9,7 +9,7 @@
             <div class="field">
                 <div class="control">
                     <input
-                            class="input is-large {% if form.errors %} is-danger {% endif %}"
+                            class="input {% if form.errors %} is-danger {% endif %}"
                             placeholder="Username" type="text" name="username" autofocus required id="id_username"
                     />
                 </div>
@@ -17,14 +17,14 @@
             <div class="field">
                 <div class="control">
                     <input
-                            class="input is-large {% if form.errors %} is-danger {% endif %}"
+                            class="input {% if form.errors %} is-danger {% endif %}"
                             placeholder="Password" type="password" name="password" required id="id_password"
                     />
                 </div>
             </div>
             <div class="field">
                 <div class="control">
-                    <button type="submit" class="button is-dark is-large">
+                    <button type="submit" class="button is-dark">
                         Login
                     </button>
                 </div>
