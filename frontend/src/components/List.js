@@ -13,13 +13,10 @@ class List extends React.Component {
         this.delete = this.delete.bind(this);
         this.deleteConfirmation = this.deleteConfirmation.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
-        this.toggleEnlarge = this.toggleEnlarge.bind(this);
-        this.enlargedRender = this.enlargedRender.bind(this);
         this.update = this.update.bind(this);
         this.state = {
             name: this.props.list['name'],
-            activeModal: false,
-            enlarged: false
+            activeModal: false
         }
     }
 
@@ -46,10 +43,6 @@ class List extends React.Component {
         this.setState({activeModal: !this.state.activeModal});
     }
 
-    toggleEnlarge() {
-       this.setState({enlarged: !this.state.enlarged});
-    }
-
     deleteConfirmation() {
         return <article className="message is-danger">
             <div className="message-header">
@@ -66,22 +59,6 @@ class List extends React.Component {
         </article>;
     }
 
-    enlargedRender() {
-        const list = this.props.list;
-        return <div className="modal-card">
-            <header className="modal-card-head">
-                <p className="modal-card-title has-text-weight-bold">{this.state.name}</p>
-                <button className="delete" aria-label="close" onClick={this.toggleEnlarge}></button>
-            </header>
-            <section className="modal-card-body">
-                <Table items={list['items']} listId={list['id']} narrow={false}/>
-            </section>
-            <footer className="modal-card-foot">
-                <p className="modal-card-subtitle has-text-weight-semibold">{list['created_at']}</p>
-            </footer>
-        </div>;
-    }
-
     render() {
         const list = this.props.list;
         return <div className="tile is-parent is-vertical is-4">
@@ -91,9 +68,6 @@ class List extends React.Component {
                         <p className="title">{this.state.name}</p>
                     </div>
                     <div className="buttons level-right">
-                        <a className={"button " + (this.state.enlarged ? "is-loading":"")} onClick={this.toggleEnlarge}>
-                            <FontAwesomeIcon className="has-text-link" icon={faSearch}/>
-                        </a>
                         <ListForm updateParent={this.update} name={list['name']} id={list['id']}/>
                         <a className={"button " + (this.state.activeModal ? "is-loading":"")} onClick={this.toggleModal}>
                             <FontAwesomeIcon className="has-text-danger" icon={faTimes}/>
@@ -107,11 +81,6 @@ class List extends React.Component {
                 modalContent={this.deleteConfirmation()}
                 active={this.state.activeModal}
                 toggle={this.toggleModal}
-            />
-            <Modal
-                modalContent={this.enlargedRender()}
-                active={this.state.enlarged}
-                toggle={this.toggleEnlarge}
             />
         </div>;
     }
