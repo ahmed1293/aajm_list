@@ -23,13 +23,12 @@ export default function Table(props) {
         setData(newData);
     }
 
-    useEffect(() => sort(), []);
+    useEffect(() => sort(), [data.length]);
 
     function addItem(item) {
         const newData = [...data];
         newData.push(item);
         setData(newData);
-        sort();
     }
 
     return <div className="table-container">
@@ -50,7 +49,7 @@ export default function Table(props) {
                    <ItemForm listId={props.listId} callback={addItem}/>
                </td>
             </tr>
-            {data.map(item => <Item key={item.id} item={item} updateTable={sort} />)}
+            {data.map(item => <Item key={item.id} instance={item} callback={sort} />)}
         </tbody>
         </table>
     </div>;

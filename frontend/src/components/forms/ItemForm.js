@@ -1,147 +1,119 @@
-import React from "react";
+import React, {useState} from "react";
 import {fetchDjango, itemsUrl} from "../../util";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencilAlt, faPlus} from "@fortawesome/free-solid-svg-icons";
 import Modal from "../common/Modal";
 
 
-class ItemForm extends React.Component {
+export default function ItemForm(props) {
 
-    constructor(props) {
-        super(props);
-        this.toggleForm = this.toggleForm.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.validateForm = this.validateForm.bind(this);
-        this.activateFormButton = this.activateFormButton.bind(this);
-        this.state = {
-            activeModal: false,
-            item: this.props.item,
-            quantity: this.props.quantity,
-            itemInvalid: false,
-            quantityInvalid: false
-        };
+    const [modal, setModal] = useState(false);
+    const [item, setItem] = useState(props.item);
+    const [quantity, setQuantity] = useState(props.quantity);
+    const [itemInvalid, setItemInvalid] = useState(false);
+    const [quantityInvalid, setQuantityInvalid] = useState(false);
+
+    function toggleModal() {
+        setModal(m => !m);
     }
 
-    toggleForm() {
-        this.setState({activeModal: !this.state.activeModal});
+    function handleChange(e) {
+        const target = e.target;
+        if (target.name === 'item') {
+            setItem(target.value);
+            return
+        }
+        setQuantity(target.value);
     }
 
-    handleChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-        this.setState({[name]: value});
-    }
+    async function handleSubmit(e) {
+        e.preventDefault();
+        setItemInvalid(false); setQuantityInvalid(false);
 
-    async handleSubmit(event) {
-        event.preventDefault();
-        this.setState({itemInvalid: false, quantityInvalid: false});
-
-        if (!this.validateForm()) {
+        if (!validateForm()) {
             return null;
         }
 
         let response = await fetchDjango(
-            itemsUrl(this.props.id), {
-                method: this.props.id ? 'PATCH':'POST',
-                body: this.props.id ? {
-                        "name": this.state.item,
-                        "quantity": this.state.quantity,
+            itemsUrl(props.id), {
+                method: props.id ? 'PATCH':'POST',
+                body: props.id ? {
+                        "name": item,
+                        "quantity": quantity,
                     } : {
-                        "name": this.state.item,
-                        "quantity": this.state.quantity,
-                        "list": this.props.listId,
+                        "name": item,
+                        "quantity": quantity,
+                        "list": props.listId,
                         "is_checked": false
                     }
         });
 
         let newItem = await response.json();
-        this.props.updateParent(newItem);
-        this.setState({item: '', quantity: ''});
-        this.toggleForm();
+        props.callback(newItem);
+        setItem(''); setQuantity('');
+        toggleModal();
     }
 
-    validateForm() {
-        let valid = true;
-
-        if (!this.state.item) {
-            this.setState({itemInvalid: true});
-            valid = false;
-        }
-
-        if (!this.state.quantity) {
-            this.setState({quantityInvalid: true});
-            valid = false;
-        }
-        return valid;
+    function validateForm() {
+        const _itemInvalid = !item;
+        const _quantityInvalid = !quantity;
+        setItemInvalid(_itemInvalid); setQuantityInvalid(_quantityInvalid);
+        return !(_itemInvalid || _quantityInvalid);
     }
 
-    activateFormButton() {
-        if (!this.props.id) {
-            return <a className={
-                "button " + (this.props.smallButton ? "is-small ":"") + (this.state.activeModal ? "is-loading":"")
-            } onClick={this.toggleForm}>
-                <FontAwesomeIcon className="has-text-info" icon={faPlus}/>
-            </a>
+    return <div>
+        {props.id ?
+            (
+                <a className={"button is-small " + (modal ? "is-loading":"")} onClick={toggleModal} data-testid="edit-item-btn">
+                    <FontAwesomeIcon className="icon has-text-warning" icon={faPencilAlt}/>
+                </a>
+            ):(
+                <a className={"button is-small " + (modal ? "is-loading":"")} onClick={toggleModal} data-testid="add-item-btn">
+                    <FontAwesomeIcon className="has-text-info" icon={faPlus}/>
+                </a>
+            )
         }
-        else {
-            return <a className={"button is-small " + (this.state.activeModal ? "is-loading":"")} onClick={this.toggleForm}>
-                <FontAwesomeIcon className="icon has-text-warning" icon={faPencilAlt}/>
-            </a>
-        }
-    }
-
-    render() {
-
-        const form = <article className="message is-dark">
-            <div className="message-header">
-               <p>Item</p>
-            </div>
-            <div className="message-body">
-               <form onSubmit={this.handleSubmit}>
-                   <div className="field">
-                       <label className="label">Item</label>
-                       <div className="control">
-                           <input
-                               autoFocus
-                               className={this.state.itemInvalid ? "input is-danger":"input"}
-                               name="item" type="text"
-                               value={this.state.item || ''}
-                               onChange={this.handleChange}
-                               placeholder="e.g. Chicken"
-                           />
-                       </div>
+        <Modal
+            active={modal}
+            toggle={toggleModal}
+            modalContent={
+                <article className="message is-dark">
+                    <div className="message-header">
+                       <p>Item</p>
+                    </div>
+                    <div className="message-body">
+                       <form onSubmit={handleSubmit}>
+                           <div className="field">
+                               <label className="label">Item</label>
+                               <div className="control">
+                                   <input
+                                       className={itemInvalid ? "input is-danger":"input"}
+                                       name="item" type="text"
+                                       value={item || ''}
+                                       onChange={handleChange}
+                                       placeholder="e.g. Chicken"
+                                   />
+                               </div>
+                           </div>
+                           <div className="field">
+                               <label className="label">Quantity</label>
+                               <div className="control">
+                                   <input
+                                       className={quantityInvalid ? "input is-danger":"input"}
+                                       name="quantity" type="text"
+                                       value={quantity || ''}
+                                       onChange={handleChange}
+                                       placeholder="e.g. 81"
+                                   />
+                               </div>
+                           </div>
+                           <div className="control">
+                               <button className="button is-dark">Save</button>
+                           </div>
+                       </form>
                    </div>
-                   <div className="field">
-                       <label className="label">Quantity</label>
-                       <div className="control">
-                           <input
-                               autoFocus
-                               className={this.state.quantityInvalid ? "input is-danger":"input"}
-                               name="quantity" type="text"
-                               value={this.state.quantity || ''}
-                               onChange={this.handleChange}
-                               placeholder="e.g. 81"
-                           />
-                       </div>
-                   </div>
-                   <div className="control">
-                       <button className="button is-dark">Save</button>
-                   </div>
-               </form>
-           </div>
-        </article>;
-
-        return <div>
-            {this.activateFormButton()}
-            <Modal
-                modalContent={form}
-                active={this.state.activeModal}
-                toggle={this.toggleForm}
-            />
-        </div>;
-    }
+                </article>
+            }
+        />
+    </div>;
 }
-
-export default ItemForm;
