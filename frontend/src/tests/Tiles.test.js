@@ -1,5 +1,5 @@
 import Tiles from "../components/Tiles";
-import {fireEvent, render, waitFor} from '@testing-library/react'
+import {fireEvent, render, waitFor, waitForElementToBeRemoved} from '@testing-library/react'
 import React from "react";
 import {getMockAllListsResponse, shoppingLists} from "./testUtil";
 
@@ -86,7 +86,7 @@ test('Creating new list', async () => {
     });
 });
 
-// TODO: fix
+
 test('Modifying existing list', async () => {
     let shoppingListsAfterEdit = shoppingLists();
     const oldListName = shoppingListsAfterEdit[0]['name'];
@@ -118,8 +118,43 @@ test('Modifying existing list', async () => {
     expect(nameInput.value).toBe(oldListName);
     fireEvent.change(nameInput, {target: {value: newListName}});
 
-    fireEvent.click(getByTestId('existing-list-save'));
+    fireEvent.click(getAllByTestId('existing-list-save')[0]);
 
     await waitFor(() => expect(container.getElementsByClassName('modal is-active').length).toBe(0));
     await findByText(newListName)
+});
+
+
+test('Deleting a list', async () => {
+    let listsAfterDeletion = shoppingLists();
+    const listToBeDeleted = listsAfterDeletion[0];
+    listsAfterDeletion.shift();
+
+    global.fetch = jest.fn()
+        .mockReturnValueOnce(getMockAllListsResponse()) // initial response
+        .mockReturnValueOnce( // delete after click
+            Promise.resolve({
+                ok: true,
+                status: 204,
+            })
+        )
+        .mockReturnValueOnce( // response after new list
+            Promise.resolve({
+                ok: true,
+                status: 200,
+                json: () => listsAfterDeletion
+            })
+        );
+
+    const {findByText, getByText, getAllByTestId, getAllByText} = render(<Tiles/>);
+
+    await findByText(listToBeDeleted['name']);
+    fireEvent.click(getAllByTestId('delete-list')[0]);
+    fireEvent.click(getAllByText('Delete')[0]);
+
+    await waitForElementToBeRemoved(() => [
+        getByText(listToBeDeleted['name']),
+        getByText(listToBeDeleted['items'][0]['name'])
+    ]);
+
 });

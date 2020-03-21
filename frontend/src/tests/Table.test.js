@@ -1,25 +1,18 @@
-import {fireEvent, render, waitForDomChange} from "@testing-library/react";
+import {fireEvent, render, waitForDomChange, waitFor} from "@testing-library/react";
 import Table from "../components/Table";
 import React from "react";
 import {getMockPatchResponse, itemList} from "./testUtil";
 
 
-describe('Table rendering', () => {
+test('Render as expected', () => {
+    const items = itemList();
+    const {getByText} = render(<Table items={items} />);
 
-    test('Add item button rendered even if not items', () => {
-        const {container} = render(<Table items={[]} />);
-        const addItemButton = container.getElementsByClassName('fa-plus')[0].parentElement;
-        expect(addItemButton).toBeTruthy();
-    });
-
-    test('Table rendered if items passed through', () => {
-       const {container} = render(<Table items={itemList()} />);
-       const table = container.getElementsByTagName('table');
-       const rows = container.getElementsByTagName('tr');
-       expect(table.length).toBe(1);
-       expect(rows.length).toBe(5); // 1 row is the addItem button
-    })
-
+    expect(getByText('name')).toBeVisible();
+    expect(getByText('quantity')).toBeVisible();
+    expect(getByText('who')).toBeVisible();
+    expect(getByText('when')).toBeVisible();
+    items.forEach((item) => expect(getByText(item.name)).toBeVisible());
 });
 
 
@@ -68,15 +61,18 @@ describe('Table sorting', () => {
         );
 
         fireEvent.click(firstButton);
-        await waitForDomChange({container});
+        //await waitForDomChange({container});
 
-        const newFirstRow = container.getElementsByTagName('tr')[2];
-        const newSecondRow = container.getElementsByTagName('tr')[3];
-        const newThirdRow = container.getElementsByTagName('tr')[4];
+        await waitFor(() => {
+            const newFirstRow = container.getElementsByTagName('tr')[2];
+            const newSecondRow = container.getElementsByTagName('tr')[3];
+            const newThirdRow = container.getElementsByTagName('tr')[4];
 
-        expect(newFirstRow).toBe(secondRow);
-        expect(newSecondRow).toBe(thirdRow);
-        expect(newThirdRow).toBe(firstRow);
+            expect(newFirstRow).toBe(secondRow);
+            expect(newSecondRow).toBe(thirdRow);
+            expect(newThirdRow).toBe(firstRow);
+        });
+
     });
 
     test('Items move away from bottom if check is undone', async () => {
@@ -108,17 +104,16 @@ describe('Table sorting', () => {
         fireEvent.click(container.getElementsByClassName('fa-check')[0]);
         fireEvent.click(container.getElementsByClassName('fa-check')[0]);
         fireEvent.click(container.getElementsByClassName('fa-check')[0]);
-        await waitForDomChange({container});
+        await waitForDomChange({container}); // TODO: dont use this
 
         const rowBeingUnchecked = container.getElementsByTagName('tr')[4];
         const uncheckButton = rowBeingUnchecked.getElementsByClassName('fa-undo')[0].parentElement;
 
         fireEvent.click(uncheckButton);
-        await waitForDomChange({container});
-
-        const newFirstRow = container.getElementsByTagName('tr')[2];
-
-        expect(newFirstRow).toBe(rowBeingUnchecked);
+        await waitFor(() => {
+            const newFirstRow = container.getElementsByTagName('tr')[2];
+            expect(newFirstRow).toBe(rowBeingUnchecked);
+        })
     });
 
 });

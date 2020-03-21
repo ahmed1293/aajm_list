@@ -7,7 +7,7 @@ import {faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 
 export default function ListForm(props) {
     const [modal, setModal] = useState(false);
-    const [name, setName] = useState('');
+    const [name, setName] = useState(props.name);
     const [nameInvalid, setNameInvalid] = useState(false);
 
     function toggleForm() {
@@ -37,7 +37,7 @@ export default function ListForm(props) {
         });
 
         if (response.ok) {
-            props.fetchLists();
+            props.callback(name);
             toggleForm();
         }
     }
