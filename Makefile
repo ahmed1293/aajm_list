@@ -2,7 +2,7 @@ local:
 	docker-compose up -d django postgres
 
 down:
-	docker-compose up -d django postgres
+	docker-compose down
 
 static:
 	docker-compose run --rm node npm run dev
