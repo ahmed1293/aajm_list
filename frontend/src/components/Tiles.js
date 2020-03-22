@@ -1,55 +1,45 @@
-import React from "react";
-import key from "weak-key";
+import React, {useEffect, useState} from "react";
 import List from "./List";
 import ListForm from "./forms/ListForm";
 
-class Tiles extends React.Component {
-    constructor(props) {
-        super(props);
-        this.update = this.update.bind(this);
 
-        this.state = {
-            data: [],
-            loaded: false,
-            errorOccurred: false
-        };
-    }
+export default function Tiles() {
 
-    componentDidMount() {
-        this.update();
-    }
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
-    async update() {
+    async function fetchData() {
+        setLoading(true);
         let response = await fetch('api/shopping-lists/');
-
         if (response.status !== 200) {
-            this.setState({ errorOccurred: true });
+            setError(true);
         }
         else {
             let data = await response.json();
-            this.setState({ data: data, loaded: true });
+            setData(data); setLoading(false);
         }
     }
 
-    render() {
-        const lists = this.state.data;
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-        if (this.state.loaded) {
-            return <div>
-                <ListForm updateParent={this.update}/>
-                <section className="section">
-                    <div className="container">
-                        <div className="tile is-ancestor flex-wrap">
-                            {lists.map(list => <List key={key(list)} list={list} updateLists={this.update}/>)}
-                        </div>
-                    </div>
-                </section>
-            </div>
-        }
+    if (loading || error) {
         return <progress
-            className={"progress is-small " + (this.state.errorOccurred ? "is-danger":"is-dark")} max="100"
-        ></progress>;
+            className={"progress is-small " + (error ? "is-danger":"is-dark")}
+            max="100"
+            data-testid={error ? "error-bar":"progress-bar"}
+        />
     }
+    return <div>
+        <ListForm callback={fetchData}/>
+        <section className="section">
+            <div className="container">
+                <div className="tile is-ancestor flex-wrap">
+                    {data.map(list => <List key={list.id} instance={list} id={list} fetchLists={fetchData}/>)}
+                </div>
+            </div>
+        </section>
+    </div>
 }
-
-export default Tiles;

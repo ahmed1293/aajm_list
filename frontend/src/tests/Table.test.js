@@ -1,25 +1,18 @@
-import {fireEvent, render, waitForDomChange} from "@testing-library/react";
+import {fireEvent, render, waitFor, waitForDomChange} from "@testing-library/react";
 import Table from "../components/Table";
 import React from "react";
 import {getMockPatchResponse, itemList} from "./testUtil";
 
 
-describe('Table rendering', () => {
+test('Render as expected', () => {
+    const items = itemList();
+    const {getByText} = render(<Table items={items} />);
 
-    test('Add item button rendered even if not items', () => {
-        const {container} = render(<Table items={[]} />);
-        const addItemButton = container.getElementsByClassName('fa-plus')[0].parentElement;
-        expect(addItemButton).toBeTruthy();
-    });
-
-    test('Table rendered if items passed through', () => {
-       const {container} = render(<Table items={itemList()} />);
-       const table = container.getElementsByTagName('table');
-       const rows = container.getElementsByTagName('tr');
-       expect(table.length).toBe(1);
-       expect(rows.length).toBe(5); // 1 row is the addItem button
-    })
-
+    expect(getByText('name')).toBeVisible();
+    expect(getByText('quantity')).toBeVisible();
+    expect(getByText('who')).toBeVisible();
+    expect(getByText('when')).toBeVisible();
+    items.forEach((item) => expect(getByText(item.name)).toBeVisible());
 });
 
 
@@ -68,15 +61,18 @@ describe('Table sorting', () => {
         );
 
         fireEvent.click(firstButton);
-        await waitForDomChange({container});
+        //await waitForDomChange({container});
 
-        const newFirstRow = container.getElementsByTagName('tr')[2];
-        const newSecondRow = container.getElementsByTagName('tr')[3];
-        const newThirdRow = container.getElementsByTagName('tr')[4];
+        await waitFor(() => {
+            const newFirstRow = container.getElementsByTagName('tr')[2];
+            const newSecondRow = container.getElementsByTagName('tr')[3];
+            const newThirdRow = container.getElementsByTagName('tr')[4];
 
-        expect(newFirstRow).toBe(secondRow);
-        expect(newSecondRow).toBe(thirdRow);
-        expect(newThirdRow).toBe(firstRow);
+            expect(newFirstRow).toBe(secondRow);
+            expect(newSecondRow).toBe(thirdRow);
+            expect(newThirdRow).toBe(firstRow);
+        });
+
     });
 
     test('Items move away from bottom if check is undone', async () => {
@@ -106,19 +102,169 @@ describe('Table sorting', () => {
 
         // check all items
         fireEvent.click(container.getElementsByClassName('fa-check')[0]);
+        await waitFor(() => expect(container.getElementsByClassName('fa-undo').length).toBe(1));
         fireEvent.click(container.getElementsByClassName('fa-check')[0]);
+        await waitFor(() => expect(container.getElementsByClassName('fa-undo').length).toBe(2));
         fireEvent.click(container.getElementsByClassName('fa-check')[0]);
-        await waitForDomChange({container});
+        await waitFor(() => expect(container.getElementsByClassName('fa-undo').length).toBe(3));
 
         const rowBeingUnchecked = container.getElementsByTagName('tr')[4];
         const uncheckButton = rowBeingUnchecked.getElementsByClassName('fa-undo')[0].parentElement;
 
         fireEvent.click(uncheckButton);
+        await waitFor(() => {
+            const newFirstRow = container.getElementsByTagName('tr')[2];
+            expect(newFirstRow).toBe(rowBeingUnchecked);
+        })
+    });
+
+});
+
+
+describe('Creating item', () => {
+
+    const newItemName = "asparagus";
+    const newItemQuantity = "300kg";
+    const newItemAddedAt = "09/10/2019 12:23:51";
+
+    function mockPostResponse() {
+        return Promise.resolve({
+            ok: true,
+            json: () => {
+                return {
+                    "id": 12,
+                    "name": "asparagus",
+                    "quantity": "300kg",
+                    "added_by": 1,
+                    "added_at": "09/10/2019 12:23:51",
+                    "is_checked": false
+                }
+            }
+        });
+    }
+
+    function submitForm(getAllByTestId, getAllByPlaceholderText, getAllByText) {
+        const addItemButton = getAllByTestId('add-item-btn')[0];
+        fireEvent.click(addItemButton);
+
+        const itemInput = getAllByPlaceholderText('e.g. Chicken')[0];
+        const quantityInput = getAllByPlaceholderText('e.g. 81')[0];
+
+        fireEvent.change(itemInput, {target: {value: newItemName}});
+        fireEvent.change(quantityInput, {target: {value: newItemQuantity}});
+
+        const submitButton = getAllByText('Save')[0];
+        fireEvent.click(submitButton);
+    }
+
+    test('Form submission adds item to list',async () => {
+        global.fetch = jest.fn().mockReturnValue(
+            mockPostResponse()
+        );
+
+        const {container, getAllByTestId, getAllByPlaceholderText, getAllByText, findByText} = render(
+            <Table items={itemList()} />
+        );
+
+        submitForm(getAllByTestId, getAllByPlaceholderText, getAllByText);
+
+        await waitFor(() => expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy());
+
+        await findByText(newItemName);
+        await findByText(newItemQuantity);
+        await findByText(newItemAddedAt);
+    });
+
+    test('Newly added item is sorted', async () => {
+        global.fetch = jest.fn()
+            .mockReturnValueOnce(
+                getMockPatchResponse() // checking off first item
+            ).mockReturnValueOnce(
+                mockPostResponse() // creating new item
+            );
+
+        const {container, getAllByTestId, getAllByPlaceholderText, getAllByText, findByText} = render(
+            <Table items={itemList()} />
+        );
+
+        const firstItemCheckButton = container.getElementsByClassName('fa-check')[0];
+        fireEvent.click(firstItemCheckButton);
         await waitForDomChange({container});
 
-        const newFirstRow = container.getElementsByTagName('tr')[2];
+        submitForm(getAllByTestId, getAllByPlaceholderText, getAllByText);
 
-        expect(newFirstRow).toBe(rowBeingUnchecked);
+        await waitForDomChange({container});
+
+        await waitFor(() => expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy());
+
+        await findByText(newItemName);
+        await findByText(newItemQuantity);
+        await findByText(newItemAddedAt);
+
+        const lastRow = container.getElementsByTagName('tr')[5];
+        const lastRowData = lastRow.getElementsByTagName('td');
+
+        const originalItems = itemList();
+        expect(lastRowData[2].innerHTML).toBe(originalItems[0].name);
+        expect(lastRowData[3].innerHTML).toBe(originalItems[0].quantity);
+        expect(lastRowData[5].innerHTML).toBe(originalItems[0].added_at);
+        expect(lastRow.classList.contains('line-through')).toBeTruthy();
+
+        const newRow = container.getElementsByTagName('tr')[4];
+        const newRowData = newRow.getElementsByTagName('td');
+        expect(newRowData[2].innerHTML).toBe(newItemName);
+        expect(newRowData[3].innerHTML).toBe(newItemQuantity);
+        expect(newRowData[5].innerHTML).toBe(newItemAddedAt);
     });
+
+});
+
+
+test('Updating an existing item', async () => {
+    const itemToBeEdited = itemList()[0];
+    const nameBeforeEdit = itemToBeEdited['name'];
+    const quantityBeforeEdit = itemToBeEdited['quantity'];
+
+    const newItemName = 'NEW NAME';
+    const newItemQuantity = 'NEW QUANTITY';
+
+    global.fetch = jest.fn().mockReturnValue(
+        Promise.resolve({
+            ok: true,
+            json: () => {
+                return {
+                    "id": itemToBeEdited['id'],
+                    "name": newItemName,
+                    "quantity": newItemQuantity,
+                    "added_by": itemToBeEdited['added_by'],
+                    "added_at": itemToBeEdited['added_at'],
+                    "is_checked": itemToBeEdited['is_checked']
+                }
+            }
+        })
+    );
+
+    const {container, getAllByTestId, getAllByPlaceholderText, getAllByText, findByText} = render(
+        <Table items={itemList()} />
+    );
+
+    fireEvent.click(getAllByTestId('edit-item-btn')[0]);
+
+    // using index 1 because 0 is add form (need to get rid of modal hell)
+    const itemInput = getAllByPlaceholderText('e.g. Chicken')[1];
+    const quantityInput = getAllByPlaceholderText('e.g. 81')[1];
+
+    expect(itemInput.value).toBe(nameBeforeEdit);
+    expect(quantityInput.value).toBe(quantityBeforeEdit);
+
+    fireEvent.change(itemInput, {target: {value: newItemName}});
+    fireEvent.change(quantityInput, {target: {value: newItemQuantity}});
+
+    fireEvent.click(getAllByText('Save')[1]);
+
+    await waitFor(() => expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy());
+
+    await expect(await findByText(newItemName)).toBeVisible();
+    await expect(await findByText(newItemQuantity)).toBeVisible();
 
 });

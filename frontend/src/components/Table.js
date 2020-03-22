@@ -1,65 +1,56 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Item from "./Item";
 import ItemForm from "./forms/ItemForm";
 
-class Table extends React.Component {
-    constructor(props) {
-        super(props);
-        this.sort = this.sort.bind(this);
-        this.addItem = this.addItem.bind(this);
-    }
 
-    componentDidMount() {
-        this.sort();
-    }
+export default function Table(props) {
 
-    sort(updatedItem) {
-        let data = this.props.items;
+    const [data, setData] = useState(props.items);
+
+    function sort(updatedItem) {
+        let newData = [...data];
 
         if (updatedItem) {
-            const itemIndex = data.findIndex(item => item['id'] === updatedItem['id']);
+            const itemIndex = newData.findIndex(item => item['id'] === updatedItem['id']);
             if (itemIndex !== -1) {
-                data.splice(itemIndex, 1, updatedItem);
+                newData.splice(itemIndex, 1, updatedItem);
             }
         }
 
-        data.sort(function (item_1, item_2) {
+        newData.sort((item_1, item_2) => {
             return item_1['is_checked'] - item_2['is_checked'] // false values first
         });
-        this.setState({data: data});
+        setData(newData);
     }
 
-    addItem(newItem) {
-        this.props.items.push(newItem);
-        this.sort();
+    useEffect(() => sort(), [data.length]);
+
+    function addItem(item) {
+        const newData = [...data];
+        newData.push(item);
+        setData(newData);
     }
 
-    // move ItemForm modal outside of table so it works on Jess' phone?
-    render() {
-        const items = this.props.items;
-        return <div className="table-container">
-            <table className={"table is-striped " + (this.props.narrow ? "is-narrow":"")}>
-                <thead>
-                <tr>
-                    <th/>
-                    <th/>
-                    <th>name</th>
-                    <th>quantity</th>
-                    <th>who</th>
-                    <th>when</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                   <td colSpan={6} className="has-text-centered">
-                       <ItemForm listId={this.props.listId} updateParent={this.addItem} smallButton={this.props.narrow}/>
-                   </td>
-                </tr>
-                {items.map(item => <Item key={item['id']} item={item} updateTable={this.sort} />)}
-            </tbody>
-            </table>
-        </div>;
-    }
+    return <div className="table-container">
+        <table className="table is-striped is-narrow">
+            <thead>
+            <tr>
+                <th/>
+                <th/>
+                <th>name</th>
+                <th>quantity</th>
+                <th>who</th>
+                <th>when</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+               <td colSpan={6} className="has-text-centered">
+                   <ItemForm listId={props.listId} callback={addItem}/>
+               </td>
+            </tr>
+            {data.map(item => <Item key={item.id} instance={item} callback={sort} />)}
+        </tbody>
+        </table>
+    </div>;
 }
-
-export default Table;

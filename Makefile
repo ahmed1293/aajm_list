@@ -1,7 +1,10 @@
 local:
 	docker-compose up -d django postgres
 
-loadstatic:
+down:
+	docker-compose down
+
+static:
 	docker-compose run --rm node npm run dev
 	docker-compose run --rm django python manage.py collectstatic --noinput
 

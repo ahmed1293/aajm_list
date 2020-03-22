@@ -1,5 +1,5 @@
 import React from 'react'
-import {fireEvent, render, waitForElement, getAllByText, waitForDomChange} from '@testing-library/react'
+import {fireEvent, render, waitFor} from '@testing-library/react'
 import Item from "../components/Item";
 import {getMockPatchResponse} from "./testUtil";
 
@@ -18,7 +18,7 @@ describe('Item icons', () => {test.each`
         "is_checked": checked
     };
     const {container} = render(
-        <table><tbody><Item item={testItem} /></tbody></table>
+        <table><tbody><Item instance={testItem} /></tbody></table>
     );
 
     const iconClassList = container.getElementsByTagName('svg')[1].classList;
@@ -53,12 +53,11 @@ describe('Checking an item', () => {
 
 
   test('Database PATCH after click',   () => {
-    const {container} = render(
-      <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
+    const {getByTestId} = render(
+      <table><tbody><Item instance={testItem} callback={mockUpdateTable} /></tbody></table>
     );
-    const button = container.getElementsByClassName('fa-check')[0].parentElement;
 
-    fireEvent.click(button);
+    fireEvent.click(getByTestId('check-button'));
 
     expect(mockFetch.mock.calls.length).toBe(1);
     expect(mockFetch.mock.calls[0][0]).toBe('/api/items/'+testItem.id+'/');
@@ -70,30 +69,26 @@ describe('Checking an item', () => {
 
 
   test('Strikethrough after click', () => {
-    const {container} = render(
-      <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
+    const {container, getByTestId} = render(
+      <table><tbody><Item instance={testItem} callback={mockUpdateTable} /></tbody></table>
     );
     const rowClassList = container.getElementsByTagName('tr')[0].classList;
-    const button = container.getElementsByClassName('fa-check')[0].parentElement;
 
     expect(rowClassList.contains('line-through')).toBeFalsy();
-    fireEvent.click(button);
+    fireEvent.click(getByTestId('check-button'));
     expect(rowClassList.contains('line-through')).toBeTruthy();
   });
 
 
   test('Table update after click', async () => {
     const mockUpdateTable = jest.fn();
-    const {container} = render(
-      <table><tbody><Item item={testItem} updateTable={mockUpdateTable} /></tbody></table>
+    const {getByTestId} = render(
+      <table><tbody><Item instance={testItem} callback={mockUpdateTable} /></tbody></table>
     );
-    const button = container.getElementsByClassName('fa-check')[0].parentElement;
+    const button = getByTestId('check-button');
 
     fireEvent.click(button);
-    const flushPromises = () => new Promise(setImmediate); // TODO: is this bad?
-    await flushPromises();
-
-    expect(mockUpdateTable.mock.calls.length).toBe(1);
+    await waitFor(() => expect(mockUpdateTable.mock.calls.length).toBe(1));
   });
 
 });
