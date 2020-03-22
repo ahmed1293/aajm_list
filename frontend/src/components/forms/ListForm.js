@@ -1,14 +1,20 @@
-import React, {useState} from "react";
-import {fetchDjango, shoppingListsUrl} from "../../util";
+import React, {useContext, useEffect, useState} from "react";
 import Modal from "../common/Modal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencilAlt} from "@fortawesome/free-solid-svg-icons";
+import {APIContext} from "../../api";
 
 
 export default function ListForm(props) {
+    // TODO: should be two separate components
+
+    const api = useContext(APIContext);
+
     const [modal, setModal] = useState(false);
     const [name, setName] = useState(props.name);
     const [nameInvalid, setNameInvalid] = useState(false);
+
+    let controller;
 
     function toggleForm() {
         setModal(m => !m);
@@ -27,20 +33,17 @@ export default function ListForm(props) {
             return null;
         }
 
-        // TODO: pass a service prop
-        let response = await fetchDjango(
-            shoppingListsUrl(props.id), {
-                method: props.id ? 'PATCH':'POST',
-                body: {
-                    "name": name,
-                }
-        });
-
-        if (response.ok) {
-            props.callback(name);
-            toggleForm();
-        }
+        const endpoint = 'shopping-lists';
+        const body = {'name': name};
+        let response = props.id ? await api.PATCH(endpoint, props.id, body) : await api.POST(endpoint, body);
+        controller = response.controller;
+        props.callback(name);
+        toggleForm();
     }
+
+    useEffect(() => {
+       return (() => {controller && controller.abort()})
+    });
 
     function renderActivateFormButton() {
         if (!props.id) {

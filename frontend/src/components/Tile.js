@@ -1,16 +1,20 @@
-import React, {useState} from "react";
-import {fetchDjango, shoppingListsUrl} from "../util";
+import React, {useContext, useEffect, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
 import List from "./List";
 import ListForm from "./forms/ListForm";
 import Modal from "./common/Modal";
+import {APIContext} from "../api";
 
 export default function Tile(props) {
+
+    const api = useContext(APIContext);
 
     const instance = props.instance;
     const [name, setName] = useState(instance.name);
     const [modal, setModal] = useState(false);
+
+    let controller;
 
     function toggleDeleteModal() {
         setModal(m => !m);
@@ -18,16 +22,14 @@ export default function Tile(props) {
 
     async function _delete(e) {
         e.preventDefault();
-        const response = await fetchDjango(
-            shoppingListsUrl(instance.id), {
-                method: 'DELETE'
-            });
-
-        if (response.ok) {
-            props.fetchLists();
-            setModal(false);
-        }
+        controller = await api.DELETE('shopping-lists', instance.id);
+        props.fetchLists();
+        setModal(false);
     }
+
+    useEffect(() => {
+       return (() => {controller && controller.abort()})
+    });
 
     return <div className="tile is-parent is-vertical is-4">
         <article className="tile is-child notification is-dark">

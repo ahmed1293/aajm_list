@@ -1,17 +1,21 @@
-import React, {useState} from "react";
-import {fetchDjango, itemsUrl} from "../../util";
+import React, {useContext, useEffect, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencilAlt, faPlus} from "@fortawesome/free-solid-svg-icons";
 import Modal from "../common/Modal";
+import {APIContext} from "../../api";
 
 
 export default function ItemForm(props) {
+
+    const api = useContext(APIContext);
 
     const [modal, setModal] = useState(false);
     const [item, setItem] = useState(props.item);
     const [quantity, setQuantity] = useState(props.quantity);
     const [itemInvalid, setItemInvalid] = useState(false);
     const [quantityInvalid, setQuantityInvalid] = useState(false);
+
+    let controller;
 
     function toggleModal() {
         setModal(m => !m);
@@ -34,25 +38,23 @@ export default function ItemForm(props) {
             return null;
         }
 
-        let response = await fetchDjango(
-            itemsUrl(props.id), {
-                method: props.id ? 'PATCH':'POST',
-                body: props.id ? {
-                        "name": item,
-                        "quantity": quantity,
-                    } : {
-                        "name": item,
-                        "quantity": quantity,
-                        "list": props.listId,
-                        "is_checked": false
-                    }
-        });
+        const endpoint = 'items';
+        const body = props.id ? {'name': item, 'quantity': quantity}:
+            {'name': item, 'quantity': quantity, 'list': props.listId, 'is_checked': false};
 
-        let newItem = await response.json();
+        let response = props.id ? await api.PATCH(endpoint, props.id, body) : await api.POST(endpoint, body);
+
+        let newItem = await response.data;
+        controller = response.controller;
+
         props.callback(newItem);
         setItem(''); setQuantity('');
         toggleModal();
     }
+
+    useEffect(() => {
+       return (() => {controller && controller.abort()})
+    });
 
     function validateForm() {
         const _itemInvalid = !item;

@@ -1,31 +1,41 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Tile from "./Tile";
 import ListForm from "./forms/ListForm";
 import {faSpinner, faFrown} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {APIContext} from "../api";
 
 
 export default function Tiles() {
+
+    const api = useContext(APIContext);
 
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
+    let controller;
+
     async function fetchData() {
         setLoading(true);
-        let response = await fetch('api/shopping-lists/');
-        if (response.status !== 200) {
-            setError(true);
-            setLoading(false);
-        }
-        else {
-            let data = await response.json();
-            setData(data); setLoading(false);
+        try {
+            let response = await api.GET('shopping-lists');
+            controller = response.controller;
+            setData(response.data); setLoading(false);
+        } catch (e) {
+            setError(true); setLoading(false);
         }
     }
 
     useEffect(() => {
-        fetchData();
+        let _isMounted = true;
+
+        _isMounted && fetchData();
+
+        return (() => {
+            _isMounted = false;
+            controller && controller.abort();
+        })
     }, []);
 
     if (loading) {
