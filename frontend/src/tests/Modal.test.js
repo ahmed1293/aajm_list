@@ -1,6 +1,6 @@
 import {itemList} from "./testUtil";
 import {fireEvent, render} from "@testing-library/react";
-import Table from "../components/Table";
+import List from "../components/List";
 import React from "react";
 
 
@@ -9,12 +9,12 @@ describe('Modal appears/reappears correctly', () => {
     const ITEMS = itemList();
 
     test('Form not visible on initial render',  () => {
-        const {container} = render(<Table items={ITEMS} />);
+        const {container} = render(<List items={ITEMS} />);
         expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy();
     });
 
     test('Form pops up after button click', () => {
-        const {container} = render(<Table items={ITEMS} />);
+        const {container} = render(<List items={ITEMS} />);
         const addItemButton = container.getElementsByClassName('fa-plus')[0].parentElement;
 
         fireEvent.click(addItemButton);
@@ -23,7 +23,7 @@ describe('Modal appears/reappears correctly', () => {
     });
 
     test('Form disappears after clicking on page', () => {
-        const {container} = render(<Table items={ITEMS} />);
+        const {container} = render(<List items={ITEMS} />);
         const addItemButton = container.getElementsByClassName('fa-plus')[0].parentElement;
 
         fireEvent.click(addItemButton);

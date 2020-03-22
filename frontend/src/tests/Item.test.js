@@ -17,16 +17,13 @@ describe('Item icons', () => {test.each`
         "added_at": "29/09/2019 15:03:59",
         "is_checked": checked
     };
-    const {container} = render(
-        <table><tbody><Item instance={testItem} /></tbody></table>
-    );
+    const {container, getByText} = render(<Item instance={testItem} index={0} />);
 
     const iconClassList = container.getElementsByTagName('svg')[1].classList;
-    const rowClassList = container.getElementsByTagName('tr')[0].classList;
 
     expect(iconClassList.contains(icon)).toBeTruthy();
     expect(iconClassList.contains(colourClass)).toBeTruthy();
-    expect(rowClassList.contains('line-through')).toBe(isCrossedThrough);
+    expect(getByText('carrots (900kg)').classList.contains('line-through')).toBe(isCrossedThrough);
   });
 });
 
@@ -53,9 +50,7 @@ describe('Checking an item', () => {
 
 
   test('Database PATCH after click',   () => {
-    const {getByTestId} = render(
-      <table><tbody><Item instance={testItem} callback={mockUpdateTable} /></tbody></table>
-    );
+    const {getByTestId} = render(<Item instance={testItem} callback={mockUpdateTable} />);
 
     fireEvent.click(getByTestId('check-button'));
 
@@ -69,22 +64,18 @@ describe('Checking an item', () => {
 
 
   test('Strikethrough after click', () => {
-    const {container, getByTestId} = render(
-      <table><tbody><Item instance={testItem} callback={mockUpdateTable} /></tbody></table>
-    );
-    const rowClassList = container.getElementsByTagName('tr')[0].classList;
+    const {getByTestId, getByText} = render(<Item instance={testItem} callback={mockUpdateTable} />);
+    const classList = getByText('onion (1g)').classList;
 
-    expect(rowClassList.contains('line-through')).toBeFalsy();
+    expect(classList.contains('line-through')).toBeFalsy();
     fireEvent.click(getByTestId('check-button'));
-    expect(rowClassList.contains('line-through')).toBeTruthy();
+    expect(classList.contains('line-through')).toBeTruthy();
   });
 
 
-  test('Table update after click', async () => {
+  test('List update after click', async () => {
     const mockUpdateTable = jest.fn();
-    const {getByTestId} = render(
-      <table><tbody><Item instance={testItem} callback={mockUpdateTable} /></tbody></table>
-    );
+    const {getByTestId} = render(<Item instance={testItem} callback={mockUpdateTable} />);
     const button = getByTestId('check-button');
 
     fireEvent.click(button);

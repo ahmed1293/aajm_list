@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {fetchDjango, shoppingListsUrl} from "../util";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
-import Table from "./Table";
+import List from "./List";
 import ListForm from "./forms/ListForm";
 import Modal from "./common/Modal";
 
@@ -43,7 +43,7 @@ export default function Tile(props) {
                 </div>
             </nav>
             <p className="subtitle">{instance.created_at}</p>
-            <Table items={instance.items} listId={instance.id} narrow={true}/>
+            <List items={instance.items} listId={instance.id} narrow={true}/>
         </article>
         <Modal
             active={modal}

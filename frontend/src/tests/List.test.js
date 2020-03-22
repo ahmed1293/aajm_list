@@ -1,32 +1,24 @@
-import {fireEvent, render, waitFor, waitForDomChange} from "@testing-library/react";
-import Table from "../components/Table";
+import {fireEvent, render, waitFor, getNodeText} from "@testing-library/react";
+import List from "../components/List";
 import React from "react";
 import {getMockPatchResponse, itemList} from "./testUtil";
 
 
 test('Render as expected', () => {
     const items = itemList();
-    const {getByText} = render(<Table items={items} />);
+    const {getByText} = render(<List items={items} />);
 
-    expect(getByText('name')).toBeVisible();
-    expect(getByText('quantity')).toBeVisible();
-    expect(getByText('who')).toBeVisible();
-    expect(getByText('when')).toBeVisible();
-    items.forEach((item) => expect(getByText(item.name)).toBeVisible());
+    items.forEach((item) => expect(getByText(`${item.name} (${item.quantity})`)).toBeVisible());
 });
 
 
-describe('Table sorting', () => {
+describe('List sorting', () => {
 
-    function checkRowValues(container, rowIndex, first, second, third, fourth) {
-        const row = container.getElementsByTagName('tr')[rowIndex];
-        const rowData = row.getElementsByTagName('td');
-        expect(rowData[2].innerHTML).toBe(first);
-        expect(rowData[3].innerHTML).toBe(second);
-        expect(rowData[4].innerHTML).toBe(third);
-        expect(rowData[5].innerHTML).toBe(fourth);
-
-        return row;
+    function checkItemText(getByTestId, index, name, quantity) {
+        const listItem = getByTestId(`item-${index}`);
+        const text = getNodeText(listItem);
+        expect(text).toBe(`${name} (${quantity})`);
+        return text;
     }
 
     const mockFetch = jest.fn();
@@ -39,34 +31,27 @@ describe('Table sorting', () => {
     test('Checked items at bottom on initial sort', () => {
         let items = itemList();
         items[0]['is_checked'] = true;
-        const {container} = render(<Table items={items} />);
+        const {getByTestId} = render(<List items={items} />);
 
-        checkRowValues(container, 4,'onion', '1g', '1', '29/09/2019 19:03:59');
+        checkItemText(getByTestId, items.length-1,'onion', '1g');
     });
 
     test('Items move to the bottom after being checked', async () => {
         const items = itemList();
 
-        const {container} = render(<Table items={items} />);
-        const firstButton = container.getElementsByClassName('fa-check')[0];
+        const {getByTestId} = render(<List items={items} />);
+        const firstButton = getByTestId('check-btn-0');
 
-        const firstRow = checkRowValues(
-            container, 2, 'onion', '1g', '1', '29/09/2019 19:03:59'
-        );
-        const secondRow = checkRowValues(
-            container, 3, 'banana', '100kg', '1', '02/01/2010 20:03:59'
-        );
-        const thirdRow = checkRowValues(
-            container, 4, 'milk', '10L', '1', '04/01/2018 21:03:59'
-        );
+        const firstRow = checkItemText(getByTestId, 0, 'onion', '1g');
+        const secondRow = checkItemText(getByTestId, 1, 'banana', '100kg');
+        const thirdRow = checkItemText(getByTestId, 2, 'milk', '10L');
 
         fireEvent.click(firstButton);
-        //await waitForDomChange({container});
 
         await waitFor(() => {
-            const newFirstRow = container.getElementsByTagName('tr')[2];
-            const newSecondRow = container.getElementsByTagName('tr')[3];
-            const newThirdRow = container.getElementsByTagName('tr')[4];
+            const newFirstRow = getNodeText(getByTestId('item-0'));
+            const newSecondRow = getNodeText(getByTestId('item-1'));
+            const newThirdRow = getNodeText(getByTestId('item-2'));
 
             expect(newFirstRow).toBe(secondRow);
             expect(newSecondRow).toBe(thirdRow);
@@ -98,23 +83,20 @@ describe('Table sorting', () => {
                     return mockItems[0]}})
             ); // check onion again
 
-        const {container} = render(<Table items={itemList()} />);
+        const {getByTestId, getAllByTestId} = render(<List items={itemList()} />);
 
         // check all items
-        fireEvent.click(container.getElementsByClassName('fa-check')[0]);
-        await waitFor(() => expect(container.getElementsByClassName('fa-undo').length).toBe(1));
-        fireEvent.click(container.getElementsByClassName('fa-check')[0]);
-        await waitFor(() => expect(container.getElementsByClassName('fa-undo').length).toBe(2));
-        fireEvent.click(container.getElementsByClassName('fa-check')[0]);
-        await waitFor(() => expect(container.getElementsByClassName('fa-undo').length).toBe(3));
+        fireEvent.click(getByTestId('check-btn-0'));
+        await waitFor(() => expect(getAllByTestId('undo-btn-', {exact: false}).length).toBe(1));
+        fireEvent.click(getByTestId('check-btn-0'));
+        await waitFor(() => expect(getAllByTestId('undo-btn-', {exact: false}).length).toBe(2));
+        fireEvent.click(getByTestId('check-btn-0'));
+        await waitFor(() => expect(getAllByTestId('undo-btn-', {exact: false}).length).toBe(3));
 
-        const rowBeingUnchecked = container.getElementsByTagName('tr')[4];
-        const uncheckButton = rowBeingUnchecked.getElementsByClassName('fa-undo')[0].parentElement;
-
-        fireEvent.click(uncheckButton);
+        const itemBeingUnchecked = getNodeText(getByTestId('item-2'));
+        fireEvent.click(getByTestId('undo-btn-2'));
         await waitFor(() => {
-            const newFirstRow = container.getElementsByTagName('tr')[2];
-            expect(newFirstRow).toBe(rowBeingUnchecked);
+            expect(getNodeText(getByTestId('item-0'))).toBe(itemBeingUnchecked);
         })
     });
 
@@ -125,7 +107,6 @@ describe('Creating item', () => {
 
     const newItemName = "asparagus";
     const newItemQuantity = "300kg";
-    const newItemAddedAt = "09/10/2019 12:23:51";
 
     function mockPostResponse() {
         return Promise.resolve({
@@ -143,7 +124,7 @@ describe('Creating item', () => {
         });
     }
 
-    function submitForm(getAllByTestId, getAllByPlaceholderText, getAllByText) {
+    async function addItem(container, getAllByTestId, getAllByPlaceholderText, getAllByText) {
         const addItemButton = getAllByTestId('add-item-btn')[0];
         fireEvent.click(addItemButton);
 
@@ -155,6 +136,7 @@ describe('Creating item', () => {
 
         const submitButton = getAllByText('Save')[0];
         fireEvent.click(submitButton);
+        await waitFor(() => expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy());
     }
 
     test('Form submission adds item to list',async () => {
@@ -163,19 +145,15 @@ describe('Creating item', () => {
         );
 
         const {container, getAllByTestId, getAllByPlaceholderText, getAllByText, findByText} = render(
-            <Table items={itemList()} />
+            <List items={itemList()} />
         );
 
-        submitForm(getAllByTestId, getAllByPlaceholderText, getAllByText);
-
-        await waitFor(() => expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy());
-
-        await findByText(newItemName);
-        await findByText(newItemQuantity);
-        await findByText(newItemAddedAt);
+        await addItem(container, getAllByTestId, getAllByPlaceholderText, getAllByText);
+        expect(await findByText(`${newItemName} (${newItemQuantity})`)).toBeVisible();
     });
 
-    test('Newly added item is sorted', async () => {
+    test('Newly added item is sorted above checked items', async () => {
+        const items = itemList();
         global.fetch = jest.fn()
             .mockReturnValueOnce(
                 getMockPatchResponse() // checking off first item
@@ -183,38 +161,20 @@ describe('Creating item', () => {
                 mockPostResponse() // creating new item
             );
 
-        const {container, getAllByTestId, getAllByPlaceholderText, getAllByText, findByText} = render(
-            <Table items={itemList()} />
+        const {container, getByTestId, getAllByTestId, getAllByPlaceholderText, getAllByText, findByText} = render(
+            <List items={items} />
         );
 
-        const firstItemCheckButton = container.getElementsByClassName('fa-check')[0];
-        fireEvent.click(firstItemCheckButton);
-        await waitForDomChange({container});
+        fireEvent.click(getByTestId('check-btn-0'));
+        await waitFor(() => expect(getByTestId(`undo-btn-${items.length-1}`)).toBeVisible());
 
-        submitForm(getAllByTestId, getAllByPlaceholderText, getAllByText);
+        await addItem(container, getAllByTestId, getAllByPlaceholderText, getAllByText);
+        const newItemText = `${newItemName} (${newItemQuantity})`;
+        expect(await findByText(newItemText)).toBeVisible();
 
-        await waitForDomChange({container});
-
-        await waitFor(() => expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy());
-
-        await findByText(newItemName);
-        await findByText(newItemQuantity);
-        await findByText(newItemAddedAt);
-
-        const lastRow = container.getElementsByTagName('tr')[5];
-        const lastRowData = lastRow.getElementsByTagName('td');
-
-        const originalItems = itemList();
-        expect(lastRowData[2].innerHTML).toBe(originalItems[0].name);
-        expect(lastRowData[3].innerHTML).toBe(originalItems[0].quantity);
-        expect(lastRowData[5].innerHTML).toBe(originalItems[0].added_at);
-        expect(lastRow.classList.contains('line-through')).toBeTruthy();
-
-        const newRow = container.getElementsByTagName('tr')[4];
-        const newRowData = newRow.getElementsByTagName('td');
-        expect(newRowData[2].innerHTML).toBe(newItemName);
-        expect(newRowData[3].innerHTML).toBe(newItemQuantity);
-        expect(newRowData[5].innerHTML).toBe(newItemAddedAt);
+        const itemsInList = container.getElementsByClassName('list-item');
+        const lastItem = itemsInList[itemsInList.length-1];
+        expect(lastItem.innerHTML.toString().includes(newItemText)).toBeFalsy();
     });
 
 });
@@ -245,7 +205,7 @@ test('Updating an existing item', async () => {
     );
 
     const {container, getAllByTestId, getAllByPlaceholderText, getAllByText, findByText} = render(
-        <Table items={itemList()} />
+        <List items={itemList()} />
     );
 
     fireEvent.click(getAllByTestId('edit-item-btn')[0]);
@@ -263,8 +223,5 @@ test('Updating an existing item', async () => {
     fireEvent.click(getAllByText('Save')[1]);
 
     await waitFor(() => expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy());
-
-    await expect(await findByText(newItemName)).toBeVisible();
-    await expect(await findByText(newItemQuantity)).toBeVisible();
-
+    expect(await findByText(`${newItemName} (${newItemQuantity})`)).toBeVisible();
 });

@@ -3,7 +3,7 @@ import Item from "./Item";
 import ItemForm from "./forms/ItemForm";
 
 
-export default function Table(props) {
+export default function List(props) {
 
     const [data, setData] = useState(props.items);
 
@@ -37,30 +37,7 @@ export default function Table(props) {
         </div>
         <br/>
         <div className="list has-background-dark">
-            {data.map(item => <div className="list-item has-text-white" key={item.id}>{item.name} ({item.quantity}) <br/></div>)}
+            {data.map((item, index) => <Item key={item.id} instance={item} callback={sort} index={index} />)}
         </div>
-    </div>;
-
-    return <div className="table-container">
-        <table className="table is-striped is-narrow">
-            <thead>
-            <tr>
-                <th/>
-                <th/>
-                <th>name</th>
-                <th>quantity</th>
-                <th>who</th>
-                <th>when</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-               <td colSpan={6} className="has-text-centered">
-                   <ItemForm listId={props.listId} callback={addItem}/>
-               </td>
-            </tr>
-            {data.map(item => <Item key={item.id} instance={item} callback={sort} />)}
-        </tbody>
-        </table>
     </div>;
 }
