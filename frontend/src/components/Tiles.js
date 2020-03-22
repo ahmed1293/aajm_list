@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
-import List from "./List";
+import Tile from "./Tile";
 import ListForm from "./forms/ListForm";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 export default function Tiles() {
@@ -26,18 +28,16 @@ export default function Tiles() {
     }, []);
 
     if (loading || error) {
-        return <progress
-            className={"progress is-small " + (error ? "is-danger":"is-dark")}
-            max="100"
-            data-testid={error ? "error-bar":"progress-bar"}
-        />
+        return <div className="container hero-body has-text-centered is-size-1 has-text-white">
+            <FontAwesomeIcon className="fa-spin" icon={faSpinner}/>
+        </div>
     }
     return <div>
         <ListForm callback={fetchData}/>
         <section className="section">
             <div className="container">
                 <div className="tile is-ancestor flex-wrap">
-                    {data.map(list => <List key={list.id} instance={list} id={list} fetchLists={fetchData}/>)}
+                    {data.map(list => <Tile key={list.id} instance={list} id={list} fetchLists={fetchData}/>)}
                 </div>
             </div>
         </section>

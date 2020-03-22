@@ -64,11 +64,11 @@ export default function ItemForm(props) {
     return <div>
         {props.id ?
             (
-                <a className={"button is-small " + (modal ? "is-loading":"")} onClick={toggleModal} data-testid="edit-item-btn">
+                <a className={"button is-small is-black is-outlined " + (modal ? "is-loading":"")} onClick={toggleModal} data-testid="edit-item-btn">
                     <FontAwesomeIcon className="icon has-text-warning" icon={faPencilAlt}/>
                 </a>
             ):(
-                <a className={"button is-small " + (modal ? "is-loading":"")} onClick={toggleModal} data-testid="add-item-btn">
+                <a className={"button is-small is-black is-outlined " + (modal ? "is-loading":"")} onClick={toggleModal} data-testid="add-item-btn">
                     <FontAwesomeIcon className="has-text-info" icon={faPlus}/>
                 </a>
             )

@@ -31,6 +31,16 @@ export default function Table(props) {
         setData(newData);
     }
 
+    return <div>
+        <div className="has-text-centered">
+            <ItemForm listId={props.listId} callback={addItem}/>
+        </div>
+        <br/>
+        <div className="list has-background-dark">
+            {data.map(item => <div className="list-item has-text-white" key={item.id}>{item.name} ({item.quantity}) <br/></div>)}
+        </div>
+    </div>;
+
     return <div className="table-container">
         <table className="table is-striped is-narrow">
             <thead>

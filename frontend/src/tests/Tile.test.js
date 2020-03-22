@@ -1,10 +1,10 @@
 import {render} from "@testing-library/react";
 import React from "react";
-import List from "../components/List";
+import Tile from "../components/Tile";
 
 
 test('Render as expected', () => {
-   const {getByText} = render(<List instance={{name: 'l1', id: '2', created_at:'12pm', items: []}}/>);
+   const {getByText} = render(<Tile instance={{name: 'l1', id: '2', created_at:'12pm', items: []}}/>);
 
    expect(getByText('l1')).toBeVisible();
    expect(getByText('12pm')).toBeVisible();

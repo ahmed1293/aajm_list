@@ -51,7 +51,7 @@ export default function ListForm(props) {
             </div>
         }
         else {
-            return <a className={"button " + (modal ? "is-loading":"")} onClick={toggleForm} data-testid="edit-list-button">
+            return <a className={"button is-black is-outlined" + (modal ? "is-loading":"")} onClick={toggleForm} data-testid="edit-list-button">
                 <FontAwesomeIcon className="has-text-warning" icon={faPencilAlt}/>
             </a>
         }

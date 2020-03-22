@@ -6,7 +6,7 @@ import Table from "./Table";
 import ListForm from "./forms/ListForm";
 import Modal from "./common/Modal";
 
-export default function List(props) {
+export default function Tile(props) {
 
     const instance = props.instance;
     const [name, setName] = useState(instance.name);
@@ -30,14 +30,14 @@ export default function List(props) {
     }
 
     return <div className="tile is-parent is-vertical is-4">
-        <article className="tile is-child box">
+        <article className="tile is-child notification is-dark">
             <nav className="level">
                 <div className="level-left level-is-shrinkable">
                     <p className="title">{name}</p>
                 </div>
                 <div className="buttons level-right">
                     <ListForm callback={setName} name={instance.name} id={instance.id}/>
-                    <a className={"button " + (modal ? "is-loading":"")} onClick={toggleDeleteModal} data-testid='delete-list'>
+                    <a className={"button is-black is-outlined " + (modal ? "is-loading":"")} onClick={toggleDeleteModal} data-testid='delete-list'>
                         <FontAwesomeIcon className="has-text-danger" icon={faTimes}/>
                     </a>
                 </div>
