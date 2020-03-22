@@ -28,22 +28,27 @@ export default function Item(props) {
         });
     }
 
-    return <tr className={checked ? "line-through":null}>
-        <td>
-            <ItemForm id={instance.id} item={name} quantity={quantity}
+    return <div className="list-item">
+        <nav className="level">
+            <div className="level-left">
+                <div className="buttons">
+                    <ItemForm id={instance.id} item={name} quantity={quantity}
                       callback={(item) => {setName(item.name); setQuantity(item.quantity)}}/>
-        </td>
-        <td>
-            <a className="button is-small" onClick={checkItem} data-testid={checked ? 'undo-button':'check-button'}>
-                <FontAwesomeIcon
-                    className={checked ? "icon has-text-info":"icon has-text-primary"}
-                    icon={checked ? faUndo:faCheck}
-                />
-            </a>
-        </td>
-        <td>{name}</td>
-        <td>{quantity}</td>
-        <td>{instance.added_by}</td>
-        <td>{instance.added_at}</td>
-    </tr>
+                    <a className="button is-small is-black is-outlined" onClick={checkItem} data-testid={checked ? 'undo-button':'check-button'}>
+                        <FontAwesomeIcon
+                            className={"icon" + (checked ? " has-text-info":" has-text-primary")}
+                            icon={checked ? faUndo:faCheck}
+                            data-testid={`${checked ? 'undo':'check'}-btn-${props.index}`}
+                        />
+                    </a>
+                </div>
+
+            </div>
+            <div className="level-item">
+                <div className={"has-text-white" + (checked ? " line-through":"")} data-testid={`item-${props.index}`}>
+                    {name} ({quantity})
+                </div>
+            </div>
+        </nav>
+    </div>;
 }

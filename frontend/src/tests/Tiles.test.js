@@ -6,7 +6,7 @@ import {getMockAllListsResponse, shoppingLists} from "./testUtil";
 
 describe('Tiles rendering', () => {
 
-    test('Correct placeholder while loading', async () => {
+    test('Spinner while loading', async () => {
         global.fetch = jest.fn().mockReturnValue(
             new Promise(() => setTimeout(
                 () => {return null}, 60
@@ -14,7 +14,7 @@ describe('Tiles rendering', () => {
 
         const {getByTestId} = render(<Tiles/>);
 
-        expect(getByTestId('progress-bar')).toBeVisible();
+        expect(getByTestId('spinner')).toBeVisible();
     });
 
     test('Correct placeholder if fetch fails', async () => {
@@ -23,7 +23,7 @@ describe('Tiles rendering', () => {
         );
 
         const {findByTestId} = render(<Tiles/>);
-        expect(await findByTestId('error-bar')).toBeVisible();
+        expect(await findByTestId('sad-face')).toBeVisible();
     });
 
     test('Tiles load if fetch successful', async() => {
@@ -109,7 +109,7 @@ test('Modifying existing list', async () => {
             })
         );
 
-    const {container, findByText, getByTestId, getAllByTestId} = render(<Tiles/>);
+    const {container, findByText, getAllByTestId} = render(<Tiles/>);
 
     expect(await findByText(oldListName)).toBeVisible();
     fireEvent.click(getAllByTestId('edit-list-button')[0]);
@@ -121,7 +121,7 @@ test('Modifying existing list', async () => {
     fireEvent.click(getAllByTestId('existing-list-save')[0]);
 
     await waitFor(() => expect(container.getElementsByClassName('modal is-active').length).toBe(0));
-    await findByText(newListName)
+    expect(await findByText(newListName)).toBeVisible();
 });
 
 
@@ -154,7 +154,6 @@ test('Deleting a list', async () => {
 
     await waitForElementToBeRemoved(() => [
         getByText(listToBeDeleted['name']),
-        getByText(listToBeDeleted['items'][0]['name'])
     ]);
 
 });

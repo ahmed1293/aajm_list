@@ -1,68 +1,43 @@
-import React, {useState} from "react";
-import {fetchDjango, shoppingListsUrl} from "../util";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faTimes} from "@fortawesome/free-solid-svg-icons";
-import Table from "./Table";
-import ListForm from "./forms/ListForm";
-import Modal from "./common/Modal";
+import React, {useEffect, useState} from "react";
+import Item from "./Item";
+import ItemForm from "./forms/ItemForm";
+
 
 export default function List(props) {
 
-    const instance = props.instance;
-    const [name, setName] = useState(instance.name);
-    const [modal, setModal] = useState(false);
+    const [data, setData] = useState(props.items);
 
-    function toggleDeleteModal() {
-        setModal(m => !m);
-    }
+    function sort(updatedItem) {
+        let newData = [...data];
 
-    async function _delete(e) {
-        e.preventDefault();
-        const response = await fetchDjango(
-            shoppingListsUrl(instance.id), {
-                method: 'DELETE'
-            });
-
-        if (response.ok) {
-            props.fetchLists();
-            setModal(false);
-        }
-    }
-
-    return <div className="tile is-parent is-vertical is-4">
-        <article className="tile is-child box">
-            <nav className="level">
-                <div className="level-left level-is-shrinkable">
-                    <p className="title">{name}</p>
-                </div>
-                <div className="buttons level-right">
-                    <ListForm callback={setName} name={instance.name} id={instance.id}/>
-                    <a className={"button " + (modal ? "is-loading":"")} onClick={toggleDeleteModal} data-testid='delete-list'>
-                        <FontAwesomeIcon className="has-text-danger" icon={faTimes}/>
-                    </a>
-                </div>
-            </nav>
-            <p className="subtitle">{instance.created_at}</p>
-            <Table items={instance.items} listId={instance.id} narrow={true}/>
-        </article>
-        <Modal
-            active={modal}
-            toggle={toggleDeleteModal}
-            modalContent={
-                <article className="message is-danger">
-                    <div className="message-header">
-                       <p>Delete List</p>
-                   </div>
-                   <div className="message-body">
-                       <form onSubmit={_delete}>
-                           Are you sure?
-                           <div className="control has-text-centered">
-                               <button className="button is-danger">Delete</button>
-                           </div>
-                       </form>
-                   </div>
-                </article>
+        if (updatedItem) {
+            const itemIndex = newData.findIndex(item => item['id'] === updatedItem['id']);
+            if (itemIndex !== -1) {
+                newData.splice(itemIndex, 1, updatedItem);
             }
-        />
+        }
+
+        newData.sort((item_1, item_2) => {
+            return item_1['is_checked'] - item_2['is_checked'] // false values first
+        });
+        setData(newData);
+    }
+
+    useEffect(() => sort(), [data.length]);
+
+    function addItem(item) {
+        const newData = [...data];
+        newData.push(item);
+        setData(newData);
+    }
+
+    return <div>
+        <div className="has-text-centered">
+            <ItemForm listId={props.listId} callback={addItem}/>
+        </div>
+        <br/>
+        <div className="list has-background-dark">
+            {data.map((item, index) => <Item key={item.id} instance={item} callback={sort} index={index} />)}
+        </div>
     </div>;
 }
