@@ -8,27 +8,31 @@ export default function List(props) {
     const [data, setData] = useState(props.items);
 
     function sort(updatedItem) {
-        let newData = [...data];
+        setData(prevData => {
+            let newData = [...prevData];
 
-        if (updatedItem) {
-            const itemIndex = newData.findIndex(item => item['id'] === updatedItem['id']);
-            if (itemIndex !== -1) {
-                newData.splice(itemIndex, 1, updatedItem);
+            if (updatedItem) {
+                const itemIndex = newData.findIndex(item => item['id'] === updatedItem['id']);
+                if (itemIndex !== -1) {
+                    newData.splice(itemIndex, 1, updatedItem);
+                }
             }
-        }
 
-        newData.sort((item_1, item_2) => {
-            return item_1['is_checked'] - item_2['is_checked'] // false values first
+            newData.sort((item_1, item_2) => {
+                return item_1['is_checked'] - item_2['is_checked'] // false values first
+            });
+            return newData;
         });
-        setData(newData);
     }
 
     useEffect(() => sort(), [data.length]);
 
     function addItem(item) {
-        const newData = [...data];
-        newData.push(item);
-        setData(newData);
+        setData(prevData => {
+            const newData = [...prevData];
+            newData.push(item);
+            return newData;
+        });
     }
 
     return <div>

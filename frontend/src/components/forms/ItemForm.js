@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencilAlt, faPlus} from "@fortawesome/free-solid-svg-icons";
-import Modal from "../common/Modal";
+import Modal from "../Modal";
 import {APIContext} from "../../api";
 
 

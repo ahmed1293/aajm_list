@@ -1,7 +1,7 @@
 import Tiles from "../components/Tiles";
 import {fireEvent, waitFor, waitForElementToBeRemoved} from '@testing-library/react'
 import React from "react";
-import {renderWithMockApi, SHOPPING_LISTS} from "./mockApi";
+import {renderWithMockApi, shoppingList} from "./mockApi";
 
 
 describe('Tiles rendering', () => {
@@ -42,7 +42,7 @@ test('Creating new list', async () => {
         "items": []
     };
 
-    const {container, findByText, getByTestId, getByText} = renderWithMockApi(<Tiles/>);
+    const {queryByTestId, findByText, getByTestId, getByText} = renderWithMockApi(<Tiles/>);
 
     const button = await findByText('New list');
     fireEvent.click(button);
@@ -53,16 +53,17 @@ test('Creating new list', async () => {
     const submitButton = getByTestId('new-list-save');
     fireEvent.click(submitButton);
     await waitFor(() => {
-        expect(container.getElementsByClassName('modal is-active').length).toBe(0);
+        expect(queryByTestId('active-modal')).toBeFalsy();
         expect(getByText(newList['name'])).toBeVisible();
     });
 });
 
 
 test('Modifying existing list', async () => {
-    const oldListName = SHOPPING_LISTS[0]['name'];
+    const list = shoppingList();
+    const oldListName = list[0]['name'];
     const newListName = 'list-edit';
-    const {container, findByText, getAllByTestId} = renderWithMockApi(<Tiles/>);
+    const {queryByTestId, findByText, getAllByTestId} = renderWithMockApi(<Tiles/>);
 
     expect(await findByText(oldListName)).toBeVisible();
     fireEvent.click(getAllByTestId('edit-list-button')[0]);
@@ -73,13 +74,13 @@ test('Modifying existing list', async () => {
 
     fireEvent.click(getAllByTestId('existing-list-save')[0]);
 
-    await waitFor(() => expect(container.getElementsByClassName('modal is-active').length).toBe(0));
+    await waitFor(() => expect(queryByTestId('active-modal')).toBeFalsy());
     expect(await findByText(newListName)).toBeVisible();
 });
 
 
 test('Deleting a list', async () => {
-    const listToBeDeleted = SHOPPING_LISTS[0];
+    const listToBeDeleted = shoppingList()[0];
 
     const {findByText, getByText, getAllByTestId, getAllByText} = renderWithMockApi(<Tiles/>);
 

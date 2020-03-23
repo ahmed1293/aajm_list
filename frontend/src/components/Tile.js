@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
 import List from "./List";
 import EditListForm from "./forms/EditListForm";
-import Modal from "./common/Modal";
+import Modal from "./Modal";
 import {APIContext} from "../api";
 
 export default function Tile(props) {
@@ -39,7 +39,8 @@ export default function Tile(props) {
                 </div>
                 <div className="buttons level-right">
                     <EditListForm callback={setName} name={instance.name} id={instance.id}/>
-                    <a className={"button is-black is-outlined " + (modal ? "is-loading":"")} onClick={toggleDeleteModal} data-testid='delete-list'>
+                    <a className={"button is-black is-outlined " + (modal ? "is-loading":"")} onClick={toggleDeleteModal}
+                       data-testid='delete-list'>
                         <FontAwesomeIcon className="has-text-danger" icon={faTimes}/>
                     </a>
                 </div>

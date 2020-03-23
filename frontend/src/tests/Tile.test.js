@@ -1,16 +1,16 @@
 import {fireEvent, render, waitFor} from "@testing-library/react";
 import React from "react";
 import Tile from "../components/Tile";
-import {ITEM_LIST, renderWithMockApi} from "./mockApi";
+import {itemList, renderWithMockApi} from "./mockApi";
 
 
 test('Render as expected', () => {
-   const items = [...ITEM_LIST];
-   const {container, getByText} = render(<Tile instance={{name: 'name', id: '2', created_at:'12pm', items: items}}/>);
+   const items = itemList();
+   const {queryByTestId, getByText} = render(<Tile instance={{name: 'name', id: '2', created_at:'12pm', items: items}}/>);
 
    expect(getByText('name')).toBeVisible();
    expect(getByText('12pm')).toBeVisible();
-   expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy()
+   expect(queryByTestId('active-modal')).toBeFalsy();
    items.forEach((i) => expect(getByText(`${i.name} (${i.quantity})`)).toBeVisible());
 });
 

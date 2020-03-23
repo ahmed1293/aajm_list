@@ -1,36 +1,16 @@
-import {itemList} from "./mockApi";
-import {fireEvent, render} from "@testing-library/react";
-import List from "../components/List";
+import {render} from "@testing-library/react";
 import React from "react";
+import Modal from "../components/Modal";
 
 
 describe('Modal appears/reappears correctly', () => {
 
-    const ITEMS = itemList();
 
-    test('Form not visible on initial render',  () => {
-        const {container} = render(<List items={ITEMS} />);
-        expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy();
+    test.each([
+        [true, true], [false, false]
+    ])('Modal active=%p if visible=%p',  (active, visible) => {
+        const {queryAllByTestId} = render(<Modal active={active}/>);
+        expect(queryAllByTestId('active-modal').length > 0).toBe(visible);
     });
 
-    test('Form pops up after button click', () => {
-        const {container} = render(<List items={ITEMS} />);
-        const addItemButton = container.getElementsByClassName('fa-plus')[0].parentElement;
-
-        fireEvent.click(addItemButton);
-
-        expect(container.getElementsByClassName('modal is-active')[0]).toBeTruthy();
-    });
-
-    test('Form disappears after clicking on page', () => {
-        const {container} = render(<List items={ITEMS} />);
-        const addItemButton = container.getElementsByClassName('fa-plus')[0].parentElement;
-
-        fireEvent.click(addItemButton);
-        expect(container.getElementsByClassName('modal is-active')[0]).toBeTruthy();
-
-        const modalBackground = container.getElementsByClassName('modal-background')[0];
-        fireEvent.click(modalBackground);
-        expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy();
-    });
 });

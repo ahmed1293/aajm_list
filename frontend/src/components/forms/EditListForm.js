@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 import {APIContext} from "../../api";
-import {useListModalForm} from "../../hooks";
+import {useListModalForm} from "../../hooks/useListModalForm";
 
 
 export default function EditListForm(props) {

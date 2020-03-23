@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useState} from "react";
-import Modal from "../common/Modal";
+import Modal from "../Modal";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 import {APIContext} from "../../api";
-import {useListModalForm} from "../../hooks";
+import {useListModalForm} from "../../hooks/useListModalForm";
 
 
 export default function AddListForm(props) {
