@@ -1,7 +1,7 @@
 import {fireEvent, render, waitFor, getNodeText} from "@testing-library/react";
 import List from "../components/List";
 import React from "react";
-import {getMockPatchResponse, itemList} from "./testUtil";
+import {getMockPatchResponse, itemList} from "./mockApi";
 
 
 test('Render as expected', () => {

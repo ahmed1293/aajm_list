@@ -1,7 +1,7 @@
 import React from 'react'
 import {fireEvent, render, waitFor} from '@testing-library/react'
 import Item from "../components/Item";
-import {getMockPatchResponse} from "./testUtil";
+import {getMockPatchResponse} from "./mockApi";
 
 
 describe('Item icons', () => {test.each`

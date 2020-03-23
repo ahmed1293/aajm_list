@@ -1,15 +1,31 @@
-import {render} from "@testing-library/react";
+import {fireEvent, render, waitFor} from "@testing-library/react";
 import React from "react";
 import Tile from "../components/Tile";
+import {ITEM_LIST, renderWithMockApi} from "./mockApi";
 
 
 test('Render as expected', () => {
-   const {getByText} = render(<Tile instance={{name: 'l1', id: '2', created_at:'12pm', items: []}}/>);
+   const items = [...ITEM_LIST];
+   const {container, getByText} = render(<Tile instance={{name: 'name', id: '2', created_at:'12pm', items: items}}/>);
 
-   expect(getByText('l1')).toBeVisible();
+   expect(getByText('name')).toBeVisible();
    expect(getByText('12pm')).toBeVisible();
+   expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy()
+   items.forEach((i) => expect(getByText(`${i.name} (${i.quantity})`)).toBeVisible());
 });
 
 
-// binning modal so leaving tests for now
+test('Deleting list', async () => {
+   const mockCallback = jest.fn();
+   const {getByTestId, getByText} = renderWithMockApi(
+       <Tile instance={{name: 'name', id: '2', created_at:'12pm', items: []}} deleteCallback={mockCallback}/>
+   );
+
+   fireEvent.click(getByTestId('delete-list'));
+   fireEvent.click(getByText('Delete'));
+   await waitFor(() => {
+      expect(mockCallback).toHaveBeenCalledTimes(1);
+      expect(mockCallback).toHaveBeenCalledWith('2');
+   });
+});
 

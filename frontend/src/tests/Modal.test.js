@@ -1,4 +1,4 @@
-import {itemList} from "./testUtil";
+import {itemList} from "./mockApi";
 import {fireEvent, render} from "@testing-library/react";
 import List from "../components/List";
 import React from "react";

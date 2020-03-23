@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useState} from "react";
 import Tile from "./Tile";
-import ListForm from "./forms/ListForm";
 import {faSpinner, faFrown} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {APIContext} from "../api";
+import AddListForm from "./forms/AddListForm";
 
 
 export default function Tiles() {
@@ -25,6 +25,17 @@ export default function Tiles() {
         } catch (e) {
             setError(true); setLoading(false);
         }
+    }
+
+    function addList(newList) {
+        let _data = [...data];
+        _data.unshift(newList);
+        setData(_data);
+    }
+
+    function deleteList(id) {
+        const _data = data.filter((l) => l.id !== id);
+        setData(_data);
     }
 
     useEffect(() => {
@@ -49,11 +60,11 @@ export default function Tiles() {
         </div>
     }
     return <div>
-        <ListForm callback={fetchData}/>
+        <AddListForm callback={addList}/>
         <section className="section">
             <div className="container">
                 <div className="tile is-ancestor flex-wrap">
-                    {data.map(list => <Tile key={list.id} instance={list} id={list} fetchLists={fetchData}/>)}
+                    {data.map(list => <Tile key={list.id} instance={list} id={list} deleteCallback={deleteList}/>)}
                 </div>
             </div>
         </section>
