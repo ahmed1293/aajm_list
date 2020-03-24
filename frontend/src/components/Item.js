@@ -1,32 +1,34 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faUndo} from "@fortawesome/free-solid-svg-icons";
-import {fetchDjango} from "../util";
 import ItemForm from "./forms/ItemForm";
+import {APIContext} from "../api";
 
 
 export default function Item(props) {
+
+    const api = useContext(APIContext);
 
     const instance = props.instance;
     const [name, setName] = useState(instance.name);
     const [quantity, setQuantity] = useState(instance.quantity);
     const [checked, setChecked] = useState(instance.is_checked);
 
-    function checkItem() {
+    let controller;
+
+    async function checkItem() {
         const newState = !checked;
         setChecked(newState);
 
-        return fetchDjango('/api/items/' + instance.id + '/', {
-            method: 'PATCH',
-            body: {
-                "is_checked": newState
-            }
-        }).then(response => {
-            return response.json();
-        }).then(data => {
-            props.callback(data);
-        });
+        let response = await api.PATCH('items', instance.id, {'is_checked': newState});
+        let data = await response.data;
+        controller = response.controller;
+        props.callback(data);
     }
+
+    useEffect(() => {
+       return (() => {controller && controller.abort()})
+    });
 
     return <div className="list-item">
         <nav className="level">

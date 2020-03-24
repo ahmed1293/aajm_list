@@ -1,7 +1,7 @@
 import React from 'react'
 import {fireEvent, render, waitFor} from '@testing-library/react'
 import Item from "../components/Item";
-import {getMockPatchResponse} from "./testUtil";
+import {renderWithMockApi} from "./mockApi";
 
 
 describe('Item icons', () => {test.each`
@@ -39,32 +39,11 @@ describe('Checking an item', () => {
         "is_checked": false
   };
 
-  const mockFetch = jest.fn();
   const mockUpdateTable = jest.fn();
-
-  beforeAll(() => {
-      global.fetch = mockFetch.mockReturnValue(
-          getMockPatchResponse()
-      );
-  });
-
-
-  test('Database PATCH after click',   () => {
-    const {getByTestId} = render(<Item instance={testItem} callback={mockUpdateTable} />);
-
-    fireEvent.click(getByTestId('check-button'));
-
-    expect(mockFetch.mock.calls.length).toBe(1);
-    expect(mockFetch.mock.calls[0][0]).toBe('/api/items/'+testItem.id+'/');
-    expect(mockFetch.mock.calls[0][1].method).toBe('PATCH');
-    expect(mockFetch.mock.calls[0][1].body).toBe(
-        JSON.stringify({"is_checked":true})
-    );
-  });
 
 
   test('Strikethrough after click', () => {
-    const {getByTestId, getByText} = render(<Item instance={testItem} callback={mockUpdateTable} />);
+    const {getByTestId, getByText} = renderWithMockApi(<Item instance={testItem} callback={mockUpdateTable} />);
     const classList = getByText('onion (1g)').classList;
 
     expect(classList.contains('line-through')).toBeFalsy();
@@ -73,9 +52,9 @@ describe('Checking an item', () => {
   });
 
 
-  test('List update after click', async () => {
+  test('Callback called after click', async () => {
     const mockUpdateTable = jest.fn();
-    const {getByTestId} = render(<Item instance={testItem} callback={mockUpdateTable} />);
+    const {getByTestId} = renderWithMockApi(<Item instance={testItem} callback={mockUpdateTable} />);
     const button = getByTestId('check-button');
 
     fireEvent.click(button);

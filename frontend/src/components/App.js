@@ -1,10 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Tiles from "./Tiles";
+import {api, APIContext} from "../api";
 
 
 const App = () => (
-  <Tiles/>
+    <APIContext.Provider value={api}>
+        <Tiles/>
+    </APIContext.Provider>
 );
 
 const wrapper = document.getElementById("app");
