@@ -32,8 +32,8 @@ export default function Tile(props) {
     });
 
     return <div className="tile is-parent is-vertical is-4">
-        <article className="tile is-child notification is-dark">
-            <nav className="level">
+        <article className="tile is-child notification is-dark" style={{padding: '10px'}}>
+            <nav className="level is-mobile">
                 <div className="level-left level-is-shrinkable">
                     <p className="title">{name}</p>
                 </div>

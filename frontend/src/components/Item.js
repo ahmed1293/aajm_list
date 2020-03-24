@@ -30,10 +30,10 @@ export default function Item(props) {
        return (() => {controller && controller.abort()})
     });
 
-    return <div className="list-item">
-        <nav className="level">
+    return <div className="list-item" style={{padding: '0.5em 0.3em'}}>
+        <nav className="level is-mobile">
             <div className="level-left">
-                <div className="buttons">
+                <div className="buttons" style={{marginRight: '8px'}}>
                     <ItemForm id={instance.id} item={name} quantity={quantity}
                       callback={(item) => {setName(item.name); setQuantity(item.quantity)}}/>
                     <a className="button is-small is-black is-outlined" onClick={checkItem} data-testid={checked ? 'undo-button':'check-button'}>
@@ -46,7 +46,7 @@ export default function Item(props) {
                 </div>
 
             </div>
-            <div className="level-item">
+            <div className="level-item level-is-shrinkable">
                 <div className={"has-text-white" + (checked ? " line-through":"")} data-testid={`item-${props.index}`}>
                     {name} ({quantity})
                 </div>
