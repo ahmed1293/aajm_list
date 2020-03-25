@@ -29,7 +29,7 @@ export function useListModalForm(initialName, handleSubmit, inputTestId, saveTes
                            <label className="label has-text-white">Name</label>
                            <div className="control">
                                <input
-                                   className={nameInvalid ? "input is-danger":"input"}
+                                   className={"input has-background-black has-text-white " + (nameInvalid ? "is-danger":"")}
                                    name="name" type="text"
                                    value={name || ''}
                                    onChange={handleChange}

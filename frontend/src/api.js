@@ -2,9 +2,6 @@ import Cookies from "js-cookie";
 import {createContext} from "react";
 
 
-// TODO: return controller for abort
-// TODO: mock version for tests
-
 export const api = {
     GET: (endpoint) => _get(endpoint),
     POST: (endpoint, data) => _post(endpoint, data),

@@ -79,17 +79,17 @@ export default function ItemForm(props) {
             active={modal}
             toggle={toggleModal}
             modalContent={
-                <article className="message is-dark">
-                    <div className="message-header">
+                <article className="message">
+                    <div className="message-header has-background-black">
                        <p>Item</p>
                     </div>
-                    <div className="message-body">
+                    <div className="message-body has-background-dark">
                        <form onSubmit={handleSubmit}>
                            <div className="field">
-                               <label className="label">Item</label>
+                               <label className="label has-text-white">Item</label>
                                <div className="control">
                                    <input
-                                       className={itemInvalid ? "input is-danger":"input"}
+                                       className={"input has-background-black has-text-white " + (itemInvalid ? "is-danger":"")}
                                        name="item" type="text"
                                        value={item || ''}
                                        onChange={handleChange}
@@ -98,10 +98,10 @@ export default function ItemForm(props) {
                                </div>
                            </div>
                            <div className="field">
-                               <label className="label">Quantity</label>
+                               <label className="label has-text-white">Quantity</label>
                                <div className="control">
                                    <input
-                                       className={quantityInvalid ? "input is-danger":"input"}
+                                       className={"input has-background-black has-text-white " + (quantityInvalid ? "is-danger":"")}
                                        name="quantity" type="text"
                                        value={quantity || ''}
                                        onChange={handleChange}
@@ -110,7 +110,7 @@ export default function ItemForm(props) {
                                </div>
                            </div>
                            <div className="control">
-                               <button className="button is-dark">Save</button>
+                               <button className="button is-black">Save</button>
                            </div>
                        </form>
                    </div>

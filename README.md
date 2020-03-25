@@ -8,8 +8,6 @@ My first play with React and Testing Library. My partner and I use this app for 
 ## TODO
 
 - Get rid of modal hell.
-- Create services and pass them as props.
-- Not so happy with all tests.
 - Move frontend outside of Django (maybe).
 
 Frontend: React and Bulma CSS. Tested with Jest and React Testing Library.
