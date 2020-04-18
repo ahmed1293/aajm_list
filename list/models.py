@@ -11,6 +11,7 @@ class ShoppingList(models.Model):
     @staticmethod
     def create_with_defaults(name, created_by):
         instance = ShoppingList.objects.create(name=name, created_by=created_by)
+        # todo: bulk create
         for default in DefaultItem.objects.all():
             Item.objects.create(
                 name=default.name,
