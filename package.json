@@ -4,7 +4,7 @@
   "description": "A list application for me and Jess",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack --mode development",
+    "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
     "test": "jest --testPathIgnorePatterns /staticfiles",
     "testCov": "jest --testPathIgnorePatterns /staticfiles --collectCoverage"
