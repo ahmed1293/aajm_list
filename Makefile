@@ -1,5 +1,5 @@
 local:
-	docker-compose up -d django postgres
+	docker-compose up -d
 
 down:
 	docker-compose down
