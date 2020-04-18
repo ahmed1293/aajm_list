@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'storages',
+    'graphene_django'
 ]
 
 MIDDLEWARE = [
@@ -115,6 +116,10 @@ SWAGGER_SETTINGS = {
             'type': 'basic'
         }
     },
+}
+
+GRAPHENE = {
+    'SCHEMA': 'list.api.graphql.schema.schema'
 }
 
 # Internationalization

@@ -4,6 +4,7 @@ from django.urls import path, include
 from django.conf import settings
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
+from graphene_django.views import GraphQLView
 from rest_framework import permissions
 
 
@@ -28,6 +29,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('list.api.urls')),
     path('', include('frontend.urls')),
+
+    path('graphql/', GraphQLView.as_view(graphiql=True)),
 
     # swagger
     url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
