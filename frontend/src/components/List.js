@@ -1,47 +1,31 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext} from "react";
 import Item from "./Item";
 import ItemForm from "./forms/ItemForm";
+import {ACTIONS, DataContext} from "../dataReducer";
 
 
 export default function List(props) {
 
-    const [data, setData] = useState(props.items);
-
-    function sort(updatedItem) {
-        setData(prevData => {
-            let newData = [...prevData];
-
-            if (updatedItem) {
-                const itemIndex = newData.findIndex(item => item['id'] === updatedItem['id']);
-                if (itemIndex !== -1) {
-                    newData.splice(itemIndex, 1, updatedItem);
-                }
-            }
-
-            newData.sort((item_1, item_2) => {
-                return item_1['is_checked'] - item_2['is_checked'] // false values first
-            });
-            return newData;
-        });
-    }
-
-    useEffect(() => sort(), [data.length]);
-
-    function addItem(item) {
-        setData(prevData => {
-            const newData = [...prevData];
-            newData.push(item);
-            return newData;
-        });
-    }
+    const dispatch = useContext(DataContext);
 
     return <div>
         <div className="has-text-centered">
-            <ItemForm listId={props.listId} callback={addItem}/>
+            <ItemForm
+                listId={props.listId}
+                callback={(newItem) => dispatch({type: ACTIONS.addItem, listId: props.listId, item: newItem})}
+            />
         </div>
         <br/>
         <div className="list has-background-dark">
-            {data.map((item, index) => <Item key={item.id} instance={item} callback={sort} index={index} />)}
+            {sort(props.items).map((item, index) => <Item key={item.id} instance={item} index={index}/>)}
         </div>
     </div>;
+}
+
+
+function sort(array) {
+    let arrayCopy = [...array];
+    return arrayCopy.sort((item_1, item_2) => {
+        return item_1.is_checked - item_2.is_checked // false values first
+    });
 }

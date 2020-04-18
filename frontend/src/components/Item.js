@@ -1,29 +1,25 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faUndo} from "@fortawesome/free-solid-svg-icons";
 import ItemForm from "./forms/ItemForm";
 import {APIContext} from "../api";
+import {ACTIONS, DataContext} from "../dataReducer";
 
 
 export default function Item(props) {
 
     const api = useContext(APIContext);
+    const dispatch = useContext(DataContext);
 
-    const instance = props.instance;
-    const [name, setName] = useState(instance.name);
-    const [quantity, setQuantity] = useState(instance.quantity);
-    const [checked, setChecked] = useState(instance.is_checked);
-
+    const item = props.instance;
     let controller;
 
     async function checkItem() {
-        const newState = !checked;
-        setChecked(newState);
-
-        let response = await api.PATCH('items', instance.id, {'is_checked': newState});
-        let data = await response.data;
+        let response = await api.PATCH('items', item.id, {'is_checked': !item.is_checked});
         controller = response.controller;
-        props.callback(data);
+        dispatch({
+            type: ACTIONS.editItem,  item: item,  values: [{lookup: 'is_checked', value: !item.is_checked}]
+        })
     }
 
     useEffect(() => {
@@ -34,21 +30,26 @@ export default function Item(props) {
         <nav className="level is-mobile">
             <div className="level-left">
                 <div className="buttons" style={{marginRight: '8px'}}>
-                    <ItemForm id={instance.id} item={name} quantity={quantity}
-                      callback={(item) => {setName(item.name); setQuantity(item.quantity)}}/>
-                    <a className="button is-small is-black is-outlined" onClick={checkItem} data-testid={checked ? 'undo-button':'check-button'}>
+                    <ItemForm id={item.id} name={item.name} quantity={item.quantity}
+                      callback={(newItem) => dispatch({type: ACTIONS.editItem, item: item, values: [
+                          {lookup: 'name', value: newItem.name}, {lookup: 'quantity', value: newItem.quantity}
+                      ]})}
+                    />
+                    <a className="button is-small is-black is-outlined" onClick={checkItem}
+                       data-testid={item.is_checked ? 'undo-button':'check-button'}
+                    >
                         <FontAwesomeIcon
-                            className={"icon" + (checked ? " has-text-info":" has-text-primary")}
-                            icon={checked ? faUndo:faCheck}
-                            data-testid={`${checked ? 'undo':'check'}-btn-${props.index}`}
+                            className={"icon" + (item.is_checked ? " has-text-info":" has-text-primary")}
+                            icon={item.is_checked ? faUndo:faCheck}
+                            data-testid={`${item.is_checked ? 'undo':'check'}-btn-${props.index}`}
                         />
                     </a>
                 </div>
 
             </div>
             <div className="level-item level-is-shrinkable">
-                <div className={"has-text-white" + (checked ? " line-through":"")} data-testid={`item-${props.index}`}>
-                    {name} ({quantity})
+                <div className={"has-text-white" + (item.is_checked ? " line-through":"")} data-testid={`item-${props.index}`}>
+                    {item.name} ({item.quantity})
                 </div>
             </div>
         </nav>

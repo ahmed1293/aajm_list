@@ -1,7 +1,9 @@
-import React from 'react'
+import React, {useReducer} from 'react'
 import {fireEvent, render, waitFor} from '@testing-library/react'
 import Item from "../components/Item";
-import {renderWithMockApi} from "./mockApi";
+import {DataContext, dataReducer} from "../dataReducer";
+import {APIContext} from "../api";
+import {api} from "./mockApi";
 
 
 describe('Item icons', () => {test.each`
@@ -31,34 +33,33 @@ describe('Item icons', () => {test.each`
 describe('Checking an item', () => {
 
   const testItem = {
-        "id": 1,
-        "name": "onion",
-        "quantity": "1g",
-        "added_by": 1,
-        "added_at": "29/09/2019 19:03:59",
-        "is_checked": false
+      "id": 1,
+      "name": "onion",
+      "quantity": "1g",
+      "added_by": 1,
+      "added_at": "29/09/2019 19:03:59",
+      "is_checked": false,
+      "list": 1
   };
 
-  const mockUpdateTable = jest.fn();
+  function ComponentToTest() {
+      const [state, dispatch] = useReducer(dataReducer, {data: [{id: 1, items: [testItem]}]})
+
+      return <APIContext.Provider value={api}>
+          <DataContext.Provider value={dispatch}>
+              <Item instance={state.data[0].items[0]}/>
+          </DataContext.Provider>
+      </APIContext.Provider>
+  }
 
 
-  test('Strikethrough after click', () => {
-    const {getByTestId, getByText} = renderWithMockApi(<Item instance={testItem} callback={mockUpdateTable} />);
+  test('Strikethrough after click', async () => {
+    const {getByTestId, getByText} = render(<ComponentToTest />);
     const classList = getByText('onion (1g)').classList;
 
     expect(classList.contains('line-through')).toBeFalsy();
     fireEvent.click(getByTestId('check-button'));
-    expect(classList.contains('line-through')).toBeTruthy();
-  });
-
-
-  test('Callback called after click', async () => {
-    const mockUpdateTable = jest.fn();
-    const {getByTestId} = renderWithMockApi(<Item instance={testItem} callback={mockUpdateTable} />);
-    const button = getByTestId('check-button');
-
-    fireEvent.click(button);
-    await waitFor(() => expect(mockUpdateTable.mock.calls.length).toBe(1));
+    await waitFor(() => expect(classList.contains('line-through')).toBeTruthy())
   });
 
 });

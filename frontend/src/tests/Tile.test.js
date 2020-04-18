@@ -1,12 +1,16 @@
-import {fireEvent, render, waitFor} from "@testing-library/react";
+import {fireEvent, waitFor} from "@testing-library/react";
 import React from "react";
 import Tile from "../components/Tile";
-import {itemList, renderWithMockApi} from "./mockApi";
+import {itemList} from "./mockApi";
+import {renderWithMockContexts} from "./util";
+import {ACTIONS} from "../dataReducer";
 
 
 test('Render as expected', () => {
    const items = itemList();
-   const {queryByTestId, getByText} = render(<Tile instance={{name: 'name', id: '2', created_at:'12pm', items: items}}/>);
+   const {queryByTestId, getByText} = renderWithMockContexts(
+       <Tile list={{name: 'name', id: '2', created_at:'12pm', items: items}}/>
+    );
 
    expect(getByText('name')).toBeVisible();
    expect(getByText('12pm')).toBeVisible();
@@ -17,15 +21,16 @@ test('Render as expected', () => {
 
 test('Deleting list', async () => {
    const mockCallback = jest.fn();
-   const {getByTestId, getByText} = renderWithMockApi(
-       <Tile instance={{name: 'name', id: '2', created_at:'12pm', items: []}} deleteCallback={mockCallback}/>
+   const {getByTestId, getByText} = renderWithMockContexts(
+       <Tile list={{name: 'name', id: '2', created_at:'12pm', items: []}}/>, {dispatchOverride: mockCallback}
    );
 
+   mockCallback.mockClear();
    fireEvent.click(getByTestId('delete-list'));
    fireEvent.click(getByText('Delete'));
    await waitFor(() => {
       expect(mockCallback).toHaveBeenCalledTimes(1);
-      expect(mockCallback).toHaveBeenCalledWith('2');
+      expect(mockCallback).toHaveBeenCalledWith({"listId": "2", "type": ACTIONS.deleteList});
    });
 });
 
