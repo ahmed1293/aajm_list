@@ -48,7 +48,6 @@ export default function ItemForm(props) {
         controller = response.controller;
 
         props.callback(newItem);
-        setItem(''); setQuantity('');
         toggleModal();
     }
 
