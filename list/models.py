@@ -11,13 +11,11 @@ class ShoppingList(models.Model):
     @staticmethod
     def create_with_defaults(name, created_by):
         instance = ShoppingList.objects.create(name=name, created_by=created_by)
-        for default in DefaultItem.objects.all():
-            Item.objects.create(
-                name=default.name,
-                quantity=default.quantity,
-                list=instance,
-                added_by=created_by
-            )
+        defaults = [
+            Item(name=default.name, quantity=default.quantity, list=instance, added_by=created_by)
+            for default in DefaultItem.objects.all()
+        ]
+        Item.objects.bulk_create(defaults)
         return instance
 
     def __str__(self):
