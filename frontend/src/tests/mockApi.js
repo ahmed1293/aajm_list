@@ -1,6 +1,4 @@
-import {APIContext} from "../api";
 import React from "react";
-import {render} from '@testing-library/react'
 
 
 export const api = {
@@ -65,11 +63,6 @@ export const api = {
     }
 };
 
-export const renderWithMockApi = (components, override) => {
-    const _api = override ? {...api, [override.method]: override.func}:api;
-    return render(<APIContext.Provider value={_api}>{components}</APIContext.Provider>);
-};
-
 export const itemList = () => [
     {
         "id": 1,
@@ -77,7 +70,8 @@ export const itemList = () => [
         "quantity": "1g",
         "added_by": 1,
         "added_at": "29/09/2019 19:03:59",
-        "is_checked": false
+        "is_checked": false,
+        "list": 1
     },
     {
         "id": 2,
@@ -85,7 +79,8 @@ export const itemList = () => [
         "quantity": "100kg",
         "added_by": 1,
         "added_at": "02/01/2010 20:03:59",
-        "is_checked": false
+        "is_checked": false,
+        "list": 1
     },
     {
         "id": 3,
@@ -93,7 +88,8 @@ export const itemList = () => [
         "quantity": "10L",
         "added_by": 1,
         "added_at": "04/01/2018 21:03:59",
-        "is_checked": false
+        "is_checked": false,
+        "list": 1
     }
 ];
 
@@ -105,20 +101,22 @@ export const shoppingList = () => [
         "created_at": "07/10/2019 19:35:44",
         "items": [
           {
-            "id": 0,
-            "name": "cheese strings",
-            "quantity": "1",
-            "added_by": "bob",
-            "added_at": "07/10/2019 19:35:44",
-            "is_checked": false
+              "id": 0,
+              "name": "cheese strings",
+              "quantity": "1",
+              "added_by": "bob",
+              "added_at": "07/10/2019 19:35:44",
+              "is_checked": false,
+              "list": 1
           },
           {
-            "id": 1,
-            "name": "spinach",
-            "quantity": "2 packs",
-            "added_by": "billy",
-            "added_at": "07/10/2019 19:35:44",
-            "is_checked": false
+              "id": 1,
+              "name": "spinach",
+              "quantity": "2 packs",
+              "added_by": "billy",
+              "added_at": "07/10/2019 19:35:44",
+              "is_checked": false,
+              "list": 1
           }
         ]
     },
@@ -129,20 +127,22 @@ export const shoppingList = () => [
         "created_at": "10/10/2018 16:35:44",
         "items": [
           {
-            "id": 2,
-            "name": "chicken",
-            "quantity": "900kg",
-            "added_by": "bob",
-            "added_at": "07/10/2019 10:26:01",
-            "is_checked": false
+              "id": 2,
+              "name": "chicken",
+              "quantity": "900kg",
+              "added_by": "bob",
+              "added_at": "07/10/2019 10:26:01",
+              "is_checked": false,
+              "list": 2
           },
           {
-            "id": 3,
-            "name": "parsley",
-            "quantity": "50g",
-            "added_by": "billy",
-            "added_at": "01/11/2019 11:21:11",
-            "is_checked": false
+              "id": 3,
+              "name": "parsley",
+              "quantity": "50g",
+              "added_by": "billy",
+              "added_at": "01/11/2019 11:21:11",
+              "is_checked": false,
+              "list": 3
           }
         ]
     },

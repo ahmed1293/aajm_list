@@ -1,16 +1,17 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useReducer, useState} from "react";
 import Tile from "./Tile";
 import {faSpinner, faFrown} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {APIContext} from "../api";
-import AddListForm from "./forms/AddListForm";
+import ListForm from "./forms/ListForm";
+import {dataReducer, DataContext, ACTIONS} from "../dataReducer";
 
 
 export default function Tiles() {
 
     const api = useContext(APIContext);
 
-    const [data, setData] = useState([]);
+    const [state, dispatch] = useReducer(dataReducer, {data: []})
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
 
@@ -21,21 +22,11 @@ export default function Tiles() {
         try {
             let response = await api.GET('shopping-lists');
             controller = response.controller;
-            setData(response.data); setLoading(false);
+            dispatch({type: ACTIONS.setData, data: response.data})
+            setLoading(false);
         } catch (e) {
             setError(true); setLoading(false);
         }
-    }
-
-    function addList(newList) {
-        let _data = [...data];
-        _data.unshift(newList);
-        setData(_data);
-    }
-
-    function deleteList(id) {
-        const _data = data.filter((l) => l.id !== id);
-        setData(_data);
     }
 
     useEffect(() => {
@@ -60,13 +51,16 @@ export default function Tiles() {
         </div>
     }
     return <div>
-        <AddListForm callback={addList}/>
-        <section className="section">
-            <div className="container">
-                <div className="tile is-ancestor flex-wrap">
-                    {data.map(list => <Tile key={list.id} instance={list} id={list} deleteCallback={deleteList}/>)}
+        <DataContext.Provider value={dispatch}>
+            <ListForm/>
+            <section className="section">
+                <div className="container">
+                    <div className="tile is-ancestor flex-wrap">
+                        {state.data.map(list => <Tile key={list.id} list={list}/>)
+                        }
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </DataContext.Provider>
     </div>
 }

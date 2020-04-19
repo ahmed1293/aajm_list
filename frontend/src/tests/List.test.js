@@ -1,12 +1,26 @@
-import {fireEvent, waitFor, getNodeText} from "@testing-library/react";
+import {fireEvent, waitFor, getNodeText, render} from "@testing-library/react";
 import List from "../components/List";
-import React from "react";
-import {itemList, renderWithMockApi} from "./mockApi";
+import React, {useReducer, useState} from "react";
+import {api, itemList} from "./mockApi";
+import {renderWithMockContexts} from "./util";
+import {DataContext, dataReducer} from "../dataReducer";
+import {APIContext} from "../api";
+
+
+function ComponentToTest({items}) {
+    const [state, dispatch] = useReducer(dataReducer, {data: [{id: 1, items: items}]})
+
+    return <APIContext.Provider value={api}>
+        <DataContext.Provider value={dispatch}>
+            <List items={state.data[0].items} listId={1}/>
+        </DataContext.Provider>
+    </APIContext.Provider>
+}
 
 
 test('Render as expected', () => {
     const items = itemList();
-    const {getByText} = renderWithMockApi(<List items={items} />);
+    const {getByText} = render(<ComponentToTest items={items}/>)
 
     items.forEach((item) => expect(getByText(`${item.name} (${item.quantity})`)).toBeVisible());
 });
@@ -14,7 +28,7 @@ test('Render as expected', () => {
 
 describe('List sorting', () => {
 
-    function expectCorrectItemText(getByTestId, index, name, quantity) {
+    function expectCorrectItemPosition(getByTestId, index, name, quantity) {
         const listItem = getByTestId(`item-${index}`);
         const text = getNodeText(listItem);
         expect(text).toBe(`${name} (${quantity})`);
@@ -24,21 +38,21 @@ describe('List sorting', () => {
     test('Checked items at bottom on initial sort', () => {
         let items = itemList();
         items[0]['is_checked'] = true;
-        const {getByTestId} = renderWithMockApi(<List items={items} />);
 
-        expectCorrectItemText(getByTestId, items.length-1,'onion', '1g');
+        const {getByTestId} = render(<ComponentToTest items={items}/>)
+
+        expectCorrectItemPosition(getByTestId, items.length-1, items[0].name, items[0].quantity);
     });
 
-    // TODO this only fails if whole describe block is ran...
     test('Items move to the bottom after being checked', async () => {
         const items = itemList();
 
-        const {getByTestId} = renderWithMockApi(<List items={items} />);
+        const {getByTestId} = render(<ComponentToTest items={items} />);
         const firstButton = getByTestId('check-btn-0');
 
-        const firstRow = expectCorrectItemText(getByTestId, 0, 'onion', '1g');
-        const secondRow = expectCorrectItemText(getByTestId, 1, 'banana', '100kg');
-        const thirdRow = expectCorrectItemText(getByTestId, 2, 'milk', '10L');
+        const firstRow = expectCorrectItemPosition(getByTestId, 0, items[0].name, items[0].quantity);
+        const secondRow = expectCorrectItemPosition(getByTestId, 1, items[1].name, items[1].quantity);
+        const thirdRow = expectCorrectItemPosition(getByTestId, 2, items[2].name, items[2].quantity);
 
         fireEvent.click(firstButton);
 
@@ -59,7 +73,7 @@ describe('List sorting', () => {
         items[1]['is_checked'] = true;
         items[2]['is_checked'] = true;
 
-        const {getByTestId} = renderWithMockApi(<List items={items} />);
+        const {getByTestId} = renderWithMockContexts(<ComponentToTest items={items} />);
 
         const itemBeingUnchecked = getNodeText(getByTestId('item-2'));
         fireEvent.click(getByTestId('undo-btn-2'));
@@ -71,62 +85,22 @@ describe('List sorting', () => {
 });
 
 
-describe('Creating item', () => {
-
+test('Adding a new item',async () => {
+    let items = itemList();
     const newItemName = "asparagus";
     const newItemQuantity = "300kg";
 
-    async function addItem(queryByTestId, getAllByTestId, getAllByPlaceholderText, getAllByText) {
-        const addItemButton = getAllByTestId('add-item-btn')[0];
-        fireEvent.click(addItemButton);
+    const {queryByTestId, getByTestId, getByPlaceholderText, getByText, findByText} = render(
+        <ComponentToTest items={items} />
+    );
 
-        const itemInput = getAllByPlaceholderText('e.g. Chicken')[0];
-        const quantityInput = getAllByPlaceholderText('e.g. 81')[0];
+    fireEvent.click(getByTestId('add-item-btn'));
+    fireEvent.change(getByPlaceholderText('e.g. Chicken'), {target: {value: newItemName}});
+    fireEvent.change(getByPlaceholderText('e.g. 81'), {target: {value: newItemQuantity}});
+    fireEvent.click(getByText('Save'))
 
-        fireEvent.change(itemInput, {target: {value: newItemName}});
-        fireEvent.change(quantityInput, {target: {value: newItemQuantity}});
-
-        const submitButton = getAllByText('Save')[0];
-        fireEvent.click(submitButton);
-        await waitFor(() => expect(queryByTestId('active-modal')).toBeFalsy());
-    }
-
-    test('Form submission adds item to list',async () => {
-        let items = itemList();
-
-        const {queryByTestId, getAllByTestId, getAllByPlaceholderText, getAllByText, findByText} = renderWithMockApi(
-            <List items={items} />
-        );
-
-        await addItem(queryByTestId, getAllByTestId, getAllByPlaceholderText, getAllByText);
-        expect(await findByText(`${newItemName} (${newItemQuantity})`)).toBeVisible();
-    });
-
-    test('Newly added item is sorted above checked items', async () => {
-        let items = itemList();
-
-        const {
-            container,
-            getByTestId,
-            getAllByTestId,
-            getAllByPlaceholderText,
-            getAllByText,
-            findByText,
-            queryByTestId
-        } = renderWithMockApi(<List items={items} />);
-
-        fireEvent.click(getByTestId('check-btn-0'));
-        await waitFor(() => expect(getByTestId(`undo-btn-${items.length-1}`)).toBeVisible());
-
-        await addItem(queryByTestId, getAllByTestId, getAllByPlaceholderText, getAllByText);
-        const newItemText = `${newItemName} (${newItemQuantity})`;
-        expect(await findByText(newItemText)).toBeVisible();
-
-        const itemsInList = container.getElementsByClassName('list-item');
-        const lastItem = itemsInList[itemsInList.length-1];
-        expect(lastItem.innerHTML.toString().includes(newItemText)).toBeFalsy();
-    });
-
+    await waitFor(() => expect(queryByTestId('modal')).toBeFalsy());
+    expect(await findByText(`${newItemName} (${newItemQuantity})`)).toBeVisible();
 });
 
 
@@ -139,15 +113,15 @@ test('Updating an existing item', async () => {
     const newItemName = 'NEW NAME';
     const newItemQuantity = 'NEW QUANTITY';
 
-    const {container, getAllByTestId, getAllByPlaceholderText, getAllByText, findByText} = renderWithMockApi(
-        <List items={items} />
+    const {queryByTestId, getAllByTestId, getByPlaceholderText, getByText, findByText} = render(
+        <ComponentToTest items={items} />
     );
 
     fireEvent.click(getAllByTestId('edit-item-btn')[0]);
 
     // using index 1 because 0 is add form (need to get rid of modal hell)
-    const itemInput = getAllByPlaceholderText('e.g. Chicken')[1];
-    const quantityInput = getAllByPlaceholderText('e.g. 81')[1];
+    const itemInput = getByPlaceholderText('e.g. Chicken');
+    const quantityInput = getByPlaceholderText('e.g. 81');
 
     expect(itemInput.value).toBe(nameBeforeEdit);
     expect(quantityInput.value).toBe(quantityBeforeEdit);
@@ -155,8 +129,8 @@ test('Updating an existing item', async () => {
     fireEvent.change(itemInput, {target: {value: newItemName}});
     fireEvent.change(quantityInput, {target: {value: newItemQuantity}});
 
-    fireEvent.click(getAllByText('Save')[1]);
+    fireEvent.click(getByText('Save'));
 
-    await waitFor(() => expect(container.getElementsByClassName('modal is-active')[0]).toBeFalsy());
+    await waitFor(() => expect(queryByTestId('modal')).toBeFalsy());
     expect(await findByText(`${newItemName} (${newItemQuantity})`)).toBeVisible();
 });

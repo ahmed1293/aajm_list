@@ -2,16 +2,16 @@ import React, {useContext, useEffect, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
 import List from "./List";
-import EditListForm from "./forms/EditListForm";
 import Modal from "./Modal";
 import {APIContext} from "../api";
+import ListForm from "./forms/ListForm";
+import {ACTIONS, DataContext} from "../dataReducer";
 
 export default function Tile(props) {
 
     const api = useContext(APIContext);
+    const dispatch = useContext(DataContext);
 
-    const instance = props.instance;
-    const [name, setName] = useState(instance.name);
     const [modal, setModal] = useState(false);
 
     let controller;
@@ -22,9 +22,9 @@ export default function Tile(props) {
 
     async function _delete(e) {
         e.preventDefault();
-        controller = await api.DELETE('shopping-lists', instance.id);
-        props.deleteCallback(instance.id);
+        controller = await api.DELETE('shopping-lists', props.list.id);
         setModal(false);
+        dispatch({type: ACTIONS.deleteList, listId: props.list.id});
     }
 
     useEffect(() => {
@@ -35,37 +35,33 @@ export default function Tile(props) {
         <article className="tile is-child notification is-dark" style={{padding: '10px'}}>
             <nav className="level is-mobile">
                 <div className="level-left level-is-shrinkable">
-                    <p className="title">{name}</p>
+                    <p className="title">{props.list.name}</p>
                 </div>
                 <div className="buttons level-right">
-                    <EditListForm callback={setName} name={instance.name} id={instance.id}/>
+                    <ListForm name={props.list.name} id={props.list.id}/>
                     <a className={"button is-black is-outlined " + (modal ? "is-loading":"")} onClick={toggleDeleteModal}
                        data-testid='delete-list'>
                         <FontAwesomeIcon className="has-text-danger" icon={faTimes}/>
                     </a>
                 </div>
             </nav>
-            <p className="subtitle">{instance.created_at}</p>
-            <List items={instance.items} listId={instance.id} narrow={true}/>
+            <p className="subtitle">{props.list.created_at}</p>
+            <List items={props.list.items} listId={props.list.id}/>
         </article>
-        <Modal
-            active={modal}
-            toggle={toggleDeleteModal}
-            modalContent={
-                <article className="message">
-                    <div className="message-header has-background-black">
-                       <p>Delete List</p>
-                   </div>
-                   <div className="message-body has-background-dark has-text-white">
-                       <form onSubmit={_delete}>
-                           Are you sure?
-                           <div className="control has-text-centered">
-                               <button className="button is-danger">Delete</button>
-                           </div>
-                       </form>
-                   </div>
-                </article>
-            }
-        />
+        {modal && <Modal toggle={toggleDeleteModal} modalContent={
+            <article className="message">
+                <div className="message-header has-background-black">
+                   <p>Delete List</p>
+               </div>
+               <div className="message-body has-background-dark has-text-white">
+                   <form onSubmit={_delete}>
+                       Are you sure?
+                       <div className="control has-text-centered">
+                           <button className="button is-danger">Delete</button>
+                       </div>
+                   </form>
+               </div>
+            </article>
+        }/>}
     </div>;
 }
