@@ -9,6 +9,7 @@ export const ACTIONS = {
     editItem: 'edit item in list'
 }
 
+// todo: may need to speed some of these up when there's a huge no of lists
 export function dataReducer(state, action) {
     let _data = [...state.data];
     switch (action.type) {
