@@ -1,6 +1,16 @@
 @charset "utf-8";
 
-$primary: #032652;
+$primary: #e16428;
+$dark: #17223b;
+$text: #fff;
+
+$input-background-color: #000;
 $input-placeholder-color: #5f5f5f;
+$input-focus-border-color: $primary;
+
+$card-background-color: $dark;
+$card-header-background-color: $dark;
+$card-header-color: $primary;
+$card-footer-background-color: $dark;
 
 @import "~bulma/bulma";
