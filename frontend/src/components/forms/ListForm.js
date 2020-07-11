@@ -51,7 +51,7 @@ export default function ListForm(props) {
 			</a>
 			:
 			<div className="container has-text-centered">
-				<a className="button is-dark is-large is-rounded" onClick={toggleModal}>New list</a>
+				<a className="button is-primary is-large is-rounded" onClick={toggleModal}>New list</a>
 			</div>
 		}
 		{active && <Modal toggle={toggleModal} modalContent={
