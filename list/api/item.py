@@ -1,5 +1,6 @@
 from rest_framework import serializers, viewsets
 
+from list.api.pagination import StandardResultsSetPagination
 from list.models import Item, DefaultItem
 
 
@@ -15,6 +16,7 @@ class ItemSerializer(serializers.ModelSerializer):
 class ItemViewSet(viewsets.ModelViewSet):
 	queryset = Item.objects.all()
 	serializer_class = ItemSerializer
+	pagination_class = StandardResultsSetPagination
 
 	def perform_create(self, serializer):
 		serializer.save(added_by=self.request.user)

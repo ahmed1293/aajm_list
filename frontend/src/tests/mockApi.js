@@ -5,7 +5,12 @@ export const api = {
 	GET: (endpoint) => {
 		const response = (endpoint === 'shopping-lists') ? shoppingList() : itemList();
 		return Promise.resolve({
-			data: response,
+			data: {
+				count: response.length,
+			  	next: null,
+			  	previous: null,
+				results: response
+			},
 			controller: new AbortController()
 		})
 	},

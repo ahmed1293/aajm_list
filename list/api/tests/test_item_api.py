@@ -9,7 +9,7 @@ def test_get_list_response(api_client):
 	response = api_client.get(reverse('api:item-list'))
 
 	assert response.status_code == 200
-	assert len(response.data) == Item.objects.count()
+	assert response.data['count'] == Item.objects.count()
 
 
 def test_get_detail_response(api_client, item_banana):

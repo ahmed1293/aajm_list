@@ -22,7 +22,7 @@ export default function Tiles() {
 		try {
 			let response = await api.GET('shopping-lists');
 			controller = response.controller;
-			dispatch({type: ACTIONS.setData, data: response.data})
+			dispatch({type: ACTIONS.setData, data: response.data.results})
 			setLoading(false);
 		} catch (e) {
 			setError(true);

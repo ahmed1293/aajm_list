@@ -71,12 +71,12 @@ export default function ItemForm(props) {
 			/>
 		</a>
 		{active && <Modal toggle={toggleModal} modalContent={
-			<article className="message">
+			<div className="message">
 				<div className="message-header has-background-black"><p>Item</p></div>
 				<div className="message-body has-background-dark">
 					<form onSubmit={handleSubmit}>
 						<div className="field">
-							<label className="label has-text-white">Item</label>
+							<label className="label has-text-white">Name</label>
 							<div className="control">
 								<input
 									className="input has-background-black has-text-white" name="name" type="text"
@@ -99,7 +99,7 @@ export default function ItemForm(props) {
 						</div>
 					</form>
 				</div>
-			</article>
+			</div>
 		}/>}
 	</>;
 }

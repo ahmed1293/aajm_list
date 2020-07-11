@@ -1,7 +1,9 @@
 from django.db import transaction
 from rest_framework import serializers, viewsets
+from rest_framework.pagination import PageNumberPagination
 
 from list.api.item import ItemSerializer
+from list.api.pagination import ShortResultsSetPagination
 from list.models import ShoppingList, DefaultItem, Item
 
 
@@ -18,6 +20,7 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 class ShoppingListViewSet(viewsets.ModelViewSet):
 	queryset = ShoppingList.objects.all().prefetch_related('item_set').order_by('-created_at')
 	serializer_class = ShoppingListSerializer
+	pagination_class = ShortResultsSetPagination
 
 	@transaction.atomic
 	def perform_create(self, serializer):

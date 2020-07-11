@@ -1,8 +1,8 @@
 import React from "react";
 
-function Modal(props) {
+export default function Modal(props) {
 	return <>
-		<div className={"modal is-active"} data-testid="modal">
+		<div className="modal is-active" data-testid="modal" style={{padding: '10px'}}>
 			<div className="modal-background" onClick={props.toggle}/>
 			<div className="modal-content">
 				{props.modalContent}
@@ -11,5 +11,3 @@ function Modal(props) {
 		</div>
 	</>;
 }
-
-export default Modal;
