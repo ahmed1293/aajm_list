@@ -56,7 +56,7 @@ export default function Tiles() {
 			<section className="section">
 				<div className="container">
 					<div className="tile is-ancestor flex-wrap">
-						{state.data.map(list => <Tile key={list.id} list={list}/>)}
+						{state.data.map((list, index) => <Tile key={list.id} list={list} isLatest={index === 0}/>)}
 					</div>
 				</div>
 			</section>

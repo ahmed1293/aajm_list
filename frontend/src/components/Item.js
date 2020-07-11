@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faUndo} from "@fortawesome/free-solid-svg-icons";
-import ItemForm from "./forms/ItemForm";
+import EditItemForm from "./forms/EditItemForm";
 import {APIContext} from "../api";
 import {ACTIONS, DataContext} from "../dataReducer";
 
@@ -32,8 +32,8 @@ export default function Item(props) {
 		<nav className="level is-mobile">
 			<div className="level-left">
 				<div className="buttons" style={{marginRight: '8px'}}>
-					<ItemForm id={item.id} name={item.name} quantity={item.quantity}
-								 callback={(newItem) => dispatch({
+					<EditItemForm id={item.id} name={item.name} quantity={item.quantity}
+									  callback={(newItem) => dispatch({
 									 type: ACTIONS.editItem, item: item, values: [
 										 {lookup: 'name', value: newItem.name}, {lookup: 'quantity', value: newItem.quantity}
 									 ]
@@ -43,7 +43,7 @@ export default function Item(props) {
 						data-testid={item.is_checked ? 'undo-button' : 'check-button'}
 					>
 						<FontAwesomeIcon
-							className={"icon" + (item.is_checked ? " has-text-info" : " has-text-primary")}
+							className={"icon" + (item.is_checked ? " has-text-info" : " has-text-success")}
 							icon={item.is_checked ? faUndo : faCheck}
 							data-testid={`${item.is_checked ? 'undo' : 'check'}-btn-${props.index}`}
 						/>

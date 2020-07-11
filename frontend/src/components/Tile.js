@@ -48,7 +48,7 @@ export default function Tile(props) {
 				</div>
 			</nav>
 			<p className="subtitle">{props.list.created_at}</p>
-			<List items={props.list.items} listId={props.list.id}/>
+			<List items={props.list.items} listId={props.list.id} canAddItem={props.isLatest}/>
 		</article>
 		{modal && <Modal toggle={toggleDeleteModal} modalContent={
 			<article className="message">

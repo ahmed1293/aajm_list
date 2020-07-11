@@ -56,7 +56,7 @@ export default function ListForm(props) {
 		}
 		{active && <Modal toggle={toggleModal} modalContent={
 			<article className="message">
-				<div className="message-header has-background-black">
+				<div className="message-header has-background-black has-text-white">
 					<p>List</p>
 				</div>
 				<div className="message-body has-background-dark">
@@ -65,13 +65,13 @@ export default function ListForm(props) {
 							<label className="label has-text-white" htmlFor="list-name">Name</label>
 							<div className="control">
 								<input
-									className="input has-background-black has-text-white" name="name" id="list-name"
+									className="input has-text-white" name="name" id="list-name"
 									type="text" value={name || ''} onChange={handleChange} placeholder="e.g. Food shop"
 								/>
 							</div>
 						</div>
 						<div className="control">
-							<button className="button is-black" disabled={!name}>Save</button>
+							<button className="button is-primary" disabled={!name}>Save</button>
 						</div>
 					</form>
 				</div>
