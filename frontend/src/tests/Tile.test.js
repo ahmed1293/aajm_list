@@ -7,30 +7,30 @@ import {ACTIONS} from "../dataReducer";
 
 
 test('Render as expected', () => {
-   const items = itemList();
-   const {queryByTestId, getByText} = renderWithMockContexts(
-       <Tile list={{name: 'name', id: '2', created_at:'12pm', items: items}}/>
-    );
+	const items = itemList();
+	const {queryByTestId, getByText} = renderWithMockContexts(
+		<Tile list={{name: 'name', id: '2', created_at: '12pm', items: items}}/>
+	);
 
-   expect(getByText('name')).toBeVisible();
-   expect(getByText('12pm')).toBeVisible();
-   expect(queryByTestId('active-modal')).toBeFalsy();
-   items.forEach((i) => expect(getByText(`${i.name} (${i.quantity})`)).toBeVisible());
+	expect(getByText('name')).toBeVisible();
+	expect(getByText('12pm')).toBeVisible();
+	expect(queryByTestId('active-modal')).toBeFalsy();
+	items.forEach((i) => expect(getByText(`${i.name} (${i.quantity})`)).toBeVisible());
 });
 
 
 test('Deleting list', async () => {
-   const mockCallback = jest.fn();
-   const {getByTestId, getByText} = renderWithMockContexts(
-       <Tile list={{name: 'name', id: '2', created_at:'12pm', items: []}}/>, {dispatchOverride: mockCallback}
-   );
+	const mockCallback = jest.fn();
+	const {getByTestId, getByText} = renderWithMockContexts(
+		<Tile list={{name: 'name', id: '2', created_at: '12pm', items: []}}/>, {dispatchOverride: mockCallback}
+	);
 
-   mockCallback.mockClear();
-   fireEvent.click(getByTestId('delete-list'));
-   fireEvent.click(getByText('Delete'));
-   await waitFor(() => {
-      expect(mockCallback).toHaveBeenCalledTimes(1);
-      expect(mockCallback).toHaveBeenCalledWith({"listId": "2", "type": ACTIONS.deleteList});
-   });
+	mockCallback.mockClear();
+	fireEvent.click(getByTestId('delete-list'));
+	fireEvent.click(getByText('Delete'));
+	await waitFor(() => {
+		expect(mockCallback).toHaveBeenCalledTimes(1);
+		expect(mockCallback).toHaveBeenCalledWith({"listId": "2", "type": ACTIONS.deleteList});
+	});
 });
 

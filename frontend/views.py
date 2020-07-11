@@ -6,15 +6,14 @@ from django.shortcuts import render
 
 @login_required()
 def index(request):
-    return render(request, 'frontend/index.html', {'COMMIT_REF': settings.COMMIT_REF})
+	return render(request, 'frontend/index.html', {'COMMIT_REF': settings.COMMIT_REF})
 
 
 class Login(LoginView):
-    template_name = 'frontend/login.html'
-    extra_context = {'COMMIT_REF': settings.COMMIT_REF}
-    redirect_authenticated_user = True
+	template_name = 'frontend/login.html'
+	extra_context = {'COMMIT_REF': settings.COMMIT_REF}
+	redirect_authenticated_user = True
 
 
 class Logout(LogoutView):
-    pass
-
+	pass

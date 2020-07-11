@@ -2,33 +2,33 @@
 
 {% block content %}
 
-<section class="section" id="login">
-    <div class="container has-text-centered">
-        <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-            <div class="field">
-                <div class="control">
-                    <input class="input {% if form.errors %} is-danger {% endif %}" placeholder="Username"
-                           type="text" name="username" autofocus required id="id_username"
-                    />
+    <section class="section" id="login">
+        <div class="container has-text-centered">
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="field">
+                    <div class="control">
+                        <input class="input {% if form.errors %} is-danger {% endif %}" placeholder="Username"
+                               type="text" name="username" autofocus required id="id_username"
+                        />
+                    </div>
                 </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <input class="input {% if form.errors %} is-danger {% endif %}" placeholder="Password"
-                           type="password" name="password" required id="id_password"
-                    />
+                <div class="field">
+                    <div class="control">
+                        <input class="input {% if form.errors %} is-danger {% endif %}" placeholder="Password"
+                               type="password" name="password" required id="id_password"
+                        />
+                    </div>
                 </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <button type="submit" class="button is-dark">
-                        Login
-                    </button>
+                <div class="field">
+                    <div class="control">
+                        <button type="submit" class="button is-dark">
+                            Login
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <input type="hidden" name="next" value="{{ next }}">
-        </form>
-    </div>
-</section>
+                <input type="hidden" name="next" value="{{ next }}">
+            </form>
+        </div>
+    </section>
 {% endblock %}

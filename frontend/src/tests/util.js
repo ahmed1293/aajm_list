@@ -5,13 +5,13 @@ import {api} from "./mockApi";
 import {DataContext} from "../dataReducer";
 
 
-export const renderWithMockContexts = (components, {apiOverride, dispatchOverride}={}) => {
-    const _api = apiOverride ? {...api, [apiOverride.method]: apiOverride.func} : api;
-    return render(
-        <APIContext.Provider value={_api}>
-            <DataContext.Provider value={dispatchOverride || jest.fn()}>
-                {components}
-            </DataContext.Provider>
-        </APIContext.Provider>
-    );
+export const renderWithMockContexts = (components, {apiOverride, dispatchOverride} = {}) => {
+	const _api = apiOverride ? {...api, [apiOverride.method]: apiOverride.func} : api;
+	return render(
+		<APIContext.Provider value={_api}>
+			<DataContext.Provider value={dispatchOverride || jest.fn()}>
+				{components}
+			</DataContext.Provider>
+		</APIContext.Provider>
+	);
 };

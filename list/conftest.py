@@ -7,38 +7,38 @@ from list.models import ShoppingList, Item, DefaultItem
 
 @pytest.fixture(autouse=True)
 def enable_db_access(db):
-    # enable DB access for all tests
-    pass
+	# enable DB access for all tests
+	pass
 
 
 @pytest.fixture
 def api_client(admin_user):
-    client = APIClient()
-    client.force_login(admin_user)
-    return client
+	client = APIClient()
+	client.force_login(admin_user)
+	return client
 
 
 @pytest.fixture
 def shopping_list(admin_user):
-    return ShoppingList.objects.create(
-        name='food',
-        created_by=admin_user,
-    )
+	return ShoppingList.objects.create(
+		name='food',
+		created_by=admin_user,
+	)
 
 
 @pytest.fixture
 def item_banana(shopping_list, admin_user):
-    return Item.objects.create(
-        name='banana',
-        quantity='1',
-        list=shopping_list,
-        added_by=admin_user,
-    )
+	return Item.objects.create(
+		name='banana',
+		quantity='1',
+		list=shopping_list,
+		added_by=admin_user,
+	)
 
 
 @pytest.fixture
 def default_item():
-    return DefaultItem.objects.create(
-        name='cucumber',
-        quantity='1'
-    )
+	return DefaultItem.objects.create(
+		name='cucumber',
+		quantity='1'
+	)

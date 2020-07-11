@@ -5,12 +5,12 @@ import {api, APIContext} from "../api";
 
 
 const App = () => (
-    <APIContext.Provider value={api}>
-        <Tiles/>
-    </APIContext.Provider>
+	<APIContext.Provider value={api}>
+		<Tiles/>
+	</APIContext.Provider>
 );
 
 const wrapper = document.getElementById("app");
 
-wrapper ? ReactDOM.render(<App />, wrapper) : null;
+wrapper ? ReactDOM.render(<App/>, wrapper) : null;
 

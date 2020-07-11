@@ -4,21 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		('list', '0002_item_is_checked'),
+	]
 
-    dependencies = [
-        ('list', '0002_item_is_checked'),
-    ]
-
-    operations = [
-        migrations.CreateModel(
-            name='DefaultItem',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('quantity', models.CharField(default=1, max_length=255)),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-    ]
+	operations = [
+		migrations.CreateModel(
+			name='DefaultItem',
+			fields=[
+				('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+				('name', models.CharField(max_length=255)),
+				('quantity', models.CharField(default=1, max_length=255)),
+			],
+			options={
+				'abstract': False,
+			},
+		),
+	]

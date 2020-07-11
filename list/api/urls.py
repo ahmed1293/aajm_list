@@ -14,5 +14,5 @@ router.register(prefix=r'default-items', viewset=DefaultItemViewSet, basename='d
 router.register(prefix=r'users', viewset=UserViewSet, basename='user')
 
 urlpatterns = [
-    path('', include(router.urls))
+	path('', include(router.urls))
 ]

@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+	dependencies = [
+		('list', '0001_initial'),
+	]
 
-    dependencies = [
-        ('list', '0001_initial'),
-    ]
-
-    operations = [
-        migrations.AddField(
-            model_name='item',
-            name='is_checked',
-            field=models.BooleanField(default=False),
-        ),
-    ]
+	operations = [
+		migrations.AddField(
+			model_name='item',
+			name='is_checked',
+			field=models.BooleanField(default=False),
+		),
+	]
