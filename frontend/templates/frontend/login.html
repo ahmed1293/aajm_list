@@ -1,34 +1,61 @@
-{% extends 'frontend/base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href={% static "bundles/main.bundle.css" %}?v={{ COMMIT_REF }}>
+        <link rel="stylesheet" href={% static "custom.css" %}?v={{ COMMIT_REF }}>
+        <title>AAJM - Login</title>
+    </head>
+
+    <body>
+        <section class="section hero is-dark is-fullheight" id="login">
+            <div class="container has-text-centered" style="width: 25%">
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <div class="card">
+                    <div class="card-header">
+                        <p class="card-header-title">
+                          AAJM
+                        </p>
+                    </div>
+                    <div class="card-content">
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input {% if form.errors %} is-danger {% endif %}"
+                                           placeholder="Username" type="text" name="username"
+                                           autofocus required id="id_username"
+                                    />
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="control">
+                                    <input class="input {% if form.errors %} is-danger {% endif %}"
+                                           placeholder="Password" type="password" name="password"
+                                           required id="id_password"
+                                    />
+                                </div>
+                            </div>
+                    </div>
+                    <footer class="card-footer">
+                        <div class="field card-footer-item">
+                            <div class="control">
+                                <button type="submit" class="button is-dark">Login</button>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </form>
+            </div>
+        </section>
+    </body>
+
+</html>
 
 {% block content %}
 
-    <section class="section" id="login">
-        <div class="container has-text-centered">
-            <form method="post" action="{% url 'login' %}">
-                {% csrf_token %}
-                <div class="field">
-                    <div class="control">
-                        <input class="input {% if form.errors %} is-danger {% endif %}" placeholder="Username"
-                               type="text" name="username" autofocus required id="id_username"
-                        />
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="control">
-                        <input class="input {% if form.errors %} is-danger {% endif %}" placeholder="Password"
-                               type="password" name="password" required id="id_password"
-                        />
-                    </div>
-                </div>
-                <div class="field">
-                    <div class="control">
-                        <button type="submit" class="button is-dark">
-                            Login
-                        </button>
-                    </div>
-                </div>
-                <input type="hidden" name="next" value="{{ next }}">
-            </form>
-        </div>
-    </section>
+
 {% endblock %}
