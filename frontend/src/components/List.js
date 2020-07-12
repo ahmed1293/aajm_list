@@ -11,7 +11,10 @@ export default function List(props) {
 
 	return <div>
 		{props.canAddItem ? <div className="has-text-centered">
-			<AddItemForm/>
+			<AddItemForm
+				listId={props.listId}
+				callback={(newItem) => dispatch({type: ACTIONS.addItem, listId: props.listId, item: newItem})}
+			/>
 			{/*<EditItemForm*/}
 			{/*	listId={props.listId}*/}
 			{/*	callback={(newItem) => dispatch({type: ACTIONS.addItem, listId: props.listId, item: newItem})}*/}
