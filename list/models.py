@@ -3,13 +3,12 @@ from django.db import models
 
 
 class ShoppingList(models.Model):
-	name = models.CharField(max_length=255)
 	created_by = models.ForeignKey(get_user_model(), on_delete=models.PROTECT, null=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 
 	@staticmethod
-	def create_with_defaults(name, created_by):
-		instance = ShoppingList.objects.create(name=name, created_by=created_by)
+	def create_with_defaults(created_by):
+		instance = ShoppingList.objects.create(created_by=created_by)
 		defaults = [
 			Item(name=default.name, quantity=default.quantity, list=instance, added_by=created_by)
 			for default in DefaultItem.objects.all()
@@ -18,7 +17,7 @@ class ShoppingList(models.Model):
 		return instance
 
 	def __str__(self):
-		return self.name
+		return f'List {str(self.created_at)}'
 
 
 class BaseItem(models.Model):

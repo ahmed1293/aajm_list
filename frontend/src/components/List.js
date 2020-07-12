@@ -1,7 +1,8 @@
 import React, {useContext} from "react";
 import Item from "./Item";
-import ItemForm from "./forms/ItemForm";
+import EditItemForm from "./forms/EditItemForm";
 import {ACTIONS, DataContext} from "../dataReducer";
+import AddItemForm from "./forms/AddItemForm";
 
 
 export default function List(props) {
@@ -9,12 +10,16 @@ export default function List(props) {
 	const dispatch = useContext(DataContext);
 
 	return <div>
-		<div className="has-text-centered">
-			<ItemForm
+		{props.canAddItem ? <div className="has-text-centered">
+			<AddItemForm
 				listId={props.listId}
 				callback={(newItem) => dispatch({type: ACTIONS.addItem, listId: props.listId, item: newItem})}
 			/>
-		</div>
+			{/*<EditItemForm*/}
+			{/*	listId={props.listId}*/}
+			{/*	callback={(newItem) => dispatch({type: ACTIONS.addItem, listId: props.listId, item: newItem})}*/}
+			{/*/>*/}
+		</div>:null}
 		<br/>
 		<div className="list has-background-dark">
 			{sort(props.items).map((item, index) => <Item key={item.id} instance={item} index={index}/>)}

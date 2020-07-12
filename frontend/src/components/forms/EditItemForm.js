@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useReducer, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPencilAlt, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 import Modal from "../Modal";
 import {APIContext} from "../../api";
 
@@ -22,7 +22,7 @@ function reducer(state, action) {
 	}
 }
 
-export default function ItemForm(props) {
+export default function EditItemForm(props) {
 
 	const api = useContext(APIContext);
 
@@ -42,17 +42,16 @@ export default function ItemForm(props) {
 
 	async function handleSubmit(e) {
 		e.preventDefault();
-		const endpoint = 'items';
-		const values = {'name': state.name, 'quantity': state.quantity};
-		const body = props.id ? values : {...values, 'list': props.listId, 'is_checked': false};
-
-		let response = props.id ? await api.PATCH(endpoint, props.id, body) : await api.POST(endpoint, body);
+		let response = await api.PATCH(
+			'items',
+			props.id,
+			{'name': state.name, 'quantity': state.quantity}
+		);
 
 		let newItem = await response.data;
 		controller = response.controller;
 
 		props.callback(newItem);
-		!props.id && dispatch({type: 'reset'});
 		toggleModal();
 	}
 
@@ -63,23 +62,19 @@ export default function ItemForm(props) {
 	});
 
 	return <>
-		<a className={"button is-small is-black is-outlined"} onClick={toggleModal}
-			data-testid={props.id ? "edit-item-btn" : "add-item-btn"}>
-			<FontAwesomeIcon
-				className={"icon " + (props.id ? "has-text-warning" : "has-text-info")}
-				icon={props.id ? faPencilAlt : faPlus}
-			/>
+		<a className={"button is-small is-black is-outlined"} onClick={toggleModal} data-testid="edit-item-btn">
+			<FontAwesomeIcon className={"icon has-text-warning"} icon={faPencilAlt}/>
 		</a>
 		{active && <Modal toggle={toggleModal} modalContent={
 			<div className="message">
-				<div className="message-header has-background-black"><p>Item</p></div>
+				<div className="message-header has-background-black has-text-white">Edit</div>
 				<div className="message-body has-background-dark">
 					<form onSubmit={handleSubmit}>
 						<div className="field">
 							<label className="label has-text-white">Name</label>
 							<div className="control">
 								<input
-									className="input has-background-black has-text-white" name="name" type="text"
+									className="input has-text-white" name="name" type="text"
 									value={state.name || ''} onChange={handleChange} placeholder="e.g. Chicken"
 								/>
 							</div>
@@ -87,13 +82,13 @@ export default function ItemForm(props) {
 						<div className="field">
 							<label className="label has-text-white">Quantity</label>
 							<div className="control">
-								<input className="input has-background-black has-text-white" name="quantity"
+								<input className="input has-text-white" name="quantity"
 										 type="text" value={state.quantity || ''} onChange={handleChange} placeholder="e.g. 81"
 								/>
 							</div>
 						</div>
 						<div className="control">
-							<button className="button is-black" disabled={!(state.name && state.quantity)}>
+							<button className="button is-primary" disabled={!(state.name && state.quantity)}>
 								Save
 							</button>
 						</div>

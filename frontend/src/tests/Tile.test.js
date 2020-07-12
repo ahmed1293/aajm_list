@@ -9,10 +9,9 @@ import {ACTIONS} from "../dataReducer";
 test('Render as expected', () => {
 	const items = itemList();
 	const {queryByTestId, getByText} = renderWithMockContexts(
-		<Tile list={{name: 'name', id: '2', created_at: '12pm', items: items}}/>
+		<Tile list={{id: '2', created_at: '12pm', items: items}}/>
 	);
 
-	expect(getByText('name')).toBeVisible();
 	expect(getByText('12pm')).toBeVisible();
 	expect(queryByTestId('active-modal')).toBeFalsy();
 	items.forEach((i) => expect(getByText(`${i.name} (${i.quantity})`)).toBeVisible());
@@ -22,7 +21,7 @@ test('Render as expected', () => {
 test('Deleting list', async () => {
 	const mockCallback = jest.fn();
 	const {getByTestId, getByText} = renderWithMockContexts(
-		<Tile list={{name: 'name', id: '2', created_at: '12pm', items: []}}/>, {dispatchOverride: mockCallback}
+		<Tile list={{id: '2', created_at: '12pm', items: []}}/>, {dispatchOverride: mockCallback}
 	);
 
 	mockCallback.mockClear();

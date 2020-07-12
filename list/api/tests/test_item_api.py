@@ -42,7 +42,6 @@ def test_post_response(api_client, admin_user, shopping_list):
 
 def test_put_response(api_client, admin_user, item_banana, shopping_list):
 	other_list = ShoppingList.objects.create(
-		name='FOOD',
 		created_by=admin_user,
 	)
 

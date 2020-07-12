@@ -14,7 +14,7 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = ShoppingList
-		fields = ['id', 'name', 'created_by', 'created_at', 'items']
+		fields = ['id', 'created_by', 'created_at', 'items']
 
 
 class ShoppingListViewSet(viewsets.ModelViewSet):

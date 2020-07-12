@@ -12,8 +12,8 @@
     </head>
 
     <body>
-        <section class="section hero is-dark is-fullheight" id="login">
-            <div class="container has-text-centered" style="width: 25%">
+        <section class="section hero is-black is-fullheight" id="login">
+            <div class="container has-text-centered">
             <form method="post" action="{% url 'login' %}">
                 {% csrf_token %}
                 <div class="card">
@@ -25,7 +25,7 @@
                     <div class="card-content">
                             <div class="field">
                                 <div class="control">
-                                    <input class="input {% if form.errors %} is-danger {% endif %}"
+                                    <input class="input has-background-black {% if form.errors %} is-danger {% endif %}"
                                            placeholder="Username" type="text" name="username"
                                            autofocus required id="id_username"
                                     />
@@ -33,7 +33,7 @@
                             </div>
                             <div class="field">
                                 <div class="control">
-                                    <input class="input {% if form.errors %} is-danger {% endif %}"
+                                    <input class="input has-background-black {% if form.errors %} is-danger {% endif %}"
                                            placeholder="Password" type="password" name="password"
                                            required id="id_password"
                                     />
@@ -43,7 +43,7 @@
                     <footer class="card-footer">
                         <div class="field card-footer-item">
                             <div class="control">
-                                <button type="submit" class="button is-dark">Login</button>
+                                <button type="submit" class="button is-primary">Login</button>
                             </div>
                         </div>
                     </footer>

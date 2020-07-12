@@ -10,7 +10,7 @@ describe('Item icons', () => {
 	test.each`
     checked  | icon          | colourClass           | isCrossedThrough
     ${true}  | ${'fa-undo'}  | ${'has-text-info'}    | ${true}
-    ${false} | ${'fa-check'} | ${'has-text-primary'} | ${false}`
+    ${false} | ${'fa-check'} | ${'has-text-success'} | ${false}`
 	('icon is $icon, with colour $colourClass, if checked=$checked', ({checked, icon, colourClass, isCrossedThrough}) => {
 		const testItem = {
 			"id": 1,
