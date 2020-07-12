@@ -3,7 +3,7 @@ import React from "react";
 
 export const api = {
 	GET: (endpoint) => {
-		const response = (endpoint === 'shopping-lists') ? shoppingList() : itemList();
+		const response = (endpoint === 'shopping-lists') ? shoppingLists() : itemList();
 		return Promise.resolve({
 			data: {
 				count: response.length,
@@ -20,7 +20,6 @@ export const api = {
 		if (endpoint === 'shopping-lists') {
 			response = {
 				"id": id,
-				"name": data.name,
 				"created_by": "bob",
 				"created_at": "07/10/2019 19:35:44",
 				"items": []
@@ -98,7 +97,7 @@ export const itemList = () => [
 	}
 ];
 
-export const shoppingList = () => [
+export const shoppingLists = () => [
 	{
 		"id": 1,
 		"name": "tesco",

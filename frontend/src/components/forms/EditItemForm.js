@@ -67,7 +67,7 @@ export default function EditItemForm(props) {
 		</a>
 		{active && <Modal toggle={toggleModal} modalContent={
 			<div className="message">
-				<div className="message-header has-background-black"><p>Item</p></div>
+				<div className="message-header has-background-black has-text-white">Edit</div>
 				<div className="message-body has-background-dark">
 					<form onSubmit={handleSubmit}>
 						<div className="field">

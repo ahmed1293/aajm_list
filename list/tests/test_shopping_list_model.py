@@ -3,21 +3,18 @@ from list.models import ShoppingList, DefaultItem
 
 def test_can_create(admin_user):
 	shopping_list = ShoppingList.objects.create(
-		name='food',
 		created_by=admin_user,
 	)
 
-	assert shopping_list.name == 'food'
 	assert shopping_list.created_by == admin_user
 
 
 def test_model_str(admin_user):
 	shopping_list = ShoppingList.objects.create(
-		name='food',
 		created_by=admin_user,
 	)
 
-	assert str(shopping_list) == 'food'
+	assert str(shopping_list) == f'List {shopping_list.created_at}'
 
 
 def test_can_create_with_defaults(admin_user):
@@ -25,7 +22,6 @@ def test_can_create_with_defaults(admin_user):
 	default_item_2 = DefaultItem.objects.create(name='grapes', quantity=1)
 
 	s_list = ShoppingList.create_with_defaults(
-		name='list with defaults',
 		created_by=admin_user
 	)
 

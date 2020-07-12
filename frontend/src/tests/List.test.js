@@ -7,21 +7,31 @@ import {DataContext, dataReducer} from "../dataReducer";
 import {APIContext} from "../api";
 
 
-function ComponentToTest({items}) {
+function ComponentToTest({items, canAddItem=true}) {
 	const [state, dispatch] = useReducer(dataReducer, {data: [{id: 1, items: items}]})
 
 	return <APIContext.Provider value={api}>
 		<DataContext.Provider value={dispatch}>
-			<List items={state.data[0].items} listId={1}/>
+			<List items={state.data[0].items} listId={1} canAddItem={canAddItem}/>
 		</DataContext.Provider>
 	</APIContext.Provider>
 }
 
 
-test('Render as expected', () => {
+test('Render as expected if can add item', () => {
 	const items = itemList();
 	const {getByText} = render(<ComponentToTest items={items}/>)
 
+	expect(getByText('Add')).toBeVisible();
+	items.forEach((item) => expect(getByText(`${item.name} (${item.quantity})`)).toBeVisible());
+});
+
+
+test('Render as expected if cannot add item', () => {
+	const items = itemList();
+	const {getByText, queryByText} = render(<ComponentToTest items={items} canAddItem={false}/>)
+
+	expect(queryByText('Add')).toBeNull();
 	items.forEach((item) => expect(getByText(`${item.name} (${item.quantity})`)).toBeVisible());
 });
 

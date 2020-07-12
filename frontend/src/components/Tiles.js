@@ -3,7 +3,6 @@ import Tile from "./Tile";
 import {faSpinner, faFrown} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {APIContext} from "../api";
-import ListForm from "./forms/ListForm";
 import {dataReducer, DataContext, ACTIONS} from "../dataReducer";
 
 
@@ -52,7 +51,12 @@ export default function Tiles() {
 	}
 	return <div>
 		<DataContext.Provider value={dispatch}>
-			<ListForm/>
+			<div className="container has-text-centered">
+				<a className="button is-primary is-large is-rounded" onClick={async () => {
+					let response = await api.POST('shopping-lists');
+					dispatch({type: ACTIONS.addList, list: await response.data});
+				}}>New list</a>
+			</div>
 			<section className="section">
 				<div className="container">
 					<div className="tile is-ancestor flex-wrap">

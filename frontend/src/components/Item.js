@@ -32,16 +32,20 @@ export default function Item(props) {
 		<nav className="level is-mobile">
 			<div className="level-left">
 				<div className="buttons" style={{marginRight: '8px'}}>
-					<EditItemForm id={item.id} name={item.name} quantity={item.quantity}
-									  callback={(newItem) => dispatch({
-									 type: ACTIONS.editItem, item: item, values: [
-										 {lookup: 'name', value: newItem.name}, {lookup: 'quantity', value: newItem.quantity}
-									 ]
-								 })}
+					<EditItemForm
+						id={item.id} name={item.name} quantity={item.quantity}
+						callback={(newItem) => dispatch({
+							type: ACTIONS.editItem,
+							item: item,
+							values: [
+								{lookup: 'name', value: newItem.name},
+								{lookup: 'quantity', value: newItem.quantity}
+							 ]
+						 })
+						}
 					/>
 					<a className="button is-small is-black is-outlined" onClick={checkItem}
-						data-testid={item.is_checked ? 'undo-button' : 'check-button'}
-					>
+						data-testid={item.is_checked ? 'undo-button' : 'check-button'}>
 						<FontAwesomeIcon
 							className={"icon" + (item.is_checked ? " has-text-info" : " has-text-success")}
 							icon={item.is_checked ? faUndo : faCheck}
@@ -49,7 +53,6 @@ export default function Item(props) {
 						/>
 					</a>
 				</div>
-
 			</div>
 			<div className="level-item level-is-shrinkable">
 				<div className={"has-text-white" + (item.is_checked ? " line-through" : "")}

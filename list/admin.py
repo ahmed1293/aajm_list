@@ -10,7 +10,6 @@ class ItemInline(admin.TabularInline):
 
 class ShoppingListAdmin(admin.ModelAdmin):
 	list_display = (
-		'name',
 		'created_by',
 		'created_at',
 	)
