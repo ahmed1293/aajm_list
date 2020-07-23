@@ -3,18 +3,19 @@ import {createContext} from "react";
 
 
 export const api = {
-	GET: (endpoint) => _get(endpoint),
+	GET: (endpoint, queryParams={}) => _get(endpoint, queryParams),
 	POST: (endpoint, data) => _post(endpoint, data),
 	DELETE: (endpoint, id) => _delete(endpoint, id),
 	PATCH: (endpoint, id, data) => _patch(endpoint, id, data)
 };
 export const APIContext = createContext(api);
 
-const _get = async (endpoint) => {
+const _get = async (endpoint, queryParams={}) => {
 	const controller = new AbortController();
 	const signal = controller.signal;
 
-	let response = await fetch(`api/${endpoint}/`, {signal});
+	const params = new URLSearchParams(queryParams).toString();
+	let response = await fetch(`api/${endpoint}/?${params}`, {signal});
 	_raiseForStatus(response.status, 200);
 	return {data: await response.json(), controller: controller};
 };

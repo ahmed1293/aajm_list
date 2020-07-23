@@ -9,3 +9,7 @@
 .level-is-shrinkable {
     flex-shrink: 1;
 }
+
+.is-clickable {
+    cursor: pointer;
+}
