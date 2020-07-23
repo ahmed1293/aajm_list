@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faUndo} from "@fortawesome/free-solid-svg-icons";
 import EditItemForm from "./forms/EditItemForm";
@@ -12,21 +12,13 @@ export default function Item(props) {
 	const dispatch = useContext(DataContext);
 
 	const item = props.instance;
-	let controller;
 
 	async function checkItem() {
-		let response = await api.PATCH('items', item.id, {'is_checked': !item.is_checked});
-		controller = response.controller;
+		await api.PATCH('items', item.id, {'is_checked': !item.is_checked});
 		dispatch({
 			type: ACTIONS.editItem, item: item, values: [{lookup: 'is_checked', value: !item.is_checked}]
 		})
 	}
-
-	useEffect(() => {
-		return (() => {
-			controller && controller.abort()
-		})
-	});
 
 	return <div className="list-item" style={{padding: '0.5em 0.3em'}}>
 		<nav className="level is-mobile">

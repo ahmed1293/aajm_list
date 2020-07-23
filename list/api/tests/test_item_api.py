@@ -5,11 +5,43 @@ from django.urls import reverse
 from list.models import Item, ShoppingList
 
 
-def test_get_list_response(api_client):
+def test_get_list_response(api_client, item_banana, default_item):
 	response = api_client.get(reverse('api:item-list'))
 
 	assert response.status_code == 200
+	items = response.data['results']
+	item_names = [i['name'] for i in items]
+
 	assert response.data['count'] == Item.objects.count()
+	assert item_banana.name in item_names
+	assert default_item.name not in item_names
+
+
+@pytest.mark.parametrize('search, results', [
+	('nec', ['nectarines']),
+	('rin', ['nectarines', 'drinks']),
+	('app', ['red apples', 'green apples']),
+	('r', ['nectarines', 'drinks', 'red apples', 'green apples', 'garlic']),
+	('foo', []),
+	('APPLE', ['red apples', 'green apples']),
+	('garlic', ['garlic'])  # duplicate names should be removed
+])
+def test_get_list_with_search(api_client, search, results):
+	shopping_list = ShoppingList.objects.create()
+	for name in ['nectarines', 'drinks', 'red apples', 'green apples', 'garlic', 'garlic', 'garlic']:
+		Item.objects.create(
+			name=name,
+			quantity=1,
+			list=shopping_list,
+		)
+
+	response = api_client.get(f"{reverse('api:item-list')}?search={search}")
+
+	assert response.status_code == 200
+	assert response.data['count'] == len(results)
+	result_names = [i['name'] for i in response.data['results']]
+	for name in result_names:
+		assert name in result_names
 
 
 def test_get_detail_response(api_client, item_banana):
