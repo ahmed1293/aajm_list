@@ -14,14 +14,11 @@ export default function Tiles() {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);
 
-	let controller;
-
 	async function fetchData() {
 		setLoading(true);
 		try {
 			let response = await api.GET('shopping-lists');
-			controller = response.controller;
-			dispatch({type: ACTIONS.setData, data: response.data.results})
+			dispatch({type: ACTIONS.setData, data: response.results})
 			setLoading(false);
 		} catch (e) {
 			setError(true);
@@ -30,14 +27,7 @@ export default function Tiles() {
 	}
 
 	useEffect(() => {
-		let _isMounted = true;
-
-		_isMounted && fetchData();
-
-		return (() => {
-			_isMounted = false;
-			controller && controller.abort();
-		})
+		fetchData();
 	}, []);
 
 	if (loading) {
@@ -54,7 +44,7 @@ export default function Tiles() {
 			<div className="container has-text-centered">
 				<a className="button is-primary is-large is-rounded" onClick={async () => {
 					let response = await api.POST('shopping-lists');
-					dispatch({type: ACTIONS.addList, list: await response.data});
+					dispatch({type: ACTIONS.addList, list: response});
 				}}>New list</a>
 			</div>
 			<section className="section">

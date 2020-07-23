@@ -11,66 +11,56 @@ export const api = {
 export const APIContext = createContext(api);
 
 const _get = async (endpoint, queryParams={}) => {
-	const controller = new AbortController();
-	const signal = controller.signal;
-
 	const params = new URLSearchParams(queryParams).toString();
-	let response = await fetch(`api/${endpoint}/?${params}`, {signal});
+	let response = await fetch(`api/${endpoint}/?${params}`);
 	_raiseForStatus(response.status, 200);
-	return {data: await response.json(), controller: controller};
+	return await response.json();
 };
 
 
 const _post = async (endpoint, data) => {
-	let {response, controller} = await _fetchDjango(
+	let response = await _fetchDjango(
 		`/api/${endpoint}/`, {
 			method: 'POST',
 			body: data
 		});
 
 	_raiseForStatus(response.status, 201);
-	return {data: await response.json(), controller: controller};
+	return await response.json();
 };
 
 
 const _delete = async (endpoint, id) => {
-	const {response, controller} = await _fetchDjango(
+	const response = await _fetchDjango(
 		`/api/${endpoint}/${id}/`, {
 			method: 'DELETE'
 		});
 
 	_raiseForStatus(response.status, 204);
-	return controller;
 };
 
 
 const _patch = async (endpoint, id, data) => {
-	let {response, controller} = await _fetchDjango(
+	let response = await _fetchDjango(
 		`/api/${endpoint}/${id}/`, {
 			method: 'PATCH',
 			body: data
 		});
 
 	_raiseForStatus(response.status, 200);
-	return {data: await response.json(), controller: controller};
+	return await response.json();
 };
 
 
 async function _fetchDjango(url, init) {
-	const controller = new AbortController();
-	const signal = controller.signal;
-
-	let response = await fetch(url, {
+	return await fetch(url, {
 		method: init['method'],
 		headers: {
 			'X-CSRFToken': Cookies.get("csrftoken"),
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(init['body']),
-		signal: signal
 	});
-
-	return {response: response, controller: controller};
 }
 
 

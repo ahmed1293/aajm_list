@@ -5,13 +5,10 @@ export const api = {
 	GET: (endpoint) => {
 		const response = (endpoint === 'shopping-lists') ? shoppingLists() : itemList();
 		return Promise.resolve({
-			data: {
-				count: response.length,
-			  	next: null,
-			  	previous: null,
-				results: response
-			},
-			controller: new AbortController()
+			count: response.length,
+			next: null,
+			previous: null,
+			results: response
 		})
 	},
 	POST: (endpoint, data) => {
@@ -34,10 +31,7 @@ export const api = {
 				"is_checked": false
 			}
 		}
-		return Promise.resolve({
-			data: response,
-			controller: new AbortController()
-		})
+		return Promise.resolve(response)
 	},
 	DELETE: () => new AbortController(),
 	PATCH: (endpoint, id, data) => {
@@ -60,10 +54,7 @@ export const api = {
 				"is_checked": data.is_checked
 			}
 		}
-		return Promise.resolve({
-			data: response,
-			controller: new AbortController()
-		})
+		return Promise.resolve(response)
 	}
 };
 

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
 import List from "./List";
@@ -13,24 +13,16 @@ export default function Tile(props) {
 
 	const [modal, setModal] = useState(false);
 
-	let controller;
-
 	function toggleDeleteModal() {
 		setModal(m => !m);
 	}
 
 	async function _delete(e) {
 		e.preventDefault();
-		controller = await api.DELETE('shopping-lists', props.list.id);
+		await api.DELETE('shopping-lists', props.list.id);
 		setModal(false);
 		dispatch({type: ACTIONS.deleteList, listId: props.list.id});
 	}
-
-	useEffect(() => {
-		return (() => {
-			controller && controller.abort()
-		})
-	});
 
 	return <div className="tile is-parent is-vertical is-4" data-testid='tile'>
 		<article className="tile is-child notification is-dark" style={{padding: '10px'}}>

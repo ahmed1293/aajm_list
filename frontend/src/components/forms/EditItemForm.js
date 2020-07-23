@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useReducer, useState} from "react";
+import React, {useContext, useReducer, useState} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 import Modal from "../Modal";
@@ -29,8 +29,6 @@ export default function EditItemForm(props) {
 	const [state, dispatch] = useReducer(reducer, {name: props.name, quantity: props.quantity}, init);
 	const [active, setActive] = useState(false);
 
-	let controller;
-
 	function toggleModal() {
 		setActive(m => !m);
 	}
@@ -42,24 +40,15 @@ export default function EditItemForm(props) {
 
 	async function handleSubmit(e) {
 		e.preventDefault();
-		let response = await api.PATCH(
+		let newItem = await api.PATCH(
 			'items',
 			props.id,
 			{'name': state.name, 'quantity': state.quantity}
 		);
 
-		let newItem = await response.data;
-		controller = response.controller;
-
 		props.callback(newItem);
 		toggleModal();
 	}
-
-	useEffect(() => {
-		return (() => {
-			controller && controller.abort()
-		})
-	});
 
 	return <>
 		<a className={"button is-small is-black is-outlined"} onClick={toggleModal} data-testid="edit-item-btn">

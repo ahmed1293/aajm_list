@@ -1,6 +1,5 @@
 import React, {useContext} from "react";
 import Item from "./Item";
-import EditItemForm from "./forms/EditItemForm";
 import {ACTIONS, DataContext} from "../dataReducer";
 import AddItemForm from "./forms/AddItemForm";
 

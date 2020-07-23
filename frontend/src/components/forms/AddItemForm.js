@@ -18,7 +18,7 @@ export default function AddItemForm(props) {
 			setSuggestions([]);
 		} else {
 			let response = await api.GET('items', {'search': value});
-			setSuggestions(response.data.results);
+			setSuggestions(response.results);
 		}
 	}
 
@@ -36,7 +36,7 @@ export default function AddItemForm(props) {
 							autoFocus={true}
 						/>
 					</div>
-					<div className='has-text-grey-light'>
+					<div className='has-text-grey-light my-2'>
 						{suggestions.map(s => <div
 							key={s.id}
 							className='mt-1 is-clickable'
@@ -45,7 +45,9 @@ export default function AddItemForm(props) {
 								setQuantity(s.quantity);
 								setSuggestions([]);
 							}}
-						>{s.name} ({s.quantity})</div>)}
+						>
+							{s.name} ({s.quantity})
+						</div>)}
 					</div>
 				</div>
 				<div className="field">
@@ -70,7 +72,7 @@ export default function AddItemForm(props) {
 								'list': props.listId,
 								'is_checked': false
 							})
-							props.callback(await response.data);
+							props.callback(response);
 							setName(''); setQuantity('');
 						}}
 					>
