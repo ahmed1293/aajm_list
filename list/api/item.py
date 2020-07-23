@@ -22,7 +22,7 @@ class ItemViewSet(viewsets.ModelViewSet):
 	def get_queryset(self):
 		search = self.request.query_params.get('search')
 		if search:
-			return Item.objects.filter(name__icontains=str(search).lower())
+			return Item.objects.filter(name__icontains=str(search).lower()).distinct('name')
 		return Item.objects.all()
 
 	def perform_create(self, serializer):

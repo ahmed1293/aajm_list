@@ -21,13 +21,14 @@ def test_get_list_response(api_client, item_banana, default_item):
 	('nec', ['nectarines']),
 	('rin', ['nectarines', 'drinks']),
 	('app', ['red apples', 'green apples']),
-	('r', ['nectarines', 'drinks', 'red apples', 'green apples']),
+	('r', ['nectarines', 'drinks', 'red apples', 'green apples', 'garlic']),
 	('foo', []),
-	('APPLE', ['red apples', 'green apples'])
+	('APPLE', ['red apples', 'green apples']),
+	('garlic', ['garlic'])  # duplicate names should be removed
 ])
 def test_get_list_with_search(api_client, search, results):
 	shopping_list = ShoppingList.objects.create()
-	for name in ['nectarines', 'drinks', 'red apples', 'green apples']:
+	for name in ['nectarines', 'drinks', 'red apples', 'green apples', 'garlic', 'garlic', 'garlic']:
 		Item.objects.create(
 			name=name,
 			quantity=1,
