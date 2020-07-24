@@ -7,7 +7,7 @@
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
     "test": "jest --testPathIgnorePatterns /staticfiles",
-    "testCov": "jest --testPathIgnorePatterns /staticfiles --collectCoverage"
+    "testCov": "jest --testPathIgnorePatterns /staticfiles --collectCoverage --coveragePathIgnorePatterns /tests"
   },
   "repository": {
     "type": "git",

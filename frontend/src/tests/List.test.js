@@ -131,7 +131,6 @@ test('Updating an existing item', async () => {
 
 	fireEvent.click(screen.getAllByTestId('edit-item-btn')[0]);
 
-	// using index 1 because 0 is add form (need to get rid of modal hell)
 	const itemInput = screen.getByPlaceholderText('e.g. Chicken');
 	const quantityInput = screen.getByPlaceholderText('e.g. 81');
 
@@ -144,5 +143,5 @@ test('Updating an existing item', async () => {
 	fireEvent.click(screen.getByText('Save'));
 
 	await waitFor(() => expect(screen.queryByTestId('modal')).toBeFalsy());
-	expect(await screen.findByText(`${newItemName} (${newItemQuantity})`)).toBeVisible();
+	expect(screen.getByText(`${newItemName} (${newItemQuantity})`)).toBeVisible();
 });
